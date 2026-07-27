@@ -1,0 +1,301 @@
+import { Prisma, type EstadoWF as EstadoWFDb } from "@prisma/client";
+import type { Ctx } from "@/server/db/env";
+import {
+  ESTADOS_EDITABLES,
+  validarTransicion,
+  pctDeNivel,
+} from "@/domain";
+import type { EstadoWF } from "@/domain/types";
+import { ApiError, noEncontrado, sinPermiso } from "@/server/api/api-error";
+import { porCodigo } from "@/server/repositories/indicador.repo";
+import { periodoAnual } from "@/server/repositories/periodo.repo";
+import {
+  INCLUDE_MEDICION,
+  scopeMediciones,
+  type MedicionCompleta,
+} from "@/server/repositories/medicion.repo";
+import { tieneRol } from "@/server/auth/guards";
+import type { MedicionInput, ValidarInput, EvidenciaInput } from "@/shared/schemas/medicion";
+import { num } from "./mappers";
+import { invalidarEstadoPEI } from "./estado-cache";
+
+const D = (n: number) => new Prisma.Decimal(n);
+
+/**
+ * Casos de uso del workflow de mediciones (§11).
+ * - Historial APPEND-ONLY: toda transición escribe HistorialEstado.
+ * - Una medición APROBADA nunca se sobrescribe: rectificar crea versión nueva.
+ * - Las transiciones se validan con la máquina de estados del dominio.
+ */
+
+function transicionar(
+  ctx: Ctx,
+  medicionId: bigint,
+  desde: EstadoWF | null,
+  hacia: EstadoWF,
+  comentario?: string | null,
+) {
+  invalidarEstadoPEI(); // toda transición puede alterar los tableros
+  return Promise.all([
+    ctx.db.medicion.update({
+      where: { id: medicionId },
+      data: { estado: hacia as EstadoWFDb },
+    }),
+    ctx.db.historialEstado.create({
+      data: {
+        medicionId,
+        estadoAnterior: desde as EstadoWFDb | null,
+        estadoNuevo: hacia as EstadoWFDb,
+        usuarioId: ctx.actor.userId,
+        comentario: comentario ?? null,
+      },
+    }),
+  ]);
+}
+
+function exigirTransicion(ctx: Ctx, desde: EstadoWF, hacia: EstadoWF): void {
+  const r = validarTransicion(desde, hacia, ctx.actor.roles);
+  if (!r.ok) {
+    throw new ApiError(
+      r.error === "TRANSICION_INVALIDA" ? 422 : 403,
+      r.error!,
+      r.error === "TRANSICION_INVALIDA"
+        ? `Transición inválida: ${desde} → ${hacia}.`
+        : `Su rol no puede pasar una medición de ${desde} a ${hacia}.`,
+    );
+  }
+}
+
+function exigirPropiedad(ctx: Ctx, dependenciaId: number): void {
+  const esScoped =
+    tieneRol(ctx.actor, "DEPENDENCIA_CARGA") &&
+    !tieneRol(ctx.actor, "ADMIN", "DGPD_VALIDADOR");
+  if (esScoped && !ctx.actor.dependenciaIds.includes(dependenciaId)) {
+    throw sinPermiso();
+  }
+}
+
+async function medicionOThrow(ctx: Ctx, id: bigint): Promise<MedicionCompleta> {
+  const m = await ctx.db.medicion.findFirst({
+    where: { id, ...scopeMediciones(ctx.actor) },
+    include: INCLUDE_MEDICION,
+  });
+  if (!m) throw noEncontrado("Medición");
+  return m;
+}
+
+/** Deriva el valor observado según la modalidad de carga del indicador. */
+async function derivarValor(
+  ctx: Ctx,
+  indicadorId: number,
+  input: MedicionInput,
+): Promise<number> {
+  if (input.nivelEscala != null) {
+    const escala = await ctx.db.escalaIndicador.findMany({
+      where: { indicadorId },
+      orderBy: { nivel: "asc" },
+    });
+    const pct = pctDeNivel(
+      escala.map((e) => ({
+        nivel: e.nivel,
+        pctMin: num(e.pctMin)!,
+        pctMax: num(e.pctMax)!,
+      })),
+      input.nivelEscala,
+    );
+    if (pct === null) {
+      throw new ApiError(
+        422,
+        "NIVEL_ESCALA_INVALIDO",
+        "El nivel reportado no existe en la escala del indicador.",
+      );
+    }
+    return pct;
+  }
+  if (input.valorObservado != null) return input.valorObservado;
+  if (input.numerador != null && input.denominador != null) {
+    return (input.numerador / input.denominador) * 100;
+  }
+  throw new ApiError(422, "VALOR_FALTANTE", "No se pudo derivar el valor observado.");
+}
+
+/**
+ * Crea o actualiza el BORRADOR de la medición del indicador/período.
+ * Si la última versión está en estado editable (BORRADOR/OBSERVADO) se
+ * actualiza; si no existe medición, se crea v1; si está en curso o aprobada,
+ * 409 (la corrección de una aprobada es `rectificar`).
+ */
+export async function guardarBorrador(
+  ctx: Ctx,
+  input: MedicionInput,
+): Promise<MedicionCompleta> {
+  const ind = await porCodigo(ctx, input.indicadorCodigo);
+  if (!ind) throw noEncontrado(`Indicador ${input.indicadorCodigo}`);
+  const principal = ind.responsables.find((r) => r.rol === "PRINCIPAL");
+  if (!principal) throw new ApiError(422, "SIN_RESPONSABLE", "El indicador no tiene dependencia principal.");
+  exigirPropiedad(ctx, principal.dependenciaId);
+
+  const periodo = await periodoAnual(ctx, input.anio);
+  const valor = await derivarValor(ctx, ind.id, input);
+
+  const existentes = await ctx.db.medicion.findMany({
+    where: { indicadorId: ind.id, periodoId: periodo.id },
+    orderBy: { version: "desc" },
+    take: 1,
+  });
+  const ultima = existentes[0];
+  invalidarEstadoPEI(); // el chip de estado de carga vive en el estado cacheado
+
+  const datos = {
+    numerador: input.numerador != null ? D(input.numerador) : null,
+    denominador: input.denominador != null ? D(input.denominador) : null,
+    nivelEscala: input.nivelEscala ?? null,
+    valorObservado: D(valor),
+    fuente: input.fuente ?? null,
+    observaciones: input.observaciones ?? null,
+    fechaCorte: input.fechaCorte ?? null,
+  };
+
+  if (!ultima) {
+    const creada = await ctx.db.medicion.create({
+      data: {
+        indicadorId: ind.id,
+        periodoId: periodo.id,
+        dependenciaId: principal.dependenciaId,
+        usuarioCargaId: ctx.actor.userId,
+        estado: "BORRADOR",
+        version: 1,
+        ...datos,
+      },
+    });
+    await ctx.db.historialEstado.create({
+      data: {
+        medicionId: creada.id,
+        estadoAnterior: null,
+        estadoNuevo: "BORRADOR",
+        usuarioId: ctx.actor.userId,
+      },
+    });
+    return medicionOThrow(ctx, creada.id);
+  }
+
+  if (!ESTADOS_EDITABLES.includes(ultima.estado as EstadoWF)) {
+    throw new ApiError(
+      409,
+      "MEDICION_EN_CURSO",
+      `Ya existe una medición en estado ${ultima.estado} para este período. ` +
+        (ultima.estado === "APROBADO"
+          ? "Para corregirla, solicite una rectificación."
+          : "Espere el resultado de la validación."),
+    );
+  }
+  exigirPropiedad(ctx, ultima.dependenciaId);
+  await ctx.db.medicion.update({ where: { id: ultima.id }, data: datos });
+  return medicionOThrow(ctx, ultima.id);
+}
+
+/** BORRADOR/OBSERVADO → ENVIADO (dependencia dueña). */
+export async function enviar(ctx: Ctx, id: bigint): Promise<MedicionCompleta> {
+  const m = await medicionOThrow(ctx, id);
+  exigirPropiedad(ctx, m.dependenciaId);
+  const desde = m.estado as EstadoWF;
+  exigirTransicion(ctx, desde, "ENVIADO");
+  await transicionar(ctx, m.id, desde, "ENVIADO");
+  return medicionOThrow(ctx, id);
+}
+
+/** ENVIADO → EN_REVISION (validador la toma). */
+export async function tomarEnRevision(
+  ctx: Ctx,
+  id: bigint,
+): Promise<MedicionCompleta> {
+  const m = await medicionOThrow(ctx, id);
+  const desde = m.estado as EstadoWF;
+  exigirTransicion(ctx, desde, "EN_REVISION");
+  await transicionar(ctx, m.id, desde, "EN_REVISION");
+  return medicionOThrow(ctx, id);
+}
+
+/** Resolución del validador: APROBADO / OBSERVADO / RECHAZADO + Validacion. */
+export async function validar(
+  ctx: Ctx,
+  id: bigint,
+  input: ValidarInput,
+): Promise<MedicionCompleta> {
+  const m = await medicionOThrow(ctx, id);
+  const desde = m.estado as EstadoWF;
+  exigirTransicion(ctx, desde, input.resultado);
+  await transicionar(ctx, m.id, desde, input.resultado, input.comentario);
+  await ctx.db.validacion.create({
+    data: {
+      medicionId: m.id,
+      usuarioId: ctx.actor.userId,
+      resultado: input.resultado,
+      comentario: input.comentario ?? null,
+    },
+  });
+  return medicionOThrow(ctx, id);
+}
+
+/**
+ * Rectificación de una APROBADA: la versión vigente pasa a RECTIFICADO y se
+ * crea la versión n+1 en BORRADOR con los datos copiados (append-only).
+ */
+export async function rectificar(
+  ctx: Ctx,
+  id: bigint,
+  motivo: string,
+): Promise<MedicionCompleta> {
+  const m = await medicionOThrow(ctx, id);
+  const desde = m.estado as EstadoWF;
+  exigirTransicion(ctx, desde, "RECTIFICADO");
+  await transicionar(ctx, m.id, desde, "RECTIFICADO", motivo);
+
+  const nueva = await ctx.db.medicion.create({
+    data: {
+      indicadorId: m.indicadorId,
+      periodoId: m.periodoId,
+      dependenciaId: m.dependenciaId,
+      usuarioCargaId: ctx.actor.userId,
+      estado: "BORRADOR",
+      version: m.version + 1,
+      numerador: m.numerador,
+      denominador: m.denominador,
+      nivelEscala: m.nivelEscala,
+      valorObservado: m.valorObservado,
+      fuente: m.fuente,
+      observaciones: `Rectifica v${m.version}: ${motivo}`,
+      fechaCorte: m.fechaCorte,
+    },
+  });
+  await ctx.db.historialEstado.create({
+    data: {
+      medicionId: nueva.id,
+      estadoAnterior: null,
+      estadoNuevo: "BORRADOR",
+      usuarioId: ctx.actor.userId,
+      comentario: `Versión de rectificación de v${m.version}.`,
+    },
+  });
+  return medicionOThrow(ctx, nueva.id);
+}
+
+/** Registra metadatos de evidencia (el binario vive en NAS/objeto). */
+export async function agregarEvidencia(
+  ctx: Ctx,
+  id: bigint,
+  input: EvidenciaInput,
+): Promise<void> {
+  const m = await medicionOThrow(ctx, id);
+  exigirPropiedad(ctx, m.dependenciaId);
+  await ctx.db.evidencia.create({
+    data: {
+      medicionId: m.id,
+      nombreArchivo: input.nombreArchivo,
+      tipo: input.tipo ?? null,
+      rutaOUrl: input.rutaOUrl,
+      hashSha256: input.hashSha256 ?? null,
+      usuarioId: ctx.actor.userId,
+    },
+  });
+}

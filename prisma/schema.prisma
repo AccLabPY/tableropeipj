@@ -1,0 +1,407 @@
+// ============================================================================
+//  Plataforma de Seguimiento del PEI 2026–2030 — schema Prisma
+//  Fase A: TiDB Serverless (MySQL 8 compatible)  ·  Fase B: PostgreSQL on-premise
+//  Portabilidad: cambiar provider a "postgresql" y regenerar migraciones.
+//  El cálculo de cumplimiento vive en la capa de dominio (TS), NO en vistas SQL.
+// ============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql" // Fase B: "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma" // TiDB: integridad referencial emulada por Prisma
+}
+
+// ------------------------------- Enums --------------------------------------
+enum Nivel {
+  OE
+  AE
+}
+
+enum Sentido {
+  ASC
+  DESC
+}
+
+enum Unidad {
+  PORCENTAJE
+  NUMERO
+  PUNTAJE
+  INDICE
+}
+
+enum RolResp {
+  PRINCIPAL
+  CORRESPONSABLE
+  FUENTE
+}
+
+enum TipoPeriodo {
+  MENSUAL
+  TRIMESTRAL
+  SEMESTRAL
+  ANUAL
+}
+
+enum EstadoWF {
+  BORRADOR
+  ENVIADO
+  EN_REVISION
+  OBSERVADO
+  APROBADO
+  RECHAZADO
+  RECTIFICADO
+}
+
+enum ResultadoVal {
+  APROBADO
+  OBSERVADO
+  RECHAZADO
+}
+
+enum RolUsuario {
+  ADMIN
+  DGPD_VALIDADOR
+  DEPENDENCIA_CARGA
+  AUTORIDAD
+  CONSULTA
+}
+
+enum ScopeUmbral {
+  GLOBAL
+  OE
+  AE
+  INDICADOR
+}
+
+// --------------------------- Estructura PEI ---------------------------------
+model ObjetivoEstrategico {
+  id          Int                 @id @default(autoincrement())
+  codigo      String              @unique // "OE1"
+  nombre      String              @db.Text
+  acciones    AccionEstrategica[]
+  indicadores Indicador[]
+  pnd         OePnd[]
+  ods         OeOds[]
+  riesgos     Riesgo[]
+}
+
+model AccionEstrategica {
+  id          Int                 @id @default(autoincrement())
+  codigo      String              @unique // "A.E.1.1"
+  nombre      String              @db.Text
+  oeId        Int
+  oe          ObjetivoEstrategico @relation(fields: [oeId], references: [id])
+  indicadores Indicador[]
+
+  @@index([oeId])
+}
+
+model Indicador {
+  id                  Int         @id @default(autoincrement())
+  codigo              Int         @unique // 1101 (OAAI); 1..6 = nivel OE
+  nivel               Nivel
+  oeId                Int
+  aeId                Int? // null si nivel OE
+  nombre              String      @db.Text
+  descripcion         String?     @db.Text
+  variables           String?     @db.Text
+  formula             String?     @db.Text
+  dimension           String? // Eficiencia | Eficacia | Calidad | Economía
+  ambito              String?
+  unidad              Unidad
+  frecuencia          TipoPeriodo @default(ANUAL)
+  cobertura           String      @default("Nacional")
+  sentido             Sentido
+  lineaBase           Decimal?    @db.Decimal(16, 4) // null => basePendiente
+  anioLineaBase       Int?
+  basePendiente       Boolean     @default(false)
+  esEscala            Boolean     @default(false)
+  esCicloVida         Boolean     @default(false)
+  peso                Decimal     @default(1) @db.Decimal(6, 3)
+  fuenteInfo          String?     @db.Text
+  comentarios         String?     @db.Text
+  requiereDiagnostico Boolean     @default(false) // base a determinar: exige diagnóstico/investigación previa
+  activo              Boolean     @default(true)
+
+  oe           ObjetivoEstrategico    @relation(fields: [oeId], references: [id])
+  ae           AccionEstrategica?     @relation(fields: [aeId], references: [id])
+  metas        Meta[]
+  escala       EscalaIndicador[]
+  responsables IndicadorDependencia[]
+  mediciones   Medicion[]
+
+  @@index([oeId])
+  @@index([aeId])
+}
+
+model Meta {
+  id                 Int       @id @default(autoincrement())
+  indicadorId        Int
+  anio               Int
+  valorMeta          Decimal?  @db.Decimal(16, 4)
+  esPeriodoConcluido Boolean   @default(false) // "0" post-cierre != meta cero
+  indicador          Indicador @relation(fields: [indicadorId], references: [id])
+
+  @@unique([indicadorId, anio])
+}
+
+model EscalaIndicador {
+  id          Int       @id @default(autoincrement())
+  indicadorId Int
+  nivel       Int
+  descripcion String    @db.Text
+  pctMin      Decimal   @db.Decimal(6, 2)
+  pctMax      Decimal   @db.Decimal(6, 2)
+  indicador   Indicador @relation(fields: [indicadorId], references: [id])
+
+  @@unique([indicadorId, nivel])
+}
+
+// ------------------------------ Catálogos -----------------------------------
+model Dependencia {
+  id          Int                    @id @default(autoincrement())
+  nombre      String                 @unique
+  area        String?
+  referente   String?
+  activo      Boolean                @default(true)
+  indicadores IndicadorDependencia[]
+  mediciones  Medicion[]
+  usuarios    UsuarioDependencia[]
+}
+
+model IndicadorDependencia {
+  indicadorId   Int
+  dependenciaId Int
+  rol           RolResp
+  indicador     Indicador   @relation(fields: [indicadorId], references: [id])
+  dependencia   Dependencia @relation(fields: [dependenciaId], references: [id])
+
+  @@id([indicadorId, dependenciaId, rol])
+  @@index([dependenciaId])
+  @@index([indicadorId])
+}
+
+model Circunscripcion {
+  id     Int    @id @default(autoincrement())
+  nombre String @unique
+}
+
+model Periodo {
+  id               Int         @id @default(autoincrement())
+  anio             Int
+  tipo             TipoPeriodo
+  numero           Int? // mes/trimestre; null si anual
+  fechaInicio      DateTime?
+  fechaFin         DateTime?
+  fechaLimiteCarga DateTime?
+  mediciones       Medicion[]
+
+  @@unique([anio, tipo, numero])
+}
+
+// ------------------------------- Hechos -------------------------------------
+model Medicion {
+  id                BigInt    @id @default(autoincrement())
+  indicadorId       Int
+  periodoId         Int
+  dependenciaId     Int
+  circunscripcionId Int?
+  numerador         Decimal?  @db.Decimal(18, 4)
+  denominador       Decimal?  @db.Decimal(18, 4)
+  nivelEscala       Int?
+  valorObservado    Decimal?  @db.Decimal(18, 4)
+  estado            EstadoWF  @default(BORRADOR)
+  version           Int       @default(1) // append-only: correcciones incrementan versión
+  fechaReporte      DateTime  @default(now())
+  fechaCorte        DateTime?
+  fuente            String?
+  usuarioCargaId    Int?
+  observaciones     String?   @db.Text
+
+  indicador    Indicador         @relation(fields: [indicadorId], references: [id])
+  periodo      Periodo           @relation(fields: [periodoId], references: [id])
+  dependencia  Dependencia       @relation(fields: [dependenciaId], references: [id])
+  validaciones Validacion[]
+  evidencias   Evidencia[]
+  historial    HistorialEstado[]
+
+  @@unique([indicadorId, periodoId, circunscripcionId, version])
+  @@index([indicadorId])
+  @@index([periodoId])
+  @@index([estado])
+  @@index([dependenciaId])
+}
+
+model Validacion {
+  id         BigInt       @id @default(autoincrement())
+  medicionId BigInt
+  usuarioId  Int?
+  resultado  ResultadoVal
+  comentario String?      @db.Text
+  fecha      DateTime     @default(now())
+  medicion   Medicion     @relation(fields: [medicionId], references: [id])
+
+  @@index([medicionId])
+}
+
+model Evidencia {
+  id            BigInt   @id @default(autoincrement())
+  medicionId    BigInt
+  nombreArchivo String
+  tipo          String?
+  rutaOUrl      String   @db.Text // NAS/objeto; NO el binario
+  hashSha256    String?
+  fecha         DateTime @default(now())
+  usuarioId     Int?
+  estado        String   @default("cargada")
+  medicion      Medicion @relation(fields: [medicionId], references: [id])
+
+  @@index([medicionId])
+}
+
+model HistorialEstado {
+  // append-only (auditoría)
+  id             BigInt    @id @default(autoincrement())
+  medicionId     BigInt
+  estadoAnterior EstadoWF?
+  estadoNuevo    EstadoWF
+  usuarioId      Int?
+  comentario     String?   @db.Text
+  fecha          DateTime  @default(now())
+  medicion       Medicion  @relation(fields: [medicionId], references: [id])
+
+  @@index([medicionId])
+}
+
+// ------------------------------ Seguridad -----------------------------------
+model Usuario {
+  id           Int                  @id @default(autoincrement())
+  nombre       String
+  email        String               @unique
+  passwordHash String
+  activo       Boolean              @default(true)
+  roles        UsuarioRol[]
+  dependencias UsuarioDependencia[]
+}
+
+model UsuarioRol {
+  usuarioId Int
+  rol       RolUsuario
+  usuario   Usuario    @relation(fields: [usuarioId], references: [id])
+
+  @@id([usuarioId, rol])
+  @@index([usuarioId])
+}
+
+model UsuarioDependencia {
+  usuarioId     Int
+  dependenciaId Int
+  usuario       Usuario     @relation(fields: [usuarioId], references: [id])
+  dependencia   Dependencia @relation(fields: [dependenciaId], references: [id])
+
+  @@id([usuarioId, dependenciaId])
+  @@index([dependenciaId])
+}
+
+// --------------------------- Trazabilidad -----------------------------------
+model PndPilar {
+  id        Int           @id @default(autoincrement())
+  numero    Int           @unique
+  nombre    String
+  objetivos PndObjetivo[]
+}
+
+model PndObjetivo {
+  id      Int      @id @default(autoincrement())
+  pilarId Int
+  codigo  String   @unique
+  nombre  String   @db.Text
+  pilar   PndPilar @relation(fields: [pilarId], references: [id])
+  oe      OePnd[]
+
+  @@index([pilarId])
+}
+
+model Ods {
+  id     Int     @id @default(autoincrement())
+  numero Int     @unique
+  nombre String
+  oe     OeOds[]
+}
+
+model OePnd {
+  oeId          Int
+  pndObjetivoId Int
+  oe            ObjetivoEstrategico @relation(fields: [oeId], references: [id])
+  pnd           PndObjetivo         @relation(fields: [pndObjetivoId], references: [id])
+
+  @@id([oeId, pndObjetivoId])
+  @@index([pndObjetivoId])
+}
+
+model OeOds {
+  oeId  Int
+  odsId Int
+  oe    ObjetivoEstrategico @relation(fields: [oeId], references: [id])
+  ods   Ods                 @relation(fields: [odsId], references: [id])
+
+  @@id([oeId, odsId])
+  @@index([odsId])
+}
+
+model Riesgo {
+  id           Int                 @id @default(autoincrement())
+  oeId         Int
+  descripcion  String              @db.Text
+  probabilidad Int?
+  impacto      Int?
+  evaluacion   String?
+  mitigacion   String?             @db.Text
+  oe           ObjetivoEstrategico @relation(fields: [oeId], references: [id])
+
+  @@index([oeId])
+}
+
+// ------------------------------- ETL ----------------------------------------
+model LoteEtl {
+  id         BigInt     @id @default(autoincrement())
+  archivo    String
+  fecha      DateTime   @default(now())
+  usuarioId  Int?
+  aceptados  Int        @default(0)
+  rechazados Int        @default(0)
+  errores    ErrorEtl[]
+}
+
+model ErrorEtl {
+  id      BigInt  @id @default(autoincrement())
+  loteId  BigInt
+  fila    Int?
+  campo   String?
+  mensaje String  @db.Text
+  lote    LoteEtl @relation(fields: [loteId], references: [id])
+
+  @@index([loteId])
+}
+
+// ------------------- Parámetros y umbrales de criticidad --------------------
+model Parametro {
+  clave String @id
+  valor String
+}
+
+model UmbralCriticidad {
+  // semáforo configurable con herencia
+  id       Int         @id @default(autoincrement())
+  scope    ScopeUmbral
+  entidad  String // "GLOBAL" | "OE1" | "A.E.1.1" | "4202"
+  verde    Int // % (>=) => En meta
+  amarillo Int // % (>=) => En riesgo; por debajo => Crítico
+  azul     Int? // % (>=) => sobrecumplimiento (opcional)
+
+  @@unique([scope, entidad])
+}

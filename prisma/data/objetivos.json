@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "codigo": "OE1",
+    "nombre": "Fortalecer la institucionalidad de la Corte Suprema de Justicia - Poder Judicial",
+    "pnd": ["4.2.4"],
+    "ods": [16]
+  },
+  {
+    "id": 2,
+    "codigo": "OE2",
+    "nombre": "Asegurar el acceso a la justicia y la vigencia de los Derechos Humanos",
+    "pnd": ["4.2.3"],
+    "ods": [16]
+  },
+  {
+    "id": 3,
+    "codigo": "OE3",
+    "nombre": "Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros",
+    "pnd": ["4.2.4"],
+    "ods": [16]
+  },
+  {
+    "id": 4,
+    "codigo": "OE4",
+    "nombre": "Mejorar las capacidades del capital humano, con los procesos de selección, conocimiento y formación continua para lograr una gestión institucional eficiente",
+    "pnd": ["4.1.1"],
+    "ods": [16]
+  },
+  {
+    "id": 5,
+    "codigo": "OE5",
+    "nombre": "Optimizar la gestión de los recursos, con procesos eficientes para la adquisición y administración de bienes y servicios, para lograr una Justicia de calidad",
+    "pnd": ["4.1.3", "4.2.1"],
+    "ods": [16]
+  },
+  {
+    "id": 6,
+    "codigo": "OE6",
+    "nombre": "Fortalecer la Gestión Registral y Catastral con la implementación del Sistema Nacional Unificado Registral y Catastral, y el Registro Unificado Nacional",
+    "pnd": ["2.2.5"],
+    "ods": [16]
+  }
+]

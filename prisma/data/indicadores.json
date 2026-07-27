@@ -1,0 +1,1197 @@
+[
+  {
+    "codigo": 1, "nivel": "OE", "oe": 1, "ae": null,
+    "nombre": "Nivel de avance en el cumplimiento de acciones para el fortalecimiento institucional",
+    "descripcion": "Evalúa el avance en el cumplimiento de acciones y procesos que mejoran la gobernanza, estructura y funcionamiento de la Corte Suprema de Justicia.",
+    "variables": "(a) Número de acciones implementadas | (b) Total de acciones planificadas en el PEI",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Objetivo Estratégico",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [10, 30, 60, 80, 100],
+    "dependencias": ["Dirección General de Planificación y Desarrollo"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 2, "nivel": "OE", "oe": 2, "ae": null,
+    "nombre": "Porcentaje de avance en la implementación de acciones para asegurar el acceso a la justicia y la vigencia de los DDHH",
+    "descripcion": "Mide el avance de las acciones implementadas para mejorar el acceso a la justicia y la vigencia de los Derechos Humanos previstas en el PEI.",
+    "variables": "(a) Acciones implementadas para mejorar el acceso y vigencia de DDHH | (b) Total de acciones previstas en el PEI",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Objetivo Estratégico",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [20, 40, 60, 80, 100],
+    "dependencias": ["Dirección General de Planificación y Desarrollo"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 3, "nivel": "OE", "oe": 3, "ae": null,
+    "nombre": "Porcentaje de avance en las acciones para optimizar el servicio de justicia",
+    "descripcion": "Mide el avance de las acciones implementadas para optimizar el servicio de justicia con una gestión eficiente en todos los fueros.",
+    "variables": "(a) Número de acciones implementadas | (b) Total de acciones planificadas en el PEI",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Objetivo Estratégico",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [10, 30, 50, 75, 100],
+    "dependencias": ["Dirección General de Planificación y Desarrollo"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 4, "nivel": "OE", "oe": 4, "ae": null,
+    "nombre": "Porcentaje de avance en las acciones para mejorar las capacidades del Capital Humano",
+    "descripcion": "Mide el avance de las acciones implementadas para mejorar las capacidades del capital humano institucional.",
+    "variables": "(a) Número de acciones implementadas | (b) Total de acciones planificadas en el PEI",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Objetivo Estratégico",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [10, 30, 50, 75, 100],
+    "dependencias": ["Dirección General de Planificación y Desarrollo"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 5, "nivel": "OE", "oe": 5, "ae": null,
+    "nombre": "Porcentaje de Ejecución del Presupuesto Anual",
+    "descripcion": "Mide la proporción del presupuesto aprobado que fue efectivamente ejecutado en el ejercicio.",
+    "variables": "(a) Presupuesto ejecutado | (b) Presupuesto aprobado",
+    "formula": "(a) / (b) * 100", "dimension": "Eficiencia", "ambito": "Objetivo Estratégico",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": null, "anioLineaBase": 2025,
+    "lineaBaseNota": "A determinar al cierre del año 2025",
+    "metas": [90, 90, 90, 95, 95],
+    "dependencias": ["Dirección General de Planificación y Desarrollo", "Dirección General de Administración y Finanzas"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 6, "nivel": "OE", "oe": 6, "ae": null,
+    "nombre": "Porcentaje de avance en la implementación del Sistema Nacional Unificado Registral y Catastral, y el Registro Unificado Nacional",
+    "descripcion": "Mide el avance de las acciones implementadas para la puesta en marcha del Sistema Nacional Unificado Registral y Catastral y el RUN.",
+    "variables": "(a) Número de acciones implementadas | (b) Total de acciones planificadas en el PEI",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Objetivo Estratégico",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [20, 40, 60, 80, 100],
+    "dependencias": ["Dirección General de Planificación y Desarrollo"],
+    "comentarios": null, "escala": null
+  },
+
+  {
+    "codigo": 1101, "nivel": "AE", "oe": 1, "ae": "A.E.1.1",
+    "nombre": "Porcentaje del marco normativo institucional actualizado y armonizado (reglamentos, manuales, resoluciones, acordadas, etc.)",
+    "descripcion": "Mide el avance porcentual en la actualización del marco normativo institucional, incluyendo reglamentos, manuales, resoluciones y otros instrumentos normativos internos, con base en criterios de pertinencia, coherencia organizacional y alineación con los objetivos estratégicos del Poder Judicial.",
+    "variables": "(a) Cantidad de normativas institucionales actualizadas | (b) Cantidad total del marco normativo",
+    "formula": "(a) / (b) * 100", "dimension": "Calidad", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [10, 35, 55, 75, 100],
+    "dependencias": ["Secretaría General", "Dirección General de Planificación y Desarrollo", "Dirección de Asuntos Jurídicos", "Instituto de Investigaciones Jurídicas"],
+    "fuentes": "Inventario normativo institucional | Informes de la Dirección de Asuntos Jurídicos | Registros administrativos de la Secretaría General | Actas de aprobación de normativa actualizada",
+    "comentarios": "Actividades prioritarias: elaborar el inventario normativo, implementar un sistema de revisión periódico y participativo de normas internas y contar con un repositorio institucional público y actualizado.",
+    "escala": null
+  },
+  {
+    "codigo": 1201, "nivel": "AE", "oe": 1, "ae": "A.E.1.2",
+    "nombre": "Porcentaje de usuarios con percepción positiva de la imagen institucional",
+    "descripcion": "Mide el nivel de percepción de los usuarios del sistema judicial respecto a la atención recibida, la transparencia del proceso y la resolución de sus trámites judiciales, mediante encuestas aplicadas a una muestra representativa.",
+    "variables": "(a) Número de usuarios con percepción positiva | (b) Número total de usuarios encuestados",
+    "formula": "(a) / (b) * 100", "dimension": "Calidad", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [0, 25, 30, 40, 50],
+    "dependencias": ["Dirección de Comunicación", "Dirección de Estadísticas Judiciales"],
+    "fuentes": "Encuestas de percepción ciudadana",
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 1301, "nivel": "AE", "oe": 1, "ae": "A.E.1.3",
+    "nombre": "Nivel de implementación del Banco de Proyectos",
+    "descripcion": "Mide el progreso desde la propuesta inicial hasta la plena implementación del banco de proyectos institucional.",
+    "variables": "(a) Nivel de implementación alcanzado según escala definida | (b) Nivel máximo posible en la escala",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [20, 40, 60, 80, 100],
+    "dependencias": ["Dirección General de Planificación y Desarrollo"],
+    "comentarios": "Requiere diagnóstico: identificar cómo se gestionan actualmente los proyectos y detectar la falta de sistematización centralizada.",
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: propuesta de creación elaborada y presentada", "pctMax": 20 },
+      { "nivel": 2, "descripcion": "Nivel Inicial: banco aprobado formalmente con lineamientos definidos", "pctMax": 40 },
+      { "nivel": 3, "descripcion": "Nivel Intermedio: fase de carga inicial de proyectos priorizados", "pctMax": 60 },
+      { "nivel": 4, "descripcion": "Nivel Avanzado: en funcionamiento con registros consolidados", "pctMax": 80 },
+      { "nivel": 5, "descripcion": "Nivel de Optimización continua: herramienta de gestión con evaluación de impacto", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 1401, "nivel": "AE", "oe": 1, "ae": "A.E.1.4",
+    "nombre": "Número de procedimientos operacionales aprobados para la atención de requerimientos",
+    "descripcion": "Contabiliza los procedimientos operacionales formalizados para optimizar la respuesta a órganos jurisdiccionales.",
+    "variables": "Sumatoria de procedimientos operacionales aprobados",
+    "formula": "Sumatoria de procedimientos operacionales aprobados", "dimension": "Eficiencia", "ambito": "Acciones Estratégicas",
+    "unidad": "NUMERO", "sentido": "ASC", "lineaBase": 50, "anioLineaBase": 2025,
+    "metas": [60, 80, 80, 80, 80],
+    "dependencias": ["Dirección General de Planificación y Desarrollo"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 1402, "nivel": "AE", "oe": 1, "ae": "A.E.1.4",
+    "nombre": "Porcentaje de requerimientos atendidos por las dependencias de apoyo y asistencia jurisdiccional",
+    "descripcion": "Mide la proporción de requerimientos emitidos por los órganos jurisdiccionales que han sido atendidos de manera efectiva por las dependencias de apoyo y asistencia, en un periodo determinado. Permite identificar brechas en la respuesta institucional.",
+    "variables": "(a) Número de requerimientos atendidos por dependencia | (b) Número total de requerimientos recibidos por dependencia",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [0, 60, 70, 80, 80],
+    "dependencias": ["Dirección General de Planificación y Desarrollo", "Dirección de Estadísticas Judiciales"],
+    "fuentes": "Registros administrativos de las dependencias de apoyo y asistencia jurisdiccional | Informes de cumplimiento | Registros físicos o digitales de requerimientos atendidos | SIPOI",
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 1501, "nivel": "AE", "oe": 1, "ae": "A.E.1.5",
+    "nombre": "Nivel de madurez del Sistema de Control Interno SCI/MECIP por componentes y su implementación por dependencias de la institución, mediante evaluaciones independientes externas (Contraloría General de la República)",
+    "descripcion": "Calificación del nivel de madurez del control interno otorgada por la Contraloría General de la República.",
+    "variables": "Puntaje obtenido en escala 0-5",
+    "formula": "Nivel de madurez = puntaje obtenido", "dimension": "Calidad", "ambito": "Acciones Estratégicas",
+    "unidad": "PUNTAJE", "sentido": "ASC", "lineaBase": 2.03, "anioLineaBase": 2024,
+    "metas": [2.2, 2.5, 2.6, 2.8, 3],
+    "dependencias": ["Dirección General de Planificación y Desarrollo"],
+    "comentarios": "Niveles de madurez según Resolución CGR N° 147/19: 1 Deficiente (0-0,99) · 2 Inicial (1-1,99) · 3 Diseñado (2-2,99) · 4 Gestionado (3-3,99) · 5 Optimizado (4-4,99) · 6 Excelencia (5).",
+    "escala": null
+  },
+  {
+    "codigo": 1502, "nivel": "AE", "oe": 1, "ae": "A.E.1.5",
+    "nombre": "Nivel de madurez del Sistema de Control Interno SCI/MECIP por componentes y su implementación por dependencias de la institución mediante evaluaciones internas (Dirección General de Auditoría Interna)",
+    "descripcion": "Calificación del nivel de madurez según la evaluación realizada por la Auditoría Interna institucional.",
+    "variables": "Puntaje obtenido en escala 0-5",
+    "formula": "Nivel de madurez = puntaje obtenido", "dimension": "Calidad", "ambito": "Acciones Estratégicas",
+    "unidad": "PUNTAJE", "sentido": "ASC", "lineaBase": 3.04, "anioLineaBase": 2024,
+    "metas": [3.2, 3.4, 3.6, 3.8, 4],
+    "dependencias": ["Dirección General de Planificación y Desarrollo"],
+    "comentarios": "Niveles de madurez según Resolución CGR N° 147/19.",
+    "escala": null
+  },
+  {
+    "codigo": 1503, "nivel": "AE", "oe": 1, "ae": "A.E.1.5",
+    "nombre": "Nivel de implementación del plan para mitigar riesgos",
+    "descripcion": "Mide el grado de ejecución de acciones preventivas y correctivas en la gestión de riesgos.",
+    "variables": "(a) Nivel de implementación alcanzado | (b) Nivel máximo de implementación posible",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2025,
+    "metas": [25, 50, 75, 100, 0],
+    "dependencias": ["Dirección General de Planificación y Desarrollo"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: diagnóstico, diseño y aprobación del plan", "pctMax": 25 },
+      { "nivel": 2, "descripcion": "Nivel Inicial: implementación inicial e intermedia", "pctMax": 50 },
+      { "nivel": 3, "descripcion": "Nivel Avanzado: implementación avanzada", "pctMax": 75 },
+      { "nivel": 4, "descripcion": "Nivel de Optimización continua: evaluación y ajustes", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 1601, "nivel": "AE", "oe": 1, "ae": "A.E.1.6",
+    "nombre": "Nivel de implementación del expediente electrónico administrativo",
+    "descripcion": "Avance en la digitalización de la gestión administrativa interna para la despapelización.",
+    "variables": "(a) Nivel de implementación alcanzado | (b) Nivel máximo de implementación posible",
+    "formula": "(a) / (b) * 100", "dimension": "Eficiencia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [20, 40, 60, 80, 100],
+    "dependencias": ["Dirección General de Tecnología de la Información y las Comunicaciones", "Dirección General de Administración y Finanzas"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: proyecto o propuesta formal", "pctMax": 20 },
+      { "nivel": 2, "descripcion": "Nivel Inicial: desarrollo técnico y normativo", "pctMax": 40 },
+      { "nivel": 3, "descripcion": "Nivel Intermedio: fase piloto en dependencias seleccionadas", "pctMax": 60 },
+      { "nivel": 4, "descripcion": "Nivel Avanzado: operativo en varias dependencias", "pctMax": 80 },
+      { "nivel": 5, "descripcion": "Nivel de Optimización continua: implementación plena y sostenida", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 1701, "nivel": "AE", "oe": 1, "ae": "A.E.1.7",
+    "nombre": "Nivel de implementación de mecanismos efectivos para el seguimiento y la supervisión de las actividades derivadas de convenios",
+    "descripcion": "Grado de ejecución de herramientas de supervisión de compromisos interinstitucionales.",
+    "variables": "(a) Nivel de implementación alcanzado | (b) Nivel máximo de implementación posible",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [20, 40, 60, 80, 100],
+    "dependencias": ["Secretaría General", "Dirección General de Planificación y Desarrollo", "Dirección de Asuntos Jurídicos", "Dirección de Cooperación y Asistencia Judicial Internacional"],
+    "comentarios": "Requiere diagnóstico: identificar mecanismos actuales, formalización de registros y responsables de cumplimiento.",
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: borrador o propuesta preliminar", "pctMax": 20 },
+      { "nivel": 2, "descripcion": "Nivel Inicial: mecanismos aprobados formalmente", "pctMax": 40 },
+      { "nivel": 3, "descripcion": "Nivel Intermedio: aplicación parcial o piloto", "pctMax": 60 },
+      { "nivel": 4, "descripcion": "Nivel Avanzado: aplicación institucionalizada a todos los convenios", "pctMax": 80 },
+      { "nivel": 5, "descripcion": "Nivel de Optimización continua: consolidación y evaluación", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 1702, "nivel": "AE", "oe": 1, "ae": "A.E.1.7",
+    "nombre": "Porcentaje de convenios interinstitucionales revisados",
+    "descripcion": "Proporción de acuerdos revisados y actualizados respecto al inventario institucional.",
+    "variables": "(a) Número de convenios revisados | (b) Número total de convenios interinstitucionales",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [0, 20, 40, 60, 80],
+    "dependencias": ["Secretaría General", "Dirección General de Planificación y Desarrollo", "Dirección de Asuntos Jurídicos", "Dirección de Cooperación y Asistencia Judicial Internacional"],
+    "comentarios": "El indicador solo se podrá medir una vez elaborado el Inventario Institucional de convenios (actividad prioritaria).",
+    "escala": null
+  },
+  {
+    "codigo": 1801, "nivel": "AE", "oe": 1, "ae": "A.E.1.8",
+    "nombre": "Cantidad de dependencias judiciales certificadas con sellos de calidad",
+    "descripcion": "Número de oficinas que obtienen acreditaciones nacionales o internacionales de calidad.",
+    "variables": "Sumatoria de dependencias certificadas",
+    "formula": "Sumatoria de dependencias judiciales certificadas con sellos de calidad", "dimension": "Calidad", "ambito": "Acciones Estratégicas",
+    "unidad": "NUMERO", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [2, 4, 4, 4, 6],
+    "dependencias": ["Dirección General de Planificación y Desarrollo"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 1802, "nivel": "AE", "oe": 1, "ae": "A.E.1.8",
+    "nombre": "Porcentaje de funcionarios capacitados en normas de gestión de calidad",
+    "descripcion": "Proporción de personal formado en estándares de calidad institucional.",
+    "variables": "(a) Número de funcionarios capacitados en gestión de calidad | (b) Total de funcionarios del Poder Judicial",
+    "formula": "(a) / (b) * 100", "dimension": "Calidad", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [5, 15, 20, 25, 30],
+    "dependencias": ["Centro Internacional de Estudios Judiciales", "Dirección General de Planificación y Desarrollo"],
+    "comentarios": null, "escala": null
+  },
+
+  {
+    "codigo": 2101, "nivel": "AE", "oe": 2, "ae": "A.E.2.1",
+    "nombre": "Nivel de avance en la revisión de mecanismos de acceso efectivo a la justicia con enfoque en derechos humanos",
+    "descripcion": "Mide el progreso en la adecuación de mecanismos que aseguran acceso efectivo con enfoque en DDHH.",
+    "variables": "(a) Nivel alcanzado según escala definida | (b) Nivel máximo posible en la escala",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [50, 100, 0, 0, 0],
+    "dependencias": ["Dirección de Derechos Humanos", "Instituto de Investigaciones Jurídicas", "Dirección de Asuntos Jurídicos"],
+    "comentarios": "Dependencias asignadas por analogía con la A.E.2.1 (ver prisma/data/NOTAS.md).",
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel Inicial: realización de diagnóstico, propuestas o planes", "pctMax": 50 },
+      { "nivel": 2, "descripcion": "Nivel Avanzado: aprobación e implementación", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 2102, "nivel": "AE", "oe": 2, "ae": "A.E.2.1",
+    "nombre": "Nivel de avance en nuevos mecanismos para simplificación de procesos judiciales",
+    "descripcion": "Refleja el progreso en acciones para reducir trámites y tiempos, priorizando personas vulnerables.",
+    "variables": "(a) Nivel alcanzado según escala definida | (b) Nivel máximo posible en la escala",
+    "formula": "(a) / (b) * 100", "dimension": "Eficiencia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [50, 75, 100, 0, 0],
+    "dependencias": ["Dirección de Derechos Humanos", "Instituto de Investigaciones Jurídicas", "Dirección de Asuntos Jurídicos"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel Inicial: realización de diagnóstico, propuestas o planes", "pctMax": 50 },
+      { "nivel": 2, "descripcion": "Nivel Intermedio: aprobación", "pctMax": 75 },
+      { "nivel": 3, "descripcion": "Nivel Avanzado: implementación", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 2201, "nivel": "AE", "oe": 2, "ae": "A.E.2.2",
+    "nombre": "Nivel de implementación de mecanismos de acceso a la justicia con perspectiva de género",
+    "descripcion": "Permite conocer el grado de implementación de mecanismos que aseguren la incorporación de la perspectiva de género en el acceso a la justicia: protocolos especializados, unidades de atención, capacitación del personal y procesos diferenciados.",
+    "variables": "(a) Nivel de implementación alcanzado según escala definida | (b) Nivel máximo posible en la escala",
+    "formula": "(a) / (b) * 100", "dimension": "Calidad", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [25, 50, 75, 100, 0],
+    "dependencias": ["Dirección de Derechos Humanos", "Secretaría de Género", "Dirección de Asuntos Jurídicos", "Instituto de Investigaciones Jurídicas"],
+    "fuentes": "Informes institucionales sobre políticas de género | Reportes de la Dirección de DDHH y la Secretaría de Género | Documentación de proyectos y protocolos implementados",
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: identificación de necesidades y planes preliminares", "pctMax": 25 },
+      { "nivel": 2, "descripcion": "Nivel Inicial: acciones o mecanismos piloto parciales", "pctMax": 50 },
+      { "nivel": 3, "descripcion": "Nivel Intermedio: mayoría de mecanismos en ejecución", "pctMax": 75 },
+      { "nivel": 4, "descripcion": "Nivel Avanzado: todos los mecanismos implementados y en funcionamiento", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 2202, "nivel": "AE", "oe": 2, "ae": "A.E.2.2",
+    "nombre": "Nivel de implementación de mecanismos de acceso a la justicia para adultos mayores",
+    "descripcion": "Avance en oficinas, asistencia jurídica y protocolos de trato digno para este grupo.",
+    "variables": "(a) Nivel alcanzado según escala definida | (b) Nivel máximo posible en la escala",
+    "formula": "(a) / (b) * 100", "dimension": "Calidad", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [0, 25, 50, 75, 100],
+    "dependencias": ["Dirección de Derechos Humanos", "Dirección de Asuntos Jurídicos", "Instituto de Investigaciones Jurídicas"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación", "pctMax": 25 },
+      { "nivel": 2, "descripcion": "Nivel Inicial", "pctMax": 50 },
+      { "nivel": 3, "descripcion": "Nivel Intermedio", "pctMax": 75 },
+      { "nivel": 4, "descripcion": "Nivel Avanzado", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 2203, "nivel": "AE", "oe": 2, "ae": "A.E.2.2",
+    "nombre": "Nivel de implementación de mecanismos de acceso a la justicia para personas con discapacidad",
+    "descripcion": "Refleja avance en infraestructura, intérpretes y tecnologías adaptativas para inclusión.",
+    "variables": "(a) Nivel alcanzado según escala definida | (b) Nivel máximo posible en la escala",
+    "formula": "(a) / (b) * 100", "dimension": "Calidad", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [0, 25, 50, 75, 100],
+    "dependencias": ["Dirección de Derechos Humanos", "Instituto de Investigaciones Jurídicas", "Dirección de Asuntos Jurídicos"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación", "pctMax": 25 },
+      { "nivel": 2, "descripcion": "Nivel Inicial", "pctMax": 50 },
+      { "nivel": 3, "descripcion": "Nivel Intermedio", "pctMax": 75 },
+      { "nivel": 4, "descripcion": "Nivel Avanzado", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 2204, "nivel": "AE", "oe": 2, "ae": "A.E.2.2",
+    "nombre": "Porcentaje de funcionarios judiciales capacitados en acceso a la justicia con enfoque en género, discapacidad y adultos mayores",
+    "descripcion": "Mide la capacitación del personal jurisdiccional y de apoyo en temáticas de inclusión.",
+    "variables": "(a) Funcionarios judiciales capacitados en acceso a la justicia con enfoque en género, discapacidad y adultos mayores | (b) Total de funcionarios de las áreas jurisdiccional, de apoyo y asistencia jurisdiccional",
+    "formula": "(a) / (b) * 100", "dimension": "Calidad", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [10, 20, 30, 40, 50],
+    "dependencias": ["Centro Internacional de Estudios Judiciales", "Dirección de Derechos Humanos", "Secretaría de Género"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 2301, "nivel": "AE", "oe": 2, "ae": "A.E.2.3",
+    "nombre": "Porcentaje de aplicación del control de convencionalidad en las decisiones judiciales",
+    "descripcion": "Proporción de decisiones que citan expresamente tratados internacionales de DDHH.",
+    "variables": "(a) Número de decisiones judiciales que aplican el control de convencionalidad | (b) Número total de decisiones judiciales analizadas",
+    "formula": "(a) / (b) * 100", "dimension": "Calidad", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [5, 10, 15, 20, 30],
+    "dependencias": ["Dirección de Derechos Humanos", "Instituto de Investigaciones Jurídicas"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 2302, "nivel": "AE", "oe": 2, "ae": "A.E.2.3",
+    "nombre": "Cantidad de magistrados y funcionarios capacitados en Derechos Humanos",
+    "descripcion": "Cantidad de personal con formación específica en DDHH y tratados.",
+    "variables": "Total de participantes",
+    "formula": "Suma total de magistrados y funcionarios capacitados en el periodo", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "NUMERO", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [500, 1500, 2500, 3500, 4000],
+    "dependencias": ["Centro Internacional de Estudios Judiciales", "Dirección de Derechos Humanos"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 2401, "nivel": "AE", "oe": 2, "ae": "A.E.2.4",
+    "nombre": "Cantidad de dependencias jurisdiccionales y de apoyo que aplican protocolos especializados en protección de las mujeres y niñas en situación de violencia",
+    "descripcion": "Mide las dependencias que implementan protocolos especializados contra la violencia.",
+    "variables": "Dependencias con aplicación de protocolos",
+    "formula": "Sumatoria de dependencias jurisdiccionales y de apoyo que aplican protocolos especializados", "dimension": "Calidad", "ambito": "Acciones Estratégicas",
+    "unidad": "NUMERO", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [400, 400, 400, 400, 400],
+    "dependencias": ["Secretaría de Género", "Dirección de Derechos Humanos"],
+    "comentarios": "Meta de mantenimiento: sostener 400 dependencias aplicando protocolos.",
+    "escala": null
+  },
+  {
+    "codigo": 2402, "nivel": "AE", "oe": 2, "ae": "A.E.2.4",
+    "nombre": "Porcentaje de funcionarios capacitados en atención especializada a víctimas de violencia",
+    "descripcion": "Proporción de personal formado en atención con enfoque de género y DDHH.",
+    "variables": "(a) Funcionarios capacitados en atención especializada a víctimas de violencia | (b) Total de funcionarios de las áreas jurisdiccional, de apoyo y asistencia jurisdiccional",
+    "formula": "(a) / (b) * 100", "dimension": "Calidad", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2025,
+    "metas": [20, 30, 40, 50, 60],
+    "dependencias": ["Centro Internacional de Estudios Judiciales", "Dirección de Derechos Humanos", "Secretaría de Género"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 2501, "nivel": "AE", "oe": 2, "ae": "A.E.2.5",
+    "nombre": "Porcentaje de servicios judiciales accesibles mediante la implementación de herramientas tecnológicas",
+    "descripcion": "Grado de incorporación de tecnología para mejorar accesibilidad y transparencia.",
+    "variables": "(a) Servicios judiciales con herramientas tecnológicas implementadas | (b) Número de servicios tecnológicos planificados",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2025,
+    "metas": [0, 25, 50, 75, 100],
+    "dependencias": ["Dirección General de Tecnología de la Información y las Comunicaciones", "Dirección de Derechos Humanos", "Dirección de Transparencia y Acceso a la Información Pública"],
+    "comentarios": null, "escala": null
+  },
+
+  {
+    "codigo": 3101, "nivel": "AE", "oe": 3, "ae": "A.E.3.1",
+    "nombre": "Tasa de Resolución",
+    "descripcion": "Casos resueltos respecto a ingresados en un periodo.",
+    "variables": "(a) Casos resueltos | (b) Casos ingresados",
+    "formula": "(a) / (b)", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "NUMERO", "sentido": "ASC", "lineaBase": null, "anioLineaBase": 2025,
+    "lineaBaseNota": "A determinar al cierre del año 2025",
+    "metas": [1.05, 1.2, 1.4, 1.5, 1.5],
+    "dependencias": ["Dirección de Estadísticas Judiciales"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 3102, "nivel": "AE", "oe": 3, "ae": "A.E.3.1",
+    "nombre": "Tasa de congestión",
+    "descripcion": "Grado de acumulación de casos en trámite respecto a resueltos.",
+    "variables": "(a) Casos pendientes al inicio del periodo | (b) Casos ingresados | (c) Casos resueltos en el periodo",
+    "formula": "((a) + (b)) / (c)", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "NUMERO", "sentido": "DESC", "lineaBase": null, "anioLineaBase": 2025,
+    "lineaBaseNota": "A determinar al cierre del año 2025",
+    "metas": [6.25, 5.75, 5.25, 4.75, 4.25],
+    "dependencias": ["Dirección de Estadísticas Judiciales"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 3103, "nivel": "AE", "oe": 3, "ae": "A.E.3.1",
+    "nombre": "Tasa de pendencia",
+    "descripcion": "Relación entre casos pendientes al final y resueltos en el periodo.",
+    "variables": "(a) Casos pendientes al final del año | (b) Casos resueltos en el año",
+    "formula": "(a) / (b)", "dimension": "Eficiencia", "ambito": "Acciones Estratégicas",
+    "unidad": "NUMERO", "sentido": "DESC", "lineaBase": null, "anioLineaBase": 2025,
+    "lineaBaseNota": "A determinar al cierre del año 2025",
+    "metas": [5.5, 5, 4.5, 4, 3.5],
+    "dependencias": ["Dirección de Estadísticas Judiciales"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 3104, "nivel": "AE", "oe": 3, "ae": "A.E.3.1",
+    "nombre": "Nivel de implementación de mecanismos para mejorar la gestión de Juzgados de Primera Instancia con alta congestión en las circunscripciones judiciales",
+    "descripcion": "Avance en mecanismos aplicados en Primera Instancia para mejorar procesos y tiempos.",
+    "variables": "(a) Nivel alcanzado según escala definida | (b) Nivel máximo posible en la escala",
+    "formula": "(a) / (b) * 100", "dimension": "Eficiencia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [25, 50, 75, 100, 0],
+    "dependencias": ["Dirección General de Planificación y Desarrollo", "Dirección de Estadísticas Judiciales", "Departamento de Administración de Fueros", "Dirección General de Auditoría de Gestión Jurisdiccional"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: diagnóstico, diseño y aprobación", "pctMax": 25 },
+      { "nivel": 2, "descripcion": "Nivel Inicial: aplicación inicial (plan piloto)", "pctMax": 50 },
+      { "nivel": 3, "descripcion": "Nivel Avanzado: aplicación general", "pctMax": 75 },
+      { "nivel": 4, "descripcion": "Nivel de Optimización continua: evaluación y ajustes", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 3201, "nivel": "AE", "oe": 3, "ae": "A.E.3.2",
+    "nombre": "Porcentaje de Juzgados que superan el tiempo promedio de duración de los procesos judiciales en el fuero Civil y Comercial de Primera Instancia",
+    "descripcion": "Proporción de juzgados que exceden el tiempo promedio de duración de procesos.",
+    "variables": "(a) Juzgados del fuero Civil y Comercial que superan el tiempo promedio | (b) Total de juzgados del fuero evaluados",
+    "formula": "(a) / (b) * 100", "dimension": "Eficiencia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "DESC", "lineaBase": 100, "anioLineaBase": 2025,
+    "metas": [95, 90, 80, 70, 60],
+    "dependencias": ["Dirección de Estadísticas Judiciales"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 3202, "nivel": "AE", "oe": 3, "ae": "A.E.3.2",
+    "nombre": "Porcentaje de Juzgados que superan el tiempo promedio de duración de los procesos judiciales en el fuero Penal",
+    "descripcion": "Proporción de juzgados penales que exceden el tiempo promedio.",
+    "variables": "(a) Juzgados penales que superan el tiempo promedio | (b) Total de juzgados penales evaluados",
+    "formula": "(a) / (b) * 100", "dimension": "Eficiencia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "DESC", "lineaBase": 100, "anioLineaBase": 2026,
+    "metas": [95, 90, 80, 70, 60],
+    "dependencias": ["Dirección de Estadísticas Judiciales"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 3203, "nivel": "AE", "oe": 3, "ae": "A.E.3.2",
+    "nombre": "Porcentaje de Juzgados que superan el tiempo promedio de duración de los procesos judiciales en el fuero Laboral",
+    "descripcion": "Proporción de juzgados laborales que exceden el tiempo promedio.",
+    "variables": "(a) Juzgados laborales que superan el tiempo promedio | (b) Total de juzgados laborales evaluados",
+    "formula": "(a) / (b) * 100", "dimension": "Eficiencia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "DESC", "lineaBase": 100, "anioLineaBase": 2025,
+    "metas": [95, 90, 80, 70, 60],
+    "dependencias": ["Dirección de Estadísticas Judiciales"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 3204, "nivel": "AE", "oe": 3, "ae": "A.E.3.2",
+    "nombre": "Porcentaje de Juzgados que superan el tiempo promedio de duración de los procesos judiciales en el fuero de la Niñez y Adolescencia",
+    "descripcion": "Proporción de juzgados de Niñez y Adolescencia que exceden el tiempo promedio.",
+    "variables": "(a) Juzgados de la Niñez y Adolescencia que superan el tiempo promedio | (b) Total de juzgados evaluados",
+    "formula": "(a) / (b) * 100", "dimension": "Eficiencia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "DESC", "lineaBase": 100, "anioLineaBase": 2026,
+    "metas": [95, 90, 80, 70, 60],
+    "dependencias": ["Dirección de Estadísticas Judiciales"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 3301, "nivel": "AE", "oe": 3, "ae": "A.E.3.3",
+    "nombre": "Nivel de implementación del modelo de gestión jurisdiccional",
+    "descripcion": "Avance en la implementación del modelo conforme a lo planificado para eficiencia.",
+    "variables": "(a) Nivel alcanzado según escala definida | (b) Nivel máximo posible en la escala",
+    "formula": "(a) / (b) * 100", "dimension": "Eficiencia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [20, 40, 60, 80, 100],
+    "dependencias": ["Dirección General de Planificación y Desarrollo", "Oficinas Técnicas de Apoyo", "Dirección General de Capital Humano", "Dirección General de Auditoría de Gestión Jurisdiccional", "Departamento de Administración de Fueros"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: modelo diseñado y aprobado", "pctMax": 20 },
+      { "nivel": 2, "descripcion": "Nivel Inicial: piloto en juzgados seleccionados", "pctMax": 40 },
+      { "nivel": 3, "descripcion": "Nivel Intermedio: piloto en tribunales seleccionados", "pctMax": 60 },
+      { "nivel": 4, "descripcion": "Nivel Avanzado: uso efectivo del modelo", "pctMax": 80 },
+      { "nivel": 5, "descripcion": "Nivel de Optimización continua: evaluación y mejoras", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 3401, "nivel": "AE", "oe": 3, "ae": "A.E.3.4",
+    "nombre": "Porcentaje de juzgados especializados de la Niñez y Adolescencia que cuentan con equipo interdisciplinario asesor de la justicia",
+    "descripcion": "Mide el grado de dotación de equipos asesores completos en los juzgados especializados de niñez y adolescencia, considerando como equipo completo aquel que cuenta con los perfiles profesionales mínimos requeridos (Art. 165 Ley N° 6083/2018).",
+    "variables": "(a) Juzgados de la Niñez y Adolescencia con equipo interdisciplinario asesor establecido por ley | (b) Total de juzgados de la Niñez y Adolescencia existentes",
+    "formula": "(a) / (b) * 100", "dimension": "Eficiencia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2025,
+    "metas": [20, 30, 40, 50, 60],
+    "dependencias": ["Dirección General de Capital Humano", "Dirección Técnico Forense"],
+    "fuentes": "Informes de gestión de juzgados especializados | Informe de necesidades de juzgados",
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 3402, "nivel": "AE", "oe": 3, "ae": "A.E.3.4",
+    "nombre": "Porcentaje de Juzgados de Paz de zonas urbanas con estructura funcional adecuada",
+    "descripcion": "Porcentaje que cumple infraestructura, tecnología, personal y atención.",
+    "variables": "(a) Juzgados de Paz urbanos con estructura funcional adecuada | (b) Total de Juzgados de Paz urbanos existentes",
+    "formula": "(a) / (b) * 100", "dimension": "Calidad", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2025,
+    "metas": [0, 15, 30, 40, 50],
+    "dependencias": ["Dirección General de Planificación y Desarrollo", "Dirección General de Administración y Finanzas", "Dirección General de Capital Humano", "Dirección de Infraestructura Física", "Departamento de Administración de Fueros", "Oficina Técnica de Apoyo a la Justicia de Paz"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 3403, "nivel": "AE", "oe": 3, "ae": "A.E.3.4",
+    "nombre": "Porcentaje de Juzgados de la Niñez y Adolescencia con estructura funcional adecuada",
+    "descripcion": "Porcentaje que cumple infraestructura, tecnología, personal y atención.",
+    "variables": "(a) Juzgados de la Niñez y Adolescencia con estructura funcional adecuada | (b) Total de Juzgados de la Niñez y Adolescencia existentes",
+    "formula": "(a) / (b) * 100", "dimension": "Calidad", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2025,
+    "metas": [0, 15, 30, 40, 50],
+    "dependencias": ["Dirección General de Planificación y Desarrollo", "Dirección General de Administración y Finanzas", "Dirección General de Capital Humano", "Dirección de Infraestructura Física", "Departamento de Administración de Fueros", "Oficina Técnica de Apoyo al Fuero de la Niñez y la Adolescencia"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 3404, "nivel": "AE", "oe": 3, "ae": "A.E.3.4",
+    "nombre": "Porcentaje de Juzgados de Crimen Organizado con estructura funcional adecuada",
+    "descripcion": "Porcentaje que cumple infraestructura, tecnología, personal y atención.",
+    "variables": "(a) Juzgados de Crimen Organizado con estructura funcional adecuada | (b) Total de Juzgados de Crimen Organizado existentes",
+    "formula": "(a) / (b) * 100", "dimension": "Calidad", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2025,
+    "metas": [0, 15, 30, 40, 50],
+    "dependencias": ["Dirección General de Planificación y Desarrollo", "Dirección General de Administración y Finanzas", "Dirección General de Capital Humano", "Dirección de Infraestructura Física", "Departamento de Administración de Fueros", "Oficina Técnica de Apoyo Penal"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 3405, "nivel": "AE", "oe": 3, "ae": "A.E.3.4",
+    "nombre": "Porcentaje de funcionarios de juzgados especializados con formación continua en su área",
+    "descripcion": "Porcentaje de funcionarios que participan en cursos vinculados a su área.",
+    "variables": "(a) Funcionarios de juzgados especializados con formación continua en su área | (b) Total de funcionarios de juzgados especializados",
+    "formula": "(a) / (b) * 100", "dimension": "Calidad", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2025,
+    "metas": [20, 40, 60, 80, 100],
+    "dependencias": ["Centro Internacional de Estudios Judiciales"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 3501, "nivel": "AE", "oe": 3, "ae": "A.E.3.5",
+    "nombre": "Nivel de implementación de indicadores de calidad de las resoluciones",
+    "descripcion": "Grado de avance en indicadores aplicados a resoluciones para mejora continua.",
+    "variables": "(a) Nivel alcanzado según escala definida | (b) Nivel máximo posible en la escala",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [20, 40, 60, 80, 100],
+    "dependencias": ["Oficinas Técnicas de Apoyo", "Dirección General de Planificación y Desarrollo", "Instituto de Investigaciones Jurídicas"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: indicadores diseñados y aprobados", "pctMax": 20 },
+      { "nivel": 2, "descripcion": "Nivel Inicial: medición en tribunales y juzgados seleccionados", "pctMax": 40 },
+      { "nivel": 3, "descripcion": "Nivel Intermedio: medición ampliada", "pctMax": 60 },
+      { "nivel": 4, "descripcion": "Nivel Avanzado: ajustes de los indicadores de calidad", "pctMax": 80 },
+      { "nivel": 5, "descripcion": "Nivel de Optimización continua: estandarización", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 3601, "nivel": "AE", "oe": 3, "ae": "A.E.3.6",
+    "nombre": "Nivel de implementación del Sistema Estadístico Judicial",
+    "descripcion": "Avance en desarrollo y uso en áreas jurisdiccional, administrativa y registral.",
+    "variables": "(a) Nivel alcanzado según escala definida | (b) Nivel máximo posible en la escala",
+    "formula": "(a) / (b) * 100", "dimension": "Eficiencia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [20, 40, 60, 80, 100],
+    "dependencias": ["Dirección de Estadísticas Judiciales"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: sistema diseñado y aprobado", "pctMax": 20 },
+      { "nivel": 2, "descripcion": "Nivel Inicial: implementación inicial y ajustes", "pctMax": 40 },
+      { "nivel": 3, "descripcion": "Nivel Intermedio: implementación intermedia y ajustes", "pctMax": 60 },
+      { "nivel": 4, "descripcion": "Nivel Avanzado: implementación avanzada", "pctMax": 80 },
+      { "nivel": 5, "descripcion": "Nivel de Optimización: evaluación y mejoras", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 3701, "nivel": "AE", "oe": 3, "ae": "A.E.3.7",
+    "nombre": "Nivel de avance en el fortalecimiento de los servicios de mediación en todo el país",
+    "descripcion": "Grado de consolidación: disponibilidad, recursos humanos e infraestructura.",
+    "variables": "(a) Nivel alcanzado según escala definida | (b) Nivel máximo posible en la escala",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2025,
+    "metas": [20, 40, 60, 80, 100],
+    "dependencias": ["Dirección de Mediación"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: diagnóstico y aprobación de acciones", "pctMax": 20 },
+      { "nivel": 2, "descripcion": "Nivel Inicial: desarrollo inicial de las acciones", "pctMax": 40 },
+      { "nivel": 3, "descripcion": "Nivel Intermedio: expansión a circunscripciones de mayor complejidad", "pctMax": 60 },
+      { "nivel": 4, "descripcion": "Nivel Avanzado: ajustes finales y cobertura casi total", "pctMax": 80 },
+      { "nivel": 5, "descripcion": "Nivel de Optimización continua: servicios fortalecidos en todo el país", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 3702, "nivel": "AE", "oe": 3, "ae": "A.E.3.7",
+    "nombre": "Tasa de acuerdos logrados sobre casos ingresados",
+    "descripcion": "Proporción de casos en mediación que finalizan con acuerdo formal.",
+    "variables": "(a) Acuerdos logrados en mediación en un periodo determinado | (b) Casos ingresados a mediación en el mismo periodo",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2024,
+    "metas": [55, 60, 65, 70, 75],
+    "dependencias": ["Dirección de Mediación"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 3801, "nivel": "AE", "oe": 3, "ae": "A.E.3.8",
+    "nombre": "Porcentaje de tribunales de apelación gestionados electrónicamente en el Sistema Integral de Tramitación Judicial Electrónica (SITJE)",
+    "descripcion": "Grado de implementación de gestión electrónica (SITJE) en Tribunales de Apelación.",
+    "variables": "(a) Tribunales de apelación gestionados en SITJE | (b) Número total de tribunales de apelación",
+    "formula": "(a) / (b) * 100", "dimension": "Eficiencia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2025,
+    "metas": [5, 15, 20, 25, 30],
+    "dependencias": ["Dirección General de Tecnología de la Información y las Comunicaciones"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 3802, "nivel": "AE", "oe": 3, "ae": "A.E.3.8",
+    "nombre": "Porcentaje de juzgados de primera instancia gestionados electrónicamente en el Sistema Integral de Tramitación Judicial Electrónica (SITJE)",
+    "descripcion": "Grado de implementación de gestión electrónica en juzgados de Primera Instancia.",
+    "variables": "(a) Juzgados de primera instancia gestionados en SITJE | (b) Total de juzgados de primera instancia",
+    "formula": "(a) / (b) * 100", "dimension": "Eficiencia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2025,
+    "metas": [5, 15, 20, 25, 30],
+    "dependencias": ["Dirección General de Tecnología de la Información y las Comunicaciones"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 3803, "nivel": "AE", "oe": 3, "ae": "A.E.3.8",
+    "nombre": "Porcentaje de juzgados de paz gestionados electrónicamente en el Sistema Integral de Tramitación Judicial Electrónica (SITJE)",
+    "descripcion": "Grado de implementación de gestión electrónica en juzgados de paz.",
+    "variables": "(a) Juzgados de paz gestionados en SITJE | (b) Total de juzgados de paz",
+    "formula": "(a) / (b) * 100", "dimension": "Eficiencia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2025,
+    "metas": [5, 15, 20, 25, 30],
+    "dependencias": ["Dirección General de Tecnología de la Información y las Comunicaciones"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 3804, "nivel": "AE", "oe": 3, "ae": "A.E.3.8",
+    "nombre": "Porcentaje de las Salas de la Corte Suprema de Justicia gestionadas electrónicamente en el Sistema Integral de Tramitación Judicial Electrónica (SITJE)",
+    "descripcion": "Grado de implementación de gestión electrónica en las Salas de la CSJ.",
+    "variables": "(a) Salas de la CSJ gestionadas en SITJE | (b) Número total de Salas de la CSJ",
+    "formula": "(a) / (b) * 100", "dimension": "Eficiencia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2025,
+    "metas": [5, 15, 20, 25, 30],
+    "dependencias": ["Dirección General de Tecnología de la Información y las Comunicaciones"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 3805, "nivel": "AE", "oe": 3, "ae": "A.E.3.8",
+    "nombre": "Nivel de implementación de IA en procesos judiciales",
+    "descripcion": "Uso de IA y plataformas digitales para modernizar la gestión en distintos fueros.",
+    "variables": "(a) Nivel alcanzado según escala definida | (b) Nivel máximo posible en la escala",
+    "formula": "(a) / (b) * 100", "dimension": "Eficiencia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [10, 25, 45, 70, 100],
+    "dependencias": ["Dirección General de Tecnología de la Información y las Comunicaciones"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: diagnóstico inicial, selección de pilotos", "pctMax": 10 },
+      { "nivel": 2, "descripcion": "Nivel Inicial: primeras pruebas de IA en fueros específicos", "pctMax": 25 },
+      { "nivel": 3, "descripcion": "Nivel Intermedio: integración progresiva e interoperabilidad", "pctMax": 45 },
+      { "nivel": 4, "descripcion": "Nivel Avanzado: consolidación en la mayoría de los fueros", "pctMax": 70 },
+      { "nivel": 5, "descripcion": "Nivel de Optimización continua: implementación plena y sostenida", "pctMax": 100 }
+    ]
+  },
+
+  {
+    "codigo": 4101, "nivel": "AE", "oe": 4, "ae": "A.E.4.1",
+    "nombre": "Nivel de avance en la revisión de la normativa vigente de Concursos de Mérito y Oposición",
+    "descripcion": null,
+    "variables": "(a) Nivel alcanzado | (b) Nivel máximo posible",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [50, 50, 0, 0, 0],
+    "dependencias": ["Dirección General de Capital Humano", "Dirección de Asuntos Jurídicos"],
+    "comentarios": "Desde 2028 se realizarán evaluaciones anuales (nivel de optimización continua).",
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: revisión, diagnóstico y propuesta de ajustes", "pctMax": 50 },
+      { "nivel": 2, "descripcion": "Nivel Avanzado: aprobación institucional y normativa lista", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 4102, "nivel": "AE", "oe": 4, "ae": "A.E.4.1",
+    "nombre": "Número de personas que accedieron al cargo a través de concursos",
+    "descripcion": null,
+    "variables": "Suma total de nombramientos y ascensos en virtud de concursos realizados en el periodo",
+    "formula": "Suma de nombramientos y ascensos en virtud de concursos realizados en el periodo", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "NUMERO", "sentido": "ASC", "lineaBase": 248, "anioLineaBase": 2024,
+    "metas": [257, 265, 278, 285, 298],
+    "dependencias": ["Dirección General de Capital Humano"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 4201, "nivel": "AE", "oe": 4, "ae": "A.E.4.2",
+    "nombre": "Nivel de revisión de la normativa de Evaluación de Desempeño",
+    "descripcion": null,
+    "variables": "(a) Nivel alcanzado | (b) Nivel máximo posible",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [30, 65, 100, 0, 0],
+    "dependencias": ["Dirección General de Capital Humano"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: revisión, diagnóstico y priorización", "pctMax": 30 },
+      { "nivel": 2, "descripcion": "Nivel Inicial: revisión completa y propuesta de ajustes", "pctMax": 65 },
+      { "nivel": 3, "descripcion": "Nivel Avanzado: aprobación institucional, lista para implementación", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 4202, "nivel": "AE", "oe": 4, "ae": "A.E.4.2",
+    "nombre": "Porcentaje de funcionarios evaluados anualmente",
+    "descripcion": null,
+    "variables": "(a) Funcionarios con evaluación de desempeño realizada en el año | (b) Número total de funcionarios",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 18.87, "anioLineaBase": 2024,
+    "metas": [20, 25, 50, 65, 75],
+    "dependencias": ["Dirección General de Capital Humano"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 4301, "nivel": "AE", "oe": 4, "ae": "A.E.4.3",
+    "nombre": "Nivel de avance en el diseño y elaboración de la carrera judicial",
+    "descripcion": "Refleja el grado de avance en el diseño y elaboración de la carrera judicial para Magistrados y funcionarios, considerando aspectos normativos, organizativos y operativos, de acuerdo con el plan institucional establecido.",
+    "variables": "(a) Nivel de avance en el diseño y elaboración | (b) Nivel de avance máximo posible",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [25, 50, 75, 100, 0],
+    "dependencias": ["Dirección de Asuntos Jurídicos", "Dirección General de Capital Humano", "Instituto de Investigaciones Jurídicas"],
+    "fuentes": "Informes de avance del proyecto de ley | Documentos normativos y manuales elaborados",
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: diseño preliminar y diagnóstico de necesidades", "pctMax": 25 },
+      { "nivel": 2, "descripcion": "Nivel Inicial: borradores y definición de perfiles", "pctMax": 50 },
+      { "nivel": 3, "descripcion": "Nivel Intermedio: validación de documentos y planificación de formación", "pctMax": 75 },
+      { "nivel": 4, "descripcion": "Nivel Avanzado: documentación completa y lista para presentación", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 4401, "nivel": "AE", "oe": 4, "ae": "A.E.4.4",
+    "nombre": "Índice de Satisfacción del Clima Laboral",
+    "descripcion": null,
+    "variables": "Índice = Puntaje obtenido",
+    "formula": "Índice = Puntaje obtenido", "dimension": "Calidad", "ambito": "Acciones Estratégicas",
+    "unidad": "PUNTAJE", "sentido": "ASC", "lineaBase": 3.26, "anioLineaBase": 2024,
+    "metas": [3.5, 3.5, 3.7, 3.8, 3.9],
+    "dependencias": ["Dirección General de Capital Humano"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 4402, "nivel": "AE", "oe": 4, "ae": "A.E.4.4",
+    "nombre": "Nivel de avance en la implementación del programa motivacional",
+    "descripcion": null,
+    "variables": "(a) Nivel alcanzado en la implementación de los programas motivacionales | (b) Nivel máximo posible",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [20, 40, 60, 80, 100],
+    "dependencias": ["Dirección General de Capital Humano"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: programa diseñado y aprobado", "pctMax": 20 },
+      { "nivel": 2, "descripcion": "Nivel Inicial: ejecución inicial de actividades", "pctMax": 40 },
+      { "nivel": 3, "descripcion": "Nivel Intermedio: ejecución intermedia", "pctMax": 60 },
+      { "nivel": 4, "descripcion": "Nivel Avanzado: ejecución avanzada", "pctMax": 80 },
+      { "nivel": 5, "descripcion": "Nivel de Optimización continua: evaluación y mejora continua", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 4501, "nivel": "AE", "oe": 4, "ae": "A.E.4.5",
+    "nombre": "Nivel de avance de los programas para la inducción y reinducción de magistrados y funcionarios",
+    "descripcion": null,
+    "variables": "(a) Nivel alcanzado en la revisión y actualización del programa | (b) Nivel máximo posible",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [50, 100, 0, 0, 0],
+    "dependencias": ["Dirección General de Capital Humano", "Centro Internacional de Estudios Judiciales"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: diseño y aprobación", "pctMax": 50 },
+      { "nivel": 2, "descripcion": "Nivel de Optimización continua: implementación, evaluación y ajustes", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 4502, "nivel": "AE", "oe": 4, "ae": "A.E.4.5",
+    "nombre": "Nivel de avance en la implementación del Centro de Entrenamiento de Magistrados",
+    "descripcion": null,
+    "variables": "(a) Nivel alcanzado en la implementación del Centro de Entrenamiento | (b) Nivel máximo posible",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [25, 50, 75, 100, 0],
+    "dependencias": ["Centro Internacional de Estudios Judiciales"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: centro diseñado y aprobado", "pctMax": 25 },
+      { "nivel": 2, "descripcion": "Nivel Inicial: implementación inicial de actividades", "pctMax": 50 },
+      { "nivel": 3, "descripcion": "Nivel Avanzado: implementación avanzada", "pctMax": 75 },
+      { "nivel": 4, "descripcion": "Nivel de Optimización continua: evaluación y mejora continua", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 4601, "nivel": "AE", "oe": 4, "ae": "A.E.4.6",
+    "nombre": "Nivel de avance en la implementación del programa de formación continua",
+    "descripcion": null,
+    "variables": "(a) Nivel alcanzado en la revisión y actualización de Planes de Estudios | (b) Nivel máximo posible",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [25, 50, 75, 100, 100],
+    "dependencias": ["Centro Internacional de Estudios Judiciales"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: programa diseñado y aprobado", "pctMax": 25 },
+      { "nivel": 2, "descripcion": "Nivel Inicial: ejecución inicial", "pctMax": 50 },
+      { "nivel": 3, "descripcion": "Nivel Avanzado: ejecución avanzada", "pctMax": 75 },
+      { "nivel": 4, "descripcion": "Nivel de Optimización continua: evaluación y mejora continua", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 4602, "nivel": "AE", "oe": 4, "ae": "A.E.4.6",
+    "nombre": "Cantidad de Magistrados y funcionarios capacitados anualmente en temas vinculados a su función conforme al nuevo programa de formación continua",
+    "descripcion": null,
+    "variables": "Sumatoria de Magistrados y funcionarios capacitados en temas vinculados a su función",
+    "formula": "Suma de magistrados y funcionarios capacitados en temas vinculados a su función", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "NUMERO", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2028,
+    "metas": [0, 1000, 2000, 3000, 5000],
+    "dependencias": ["Centro Internacional de Estudios Judiciales", "Dirección General de Capital Humano"],
+    "comentarios": "La medición inicia con el nuevo programa de formación continua (meta 2026 = 0).",
+    "escala": null
+  },
+  {
+    "codigo": 4701, "nivel": "AE", "oe": 4, "ae": "A.E.4.7",
+    "nombre": "Nivel de implementación del Sistema de Gestión de Capital Humano",
+    "descripcion": null,
+    "variables": "(a) Nivel alcanzado según escala definida | (b) Nivel máximo posible en la escala",
+    "formula": "(a) / (b) * 100", "dimension": "Eficiencia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [20, 40, 60, 80, 100],
+    "dependencias": ["Dirección General de Capital Humano", "Dirección General de Tecnología de la Información y las Comunicaciones"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: diagnóstico", "pctMax": 20 },
+      { "nivel": 2, "descripcion": "Nivel Inicial: sistema diseñado", "pctMax": 40 },
+      { "nivel": 3, "descripcion": "Nivel Intermedio: aprobación", "pctMax": 60 },
+      { "nivel": 4, "descripcion": "Nivel Avanzado: ejecución avanzada", "pctMax": 80 },
+      { "nivel": 5, "descripcion": "Nivel de Optimización continua: evaluación y mejora continua", "pctMax": 100 }
+    ]
+  },
+
+  {
+    "codigo": 5101, "nivel": "AE", "oe": 5, "ae": "A.E.5.1",
+    "nombre": "Nivel de implementación del mecanismo de Planificación de Necesidades",
+    "descripcion": null,
+    "variables": "(a) Nivel alcanzado según escala definida | (b) Nivel máximo posible en la escala",
+    "formula": "(a) / (b) * 100", "dimension": "Eficiencia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [20, 40, 60, 80, 100],
+    "dependencias": ["Dirección General de Planificación y Desarrollo"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: diagnóstico, diseño y aprobación", "pctMax": 20 },
+      { "nivel": 2, "descripcion": "Nivel Inicial: implementación inicial", "pctMax": 40 },
+      { "nivel": 3, "descripcion": "Nivel Intermedio: implementación intermedia", "pctMax": 60 },
+      { "nivel": 4, "descripcion": "Nivel Avanzado: implementación avanzada", "pctMax": 80 },
+      { "nivel": 5, "descripcion": "Nivel de Optimización continua: evaluación y ajustes", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 5102, "nivel": "AE", "oe": 5, "ae": "A.E.5.1",
+    "nombre": "Porcentaje de llamados evaluados en función a las metas programadas del Presupuesto por Resultados",
+    "descripcion": null,
+    "variables": "(a) Número de llamados evaluados | (b) Número total de llamados que requieren ser evaluados",
+    "formula": "(a) / (b) * 100", "dimension": "Eficiencia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 85, "anioLineaBase": 2024,
+    "metas": [90, 90, 90, 95, 95],
+    "dependencias": ["Unidad Operativa de Contrataciones", "Dirección General de Planificación y Desarrollo"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 5201, "nivel": "AE", "oe": 5, "ae": "A.E.5.2",
+    "nombre": "Índice de satisfacción con relación a la provisión de bienes y servicios",
+    "descripcion": "Mide el grado de satisfacción de las dependencias del Poder Judicial en relación con los bienes y servicios provistos para su funcionamiento, a través de encuestas de satisfacción aplicadas periódicamente.",
+    "variables": "(a) Puntuación obtenida en la encuesta de satisfacción | (b) Puntuación máxima posible en la encuesta",
+    "formula": "(a) / (b) * 100", "dimension": "Calidad", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [30, 60, 70, 80, 90],
+    "dependencias": ["Dirección General de Administración y Finanzas", "Dirección General de Planificación y Desarrollo", "Unidad Operativa de Contrataciones", "Dirección de Estadísticas Judiciales"],
+    "fuentes": "Encuestas de satisfacción aplicadas a dependencias judiciales",
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 5202, "nivel": "AE", "oe": 5, "ae": "A.E.5.2",
+    "nombre": "Índice de mejoras implementadas en los procesos de provisión de bienes y servicios, en base a encuestas de satisfacción",
+    "descripcion": null,
+    "variables": "(a) Número de medidas de mejora implementadas | (b) Número de medidas de mejora propuestas",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [0, 30, 50, 60, 70],
+    "dependencias": ["Dirección General de Administración y Finanzas", "Dirección General de Planificación y Desarrollo", "Unidad Operativa de Contrataciones", "Dirección de Estadísticas Judiciales"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 5301, "nivel": "AE", "oe": 5, "ae": "A.E.5.3",
+    "nombre": "Nivel de avance para lograr la autarquía y autonomía presupuestaria",
+    "descripcion": null,
+    "variables": "(a) Niveles cumplidos del proceso | (b) Niveles totales previstos",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [50, 100, 0, 0, 0],
+    "dependencias": ["Dirección General de Administración y Finanzas", "Dirección de Asuntos Jurídicos", "Instituto de Investigaciones Jurídicas"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel Inicial: diagnóstico y análisis de normativa y antecedentes", "pctMax": 50 },
+      { "nivel": 2, "descripcion": "Nivel Avanzado: borrador de anteproyecto de ley presentado a Ministros", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 5401, "nivel": "AE", "oe": 5, "ae": "A.E.5.4",
+    "nombre": "Cantidad de metros cuadrados construidos según plan de inversiones de obras",
+    "descripcion": null,
+    "variables": "Suma de metros cuadrados construidos",
+    "formula": "Suma de metros cuadrados construidos", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "NUMERO", "sentido": "ASC", "lineaBase": 254000, "anioLineaBase": 2025,
+    "metas": [272543, 294399, 311882, 332426, 351257],
+    "dependencias": ["Dirección General de Planificación y Desarrollo", "Dirección de Infraestructura Física"],
+    "comentarios": "Unidad de medida: metros cuadrados.",
+    "escala": null
+  },
+  {
+    "codigo": 5402, "nivel": "AE", "oe": 5, "ae": "A.E.5.4",
+    "nombre": "Nivel de implementación del plan de mantenimiento de sedes judiciales",
+    "descripcion": null,
+    "variables": "(a) Nivel alcanzado según escala definida | (b) Nivel máximo posible en la escala",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [20, 40, 60, 80, 100],
+    "dependencias": ["Dirección de Infraestructura Física"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: diagnóstico, diseño y aprobación", "pctMax": 20 },
+      { "nivel": 2, "descripcion": "Nivel Inicial: ejecución inicial", "pctMax": 40 },
+      { "nivel": 3, "descripcion": "Nivel Intermedio: ejecución intermedia", "pctMax": 60 },
+      { "nivel": 4, "descripcion": "Nivel Avanzado: ejecución avanzada", "pctMax": 80 },
+      { "nivel": 5, "descripcion": "Nivel de Optimización continua: evaluación y ajustes", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 5403, "nivel": "AE", "oe": 5, "ae": "A.E.5.4",
+    "nombre": "Porcentaje de ejecución del presupuesto aprobado para infraestructura edilicia, de acuerdo al Plan Presupuestario de Inversiones",
+    "descripcion": null,
+    "variables": "(a) Presupuesto ejecutado en infraestructura edilicia | (b) Presupuesto aprobado para infraestructura edilicia",
+    "formula": "(a) / (b) * 100", "dimension": "Eficiencia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 50, "anioLineaBase": 2025,
+    "metas": [75, 75, 80, 85, 95],
+    "dependencias": ["Dirección General de Administración y Finanzas", "Dirección General de Planificación y Desarrollo", "Dirección de Infraestructura Física"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 5404, "nivel": "AE", "oe": 5, "ae": "A.E.5.4",
+    "nombre": "Porcentaje de sedes judiciales de Juzgados de Primera Instancia que cuentan con edificios propios",
+    "descripcion": null,
+    "variables": "(a) Sedes judiciales de Juzgados de Primera Instancia con edificios propios | (b) Total de sedes judiciales de Juzgados de Primera Instancia",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 50, "anioLineaBase": 2025,
+    "metas": [60, 70, 80, 90, 100],
+    "dependencias": ["Dirección General de Planificación y Desarrollo", "Dirección de Infraestructura Física"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 5405, "nivel": "AE", "oe": 5, "ae": "A.E.5.4",
+    "nombre": "Porcentaje de sedes judiciales de Juzgados de Paz que cuentan con edificios propios",
+    "descripcion": null,
+    "variables": "(a) Sedes judiciales de Juzgados de Paz con edificios propios | (b) Total de sedes judiciales de Juzgados de Paz",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 40, "anioLineaBase": 2025,
+    "metas": [50, 55, 60, 65, 70],
+    "dependencias": ["Dirección de Infraestructura Física", "Dirección General de Planificación y Desarrollo"],
+    "comentarios": null, "escala": null
+  },
+
+  {
+    "codigo": 6101, "nivel": "AE", "oe": 6, "ae": "A.E.6.1",
+    "nombre": "Nivel de implementación de la estructura organizacional del Registro Unificado Nacional (RUN)",
+    "descripcion": "Evalúa el avance en la implementación de la estructura organizacional del Registro Unificado Nacional (RUN).",
+    "variables": "(a) Nivel de implementación alcanzado según escala definida | (b) Nivel máximo posible en la escala",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2025,
+    "metas": [50, 100, 0, 0, 0],
+    "dependencias": ["Gerencia Superior del Registro Unificado Nacional", "Dirección General de Planificación y Desarrollo"],
+    "fuentes": "Informes de gestión del proyecto RUN | Reportes de avance de la Dirección General de Registros Públicos | Plan de Implementación del RUN",
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Diagnóstico y Planificación: manuales de responsabilidad y funciones aprobados", "pctMax": 25 },
+      { "nivel": 2, "descripcion": "Definición de Puestos: perfiles de puestos aprobados", "pctMax": 50 },
+      { "nivel": 3, "descripcion": "Sistematización operacional: procedimientos operacionales elaborados", "pctMax": 75 },
+      { "nivel": 4, "descripcion": "Control de Riesgos: mapas de riesgos elaborados", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 6102, "nivel": "AE", "oe": 6, "ae": "A.E.6.1",
+    "nombre": "Porcentaje de documentos finalizados por el Registro Unificado Nacional (RUN)",
+    "descripcion": null,
+    "variables": "(a) Número de documentos finalizados | (b) Número de documentos ingresados",
+    "formula": "(a) / (b) * 100", "dimension": "Eficiencia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2025,
+    "metas": [70, 80, 90, 90, 100],
+    "dependencias": ["Gerencia Superior del Registro Unificado Nacional"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 6103, "nivel": "AE", "oe": 6, "ae": "A.E.6.1",
+    "nombre": "Tasa de inscripciones de inmuebles finalizadas anualmente por el Registro Unificado Nacional (RUN)",
+    "descripcion": null,
+    "variables": "(a) Títulos inscriptos de inmuebles finalizados por el RUN | (b) Total de títulos inscriptos de inmuebles ingresados al RUN",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2024,
+    "metas": [70, 80, 90, 100, 100],
+    "dependencias": ["Gerencia Superior del Registro Unificado Nacional"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 6104, "nivel": "AE", "oe": 6, "ae": "A.E.6.1",
+    "nombre": "Tasa de inscripciones de automotores finalizadas anualmente por el Registro Unificado Nacional (RUN)",
+    "descripcion": null,
+    "variables": "(a) Títulos inscriptos de automotores finalizados por el RUN | (b) Total de títulos inscriptos de automotores ingresados al RUN",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2024,
+    "metas": [70, 80, 90, 100, 100],
+    "dependencias": ["Gerencia Superior del Registro Unificado Nacional"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 6105, "nivel": "AE", "oe": 6, "ae": "A.E.6.1",
+    "nombre": "Tasa de inscripciones de marcas y señales finalizadas anualmente por el Registro Unificado Nacional (RUN)",
+    "descripcion": null,
+    "variables": "(a) Títulos inscriptos de marcas y señales finalizados por el RUN | (b) Total de títulos inscriptos de marcas y señales ingresados al RUN",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2024,
+    "metas": [70, 80, 90, 100, 100],
+    "dependencias": ["Gerencia Superior del Registro Unificado Nacional"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 6106, "nivel": "AE", "oe": 6, "ae": "A.E.6.1",
+    "nombre": "Tasa de inscripciones de buques finalizadas anualmente por el Registro Unificado Nacional (RUN)",
+    "descripcion": null,
+    "variables": "(a) Títulos inscriptos de buques finalizados por el RUN | (b) Total de títulos inscriptos de buques ingresados al RUN",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2025,
+    "metas": [70, 80, 90, 100, 100],
+    "dependencias": ["Gerencia Superior del Registro Unificado Nacional"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 6107, "nivel": "AE", "oe": 6, "ae": "A.E.6.1",
+    "nombre": "Porcentaje de funcionarios ingresados por concursos de oposición realizados en el marco de la implementación del Registro Unificado Nacional (RUN)",
+    "descripcion": null,
+    "variables": "(a) Cantidad de funcionarios ingresados por concurso de oposición del RUN | (b) Cantidad total de funcionarios del RUN",
+    "formula": "(a) / (b) * 100", "dimension": "Calidad", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [10, 20, 30, 40, 50],
+    "dependencias": ["Gerencia Superior del Registro Unificado Nacional", "Dirección General de Capital Humano"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 6201, "nivel": "AE", "oe": 6, "ae": "A.E.6.2",
+    "nombre": "Porcentaje de los manuales de responsabilidad y funciones aprobados",
+    "descripcion": null,
+    "variables": "(a) Número de manuales aprobados | (b) Número total de manuales requeridos",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2025,
+    "metas": [50, 100, 0, 0, 0],
+    "dependencias": ["Dirección General de Planificación y Desarrollo", "Dirección General de Capital Humano"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 6301, "nivel": "AE", "oe": 6, "ae": "A.E.6.3",
+    "nombre": "Nivel de avance en la implementación del sistema informático de gestión electrónica integral",
+    "descripcion": null,
+    "variables": "(a) Nivel alcanzado según la escala | (b) Nivel máximo posible",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [20, 40, 60, 80, 100],
+    "dependencias": ["Dirección de Tecnología del Registro Unificado Nacional", "Gerencia Superior del Registro Unificado Nacional"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Diseño del sistema", "pctMax": 20 },
+      { "nivel": 2, "descripcion": "Aprobación", "pctMax": 40 },
+      { "nivel": 3, "descripcion": "Implementación inicial", "pctMax": 60 },
+      { "nivel": 4, "descripcion": "Implementación avanzada", "pctMax": 80 },
+      { "nivel": 5, "descripcion": "Monitoreo de uso efectivo / evaluación y mejora", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 6401, "nivel": "AE", "oe": 6, "ae": "A.E.6.4",
+    "nombre": "Nivel de implementación del plan de adecuación y unificación de la infraestructura edilicia",
+    "descripcion": null,
+    "variables": "(a) Nivel alcanzado según la escala | (b) Nivel máximo posible",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [20, 40, 60, 80, 100],
+    "dependencias": ["Gerencia Superior del Registro Unificado Nacional"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: diagnóstico", "pctMax": 20 },
+      { "nivel": 2, "descripcion": "Nivel Inicial: diseño y aprobación del plan", "pctMax": 40 },
+      { "nivel": 3, "descripcion": "Nivel Intermedio: implementación inicial", "pctMax": 60 },
+      { "nivel": 4, "descripcion": "Nivel Avanzado: implementación avanzada", "pctMax": 80 },
+      { "nivel": 5, "descripcion": "Nivel de Optimización continua: monitoreo, evaluación y mejora", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 6501, "nivel": "AE", "oe": 6, "ae": "A.E.6.5",
+    "nombre": "Nivel de implementación del plan de comunicación del Registro Unificado Nacional (RUN)",
+    "descripcion": null,
+    "variables": "(a) Nivel alcanzado según la escala | (b) Nivel máximo posible",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [20, 40, 60, 80, 100],
+    "dependencias": ["Gerencia Superior del Registro Unificado Nacional"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: diseño y aprobación", "pctMax": 20 },
+      { "nivel": 2, "descripcion": "Nivel Inicial: implementación inicial", "pctMax": 40 },
+      { "nivel": 3, "descripcion": "Nivel Intermedio: implementación intermedia", "pctMax": 60 },
+      { "nivel": 4, "descripcion": "Nivel Avanzado: implementación avanzada", "pctMax": 80 },
+      { "nivel": 5, "descripcion": "Nivel de Optimización continua: evaluación y mejora", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 6601, "nivel": "AE", "oe": 6, "ae": "A.E.6.6",
+    "nombre": "Cantidad de convenios interinstitucionales relacionados al RUN",
+    "descripcion": null,
+    "variables": "Suma de convenios interinstitucionales",
+    "formula": "Suma de convenios interinstitucionales", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "NUMERO", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2026,
+    "metas": [3, 3, 4, 4, 5],
+    "dependencias": ["Gerencia Superior del Registro Unificado Nacional"],
+    "comentarios": null, "escala": null
+  },
+  {
+    "codigo": 6701, "nivel": "AE", "oe": 6, "ae": "A.E.6.7",
+    "nombre": "Nivel de Implementación de la gestión administrativa y financiera",
+    "descripcion": null,
+    "variables": "(a) Nivel alcanzado según la escala | (b) Nivel máximo posible",
+    "formula": "(a) / (b) * 100", "dimension": "Eficacia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2025,
+    "metas": [25, 50, 75, 100, 0],
+    "dependencias": ["Gerencia Superior del Registro Unificado Nacional", "Dirección General de Administración y Finanzas"],
+    "comentarios": null,
+    "escala": [
+      { "nivel": 1, "descripcion": "Nivel de Planificación: SUAF, SubUOC, Comité de Evaluación y Subcomité aprobados", "pctMax": 25 },
+      { "nivel": 2, "descripcion": "Nivel Inicial: fase inicial de gestión presupuestaria y contrataciones", "pctMax": 50 },
+      { "nivel": 3, "descripcion": "Nivel Avanzado: operación sostenida con monitoreo y ajustes", "pctMax": 75 },
+      { "nivel": 4, "descripcion": "Nivel de Optimización continua: evaluación y ajustes", "pctMax": 100 }
+    ]
+  },
+  {
+    "codigo": 6702, "nivel": "AE", "oe": 6, "ae": "A.E.6.7",
+    "nombre": "Porcentaje de ejecución del presupuesto asignado al Registro Unificado Nacional (RUN)",
+    "descripcion": null,
+    "variables": "(a) Presupuesto ejecutado del RUN | (b) Presupuesto total aprobado del RUN",
+    "formula": "(a) / (b) * 100", "dimension": "Eficiencia", "ambito": "Acciones Estratégicas",
+    "unidad": "PORCENTAJE", "sentido": "ASC", "lineaBase": 0, "anioLineaBase": 2025,
+    "metas": [90, 90, 90, 95, 95],
+    "dependencias": ["Gerencia Superior del Registro Unificado Nacional", "Dirección General de Administración y Finanzas"],
+    "comentarios": null, "escala": null
+  }
+]

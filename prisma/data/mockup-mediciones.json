@@ -1,0 +1,33 @@
+[
+  { "codigo": 1101, "estado": "APROBADO", "valor": 9, "numerador": 45, "denominador": 500, "fuente": "Inventario normativo institucional", "obs": "Avance sobre el inventario normativo 2026." },
+  { "codigo": 1301, "estado": "APROBADO", "valor": 12, "obs": "Propuesta del Banco de Proyectos presentada; lineamientos en elaboración." },
+  { "codigo": 1601, "estado": "APROBADO", "valor": 16, "obs": "Proyecto de expediente electrónico administrativo aprobado; desarrollo en curso." },
+  { "codigo": 2201, "estado": "APROBADO", "valor": 25, "nivelEscala": 1, "obs": "Nivel de planificación alcanzado: necesidades identificadas y plan preliminar." },
+  { "codigo": 2302, "estado": "APROBADO", "valor": 610, "obs": "Capacitaciones en DDHH del primer semestre." },
+  { "codigo": 3801, "estado": "APROBADO", "valor": 5, "numerador": 2, "denominador": 40, "obs": "Tribunales de apelación incorporados al SITJE." },
+  { "codigo": 4102, "estado": "APROBADO", "valor": 259, "obs": "Nombramientos y ascensos por concurso del ejercicio." },
+  { "codigo": 5102, "estado": "APROBADO", "valor": 89, "numerador": 178, "denominador": 200, "obs": "Llamados evaluados según metas del PpR." },
+  { "codigo": 3401, "estado": "APROBADO", "valor": 20, "numerador": 16, "denominador": 80, "obs": "Juzgados de Niñez con equipo interdisciplinario completo." },
+  { "codigo": 5403, "estado": "APROBADO", "valor": 70, "obs": "Ejecución del presupuesto de infraestructura al cierre del periodo." },
+  { "codigo": 6501, "estado": "APROBADO", "valor": 15, "obs": "Plan de comunicación del RUN en diseño avanzado." },
+  { "codigo": 4501, "estado": "APROBADO", "valor": 40, "obs": "Programa de inducción en revisión final para aprobación." },
+
+  { "codigo": 1502, "estado": "ENVIADO", "valor": 3.18, "obs": "Evaluación interna de madurez SCI/MECIP." },
+  { "codigo": 2301, "estado": "ENVIADO", "valor": 4, "numerador": 8, "denominador": 200, "obs": "Decisiones con control de convencionalidad sobre muestra analizada." },
+  { "codigo": 3201, "estado": "ENVIADO", "valor": 96, "numerador": 48, "denominador": 50, "obs": "Juzgados civiles que superan el tiempo promedio." },
+  { "codigo": 4202, "estado": "ENVIADO", "valor": 19.5, "obs": "Funcionarios evaluados en el ejercicio." },
+  { "codigo": 5401, "estado": "ENVIADO", "valor": 270000, "obs": "Metros cuadrados construidos según plan de obras." },
+  { "codigo": 6102, "estado": "ENVIADO", "valor": 55, "numerador": 5500, "denominador": 10000, "obs": "Documentos finalizados por el RUN." },
+
+  { "codigo": 3805, "estado": "BORRADOR", "valor": 6, "obs": "Diagnóstico de procesos piloto de IA en curso." },
+  { "codigo": 4401, "estado": "BORRADOR", "valor": 3.42, "obs": "Resultado preliminar de la encuesta de clima laboral." },
+  { "codigo": 6103, "estado": "BORRADOR", "valor": 48, "numerador": 4800, "denominador": 10000, "obs": "Inscripciones de inmuebles finalizadas (parcial)." },
+
+  { "codigo": 2402, "estado": "EN_REVISION", "valor": 22, "obs": "Capacitación en atención a víctimas — primer corte." },
+
+  { "codigo": 3702, "estado": "OBSERVADO", "valor": 50, "validacion": "La fuente de los acuerdos no incluye las circunscripciones del interior; completar y reenviar.", "obs": "Acuerdos logrados en mediación (parcial capital)." },
+
+  { "codigo": 1802, "estado": "RECHAZADO", "valor": 3, "validacion": "La medición no corresponde al periodo informado; cargar con corte al cierre del ejercicio.", "obs": "Funcionarios capacitados en normas de calidad." },
+
+  { "codigo": 2401, "estado": "RECTIFICADO", "valor": 380, "obs": "Dependencias con protocolos especializados (primer relevamiento).", "rectificadaPor": { "valor": 400, "obs": "Rectificación: se incorporó el relevamiento de circunscripciones faltantes.", "validacion": "Rectificación verificada contra el registro de la Secretaría de Género." } }
+]

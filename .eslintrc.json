@@ -1,3 +1,27 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": ["next/core-web-vitals", "next/typescript"],
+  "overrides": [
+    {
+      "files": [
+        "src/app/**/*.tsx",
+        "src/ui/**/*.tsx",
+        "src/domain/**/*.ts",
+        "src/shared/**/*.ts",
+        "src/lib/**/*.ts"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "@prisma/client",
+                "message": "Prisma solo puede importarse en src/server y prisma/. La UI y el dominio usan los DTOs planos de src/shared/dtos (los Decimal/BigInt mueren en los mappers de services)."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }

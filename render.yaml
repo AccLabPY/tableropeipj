@@ -1,0 +1,29 @@
+# ============================================================
+# Render Blueprint — Plataforma PEI 2026-2030 (Fase A)
+# Web Service Node (Next.js) + TiDB Serverless externo.
+# Las env vars sensibles se cargan en el dashboard de Render
+# (sync: false) — NUNCA se commitean.
+# ============================================================
+services:
+  - type: web
+    name: pei-pj-plataforma
+    runtime: node
+    plan: starter
+    buildCommand: npm ci && npx prisma generate && npm run build
+    startCommand: npm run start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DB_DEFAULT_ENV
+        value: prod
+      - key: AUTH_TRUST_HOST
+        value: "true"
+      - key: DATABASE_URL
+        sync: false # mysql://…/peipj?sslaccept=strict&connection_limit=5&pool_timeout=15
+      - key: DATABASE_URL_TEST
+        sync: false # mysql://…/peipj_test?sslaccept=strict&connection_limit=5&pool_timeout=15
+      - key: AUTH_SECRET
+        sync: false # openssl rand -base64 32
+      - key: AUTH_URL
+        sync: false # https://<servicio>.onrender.com

@@ -1,26 +1,61 @@
 {
-  "name": "scaffold-tmp",
+  "name": "pei-pj-plataforma",
   "version": "0.1.0",
   "private": true,
+  "description": "Plataforma de Seguimiento del PEI 2026-2030 · Corte Suprema de Justicia del Paraguay",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "next lint"
+    "postinstall": "prisma generate",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:domain": "vitest run src/domain",
+    "data:verify": "tsx prisma/data/verify.ts",
+    "db:generate": "prisma generate",
+    "db:push:prod": "dotenv -e .env.db.prod -- prisma db push",
+    "db:push:test": "dotenv -e .env.db.test -- prisma db push",
+    "db:seed:prod": "dotenv -e .env.db.prod -- tsx prisma/seed.ts",
+    "db:seed:test": "dotenv -e .env.db.test -- cross-env SEED_MOCKUP=1 tsx prisma/seed.ts",
+    "db:setup:all": "npm run db:push:prod && npm run db:seed:prod && npm run db:push:test && npm run db:seed:test",
+    "db:studio:prod": "dotenv -e .env.db.prod -- prisma studio",
+    "db:studio:test": "dotenv -e .env.db.test -- prisma studio"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
-    "react": "^18",
-    "react-dom": "^18",
-    "next": "14.2.25"
+    "@hookform/resolvers": "^3.9.1",
+    "@prisma/client": "^5.22.0",
+    "@tanstack/react-query": "^5.62.0",
+    "bcryptjs": "^2.4.3",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.468.0",
+    "next": "14.2.25",
+    "next-auth": "5.0.0-beta.29",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.54.0",
+    "recharts": "^2.15.0",
+    "tailwind-merge": "^2.5.5",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
+    "cross-env": "^7.0.3",
+    "dotenv-cli": "^7.4.4",
     "eslint": "^8",
-    "eslint-config-next": "14.2.25"
+    "eslint-config-next": "14.2.25",
+    "postcss": "^8",
+    "prisma": "^5.22.0",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.19.2",
+    "typescript": "^5",
+    "vitest": "^2.1.8"
   }
 }
