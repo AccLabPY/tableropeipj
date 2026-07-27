@@ -59,7 +59,7 @@ export function CatalogoIndicadores({ estado }: { estado: EstadoPeiDTO }) {
             <option value="GRIS">Pendiente</option>
           </select>
         </label>
-        <label className="flex-1 text-2xs uppercase tracking-[.06em] text-muted">
+        <label className="min-w-[180px] flex-1 text-2xs uppercase tracking-[.06em] text-muted">
           Buscar
           <input
             type="text"
@@ -82,15 +82,15 @@ export function CatalogoIndicadores({ estado }: { estado: EstadoPeiDTO }) {
                 <th className="border-b border-linea px-3 py-[9px]">Código</th>
                 <th className="border-b border-linea px-3 py-[9px]">Indicador</th>
                 <th className="border-b border-linea px-3 py-[9px]">OE</th>
-                <th className="border-b border-linea px-3 py-[9px]">Unidad</th>
-                <th className="border-b border-linea px-3 py-[9px]">Sentido</th>
-                <th className="border-b border-linea px-3 py-[9px] text-right">
+                <th className="hidden border-b border-linea px-3 py-[9px] lg:table-cell">Unidad</th>
+                <th className="hidden border-b border-linea px-3 py-[9px] lg:table-cell">Sentido</th>
+                <th className="hidden border-b border-linea px-3 py-[9px] text-right md:table-cell">
                   Base
                 </th>
-                <th className="border-b border-linea px-3 py-[9px] text-right">
+                <th className="hidden border-b border-linea px-3 py-[9px] text-right sm:table-cell">
                   Meta {estado.anio}
                 </th>
-                <th className="border-b border-linea px-3 py-[9px] text-right">
+                <th className="hidden border-b border-linea px-3 py-[9px] text-right sm:table-cell">
                   Aprobado
                 </th>
                 <th className="border-b border-linea px-3 py-[9px]">Semáforo</th>
@@ -117,7 +117,7 @@ export function CatalogoIndicadores({ estado }: { estado: EstadoPeiDTO }) {
                   <td className="border-b border-linea-2 px-3 py-[10px]">
                     <Tag>{i.oeCodigo}</Tag>
                   </td>
-                  <td className="border-b border-linea-2 px-3 py-[10px] text-[12px] text-muted">
+                  <td className="hidden border-b border-linea-2 px-3 py-[10px] text-[12px] text-muted lg:table-cell">
                     {i.unidad === "PORCENTAJE"
                       ? "%"
                       : i.unidad === "NUMERO"
@@ -126,24 +126,24 @@ export function CatalogoIndicadores({ estado }: { estado: EstadoPeiDTO }) {
                           ? "Puntaje"
                           : "Índice"}
                   </td>
-                  <td className="border-b border-linea-2 px-3 py-[10px] text-[12px]">
+                  <td className="hidden border-b border-linea-2 px-3 py-[10px] text-[12px] lg:table-cell">
                     {i.sentido === "ASC" ? "↑ Asc." : "↓ Desc."}
                   </td>
-                  <td className="tnum border-b border-linea-2 px-3 py-[10px] text-right">
+                  <td className="tnum hidden border-b border-linea-2 px-3 py-[10px] text-right md:table-cell">
                     {i.basePendiente ? (
                       <span className="text-muted-2">a determinar</span>
                     ) : (
                       fmtNum(i.lineaBase)
                     )}
                   </td>
-                  <td className="tnum border-b border-linea-2 px-3 py-[10px] text-right">
+                  <td className="tnum hidden border-b border-linea-2 px-3 py-[10px] text-right sm:table-cell">
                     {i.metaConcluida ? (
                       <span className="text-muted-2">concluido</span>
                     ) : (
                       fmtValor(i.meta, i.unidad)
                     )}
                   </td>
-                  <td className="tnum border-b border-linea-2 px-3 py-[10px] text-right">
+                  <td className="tnum hidden border-b border-linea-2 px-3 py-[10px] text-right sm:table-cell">
                     {fmtValor(i.valor, i.unidad)}
                   </td>
                   <td className="border-b border-linea-2 px-3 py-[10px]">

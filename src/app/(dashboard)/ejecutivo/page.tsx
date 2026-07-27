@@ -40,7 +40,7 @@ export default async function EjecutivoPage({
       />
 
       {/* KPIs */}
-      <div className="mb-4 grid grid-cols-5 gap-4 max-[1080px]:grid-cols-2">
+      <div className="mb-4 grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-5">
         <Card className="p-4">
           <div className="text-2xs uppercase tracking-[.08em] text-muted">
             Índice de cumplimiento {anio}
@@ -99,7 +99,7 @@ export default async function EjecutivoPage({
       </div>
 
       {/* OE + donut */}
-      <div className="grid grid-cols-[1.35fr_1fr] gap-4 max-[1080px]:grid-cols-1">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.35fr_1fr]">
         <Card>
           <CardHeader
             title="Avance por objetivo estratégico"
@@ -174,14 +174,14 @@ export default async function EjecutivoPage({
                 <th className="border-b border-linea px-3 py-[9px]">
                   Indicador
                 </th>
-                <th className="border-b border-linea px-3 py-[9px]">OE</th>
-                <th className="border-b border-linea px-3 py-[9px]">
+                <th className="hidden border-b border-linea px-3 py-[9px] sm:table-cell">OE</th>
+                <th className="hidden border-b border-linea px-3 py-[9px] lg:table-cell">
                   Dependencia responsable
                 </th>
-                <th className="border-b border-linea px-3 py-[9px] text-right">
+                <th className="hidden border-b border-linea px-3 py-[9px] text-right md:table-cell">
                   Meta {anio}
                 </th>
-                <th className="border-b border-linea px-3 py-[9px] text-right">
+                <th className="hidden border-b border-linea px-3 py-[9px] text-right md:table-cell">
                   Aprobado
                 </th>
                 <th className="border-b border-linea px-3 py-[9px] text-right">
@@ -206,16 +206,16 @@ export default async function EjecutivoPage({
                   <td className="border-b border-linea-2 px-3 py-[10px] text-[12.5px]">
                     {i.nombre}
                   </td>
-                  <td className="border-b border-linea-2 px-3 py-[10px]">
+                  <td className="hidden border-b border-linea-2 px-3 py-[10px] sm:table-cell">
                     <Tag>{i.oeCodigo}</Tag>
                   </td>
-                  <td className="border-b border-linea-2 px-3 py-[10px] text-[12.5px] text-muted">
+                  <td className="hidden border-b border-linea-2 px-3 py-[10px] text-[12.5px] text-muted lg:table-cell">
                     {i.dependenciaPrincipal}
                   </td>
-                  <td className="tnum border-b border-linea-2 px-3 py-[10px] text-right">
+                  <td className="tnum hidden border-b border-linea-2 px-3 py-[10px] text-right md:table-cell">
                     {fmtValor(i.meta, i.unidad)}
                   </td>
-                  <td className="tnum border-b border-linea-2 px-3 py-[10px] text-right">
+                  <td className="tnum hidden border-b border-linea-2 px-3 py-[10px] text-right md:table-cell">
                     {fmtValor(i.valor, i.unidad)}
                   </td>
                   <td className="tnum border-b border-linea-2 px-3 py-[10px] text-right font-semibold">

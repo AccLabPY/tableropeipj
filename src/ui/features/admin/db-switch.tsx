@@ -23,7 +23,7 @@ export function DbSwitch({ actual }: { actual: "prod" | "test" }) {
 
   return (
     <div>
-      <div className="mb-3 flex gap-[10px]">
+      <div className="mb-3 flex flex-col gap-[10px] sm:flex-row">
         {(
           [
             ["prod", "Producción (peipj)", "datos oficiales"],

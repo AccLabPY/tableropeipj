@@ -112,7 +112,7 @@ export function EscalasView({
   const amarilloOk = Math.min(amarillo, verde - 1);
 
   return (
-    <div className="grid grid-cols-2 items-start gap-4 max-[980px]:grid-cols-1">
+    <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-2">
       <Card>
         <CardHeader title="Definir umbrales" meta="verde ≥ · amarillo ≥ · rojo <" />
         <CardBody>
@@ -177,7 +177,7 @@ export function EscalasView({
           ) : null}
 
           <div className="my-[14px] flex items-center gap-3">
-            <label className="w-[150px] text-[12px]">Umbral verde (≥)</label>
+            <label className="w-[110px] text-[11px] sm:w-[150px] sm:text-[12px]">Umbral verde (≥)</label>
             <input
               type="range"
               min={1}
@@ -191,7 +191,7 @@ export function EscalasView({
             </span>
           </div>
           <div className="my-[14px] flex items-center gap-3">
-            <label className="w-[150px] text-[12px]">Umbral amarillo (≥)</label>
+            <label className="w-[110px] text-[11px] sm:w-[150px] sm:text-[12px]">Umbral amarillo (≥)</label>
             <input
               type="range"
               min={0}
@@ -296,8 +296,8 @@ export function EscalasView({
           title="Escalas configuradas"
           meta="lo específico prevalece sobre lo heredado"
         />
-        <CardBody className="p-0">
-          <table className="w-full">
+        <CardBody className="overflow-x-auto p-0">
+          <table className="w-full min-w-[440px]">
             <thead>
               <tr className="bg-[#FAFBFC] text-left text-2xs uppercase tracking-[.06em] text-muted">
                 <th className="border-b border-linea px-4 py-2">Ámbito</th>

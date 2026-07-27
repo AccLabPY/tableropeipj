@@ -26,13 +26,13 @@ export function AccionesView({ estado }: { estado: EstadoPeiDTO }) {
   }, [ae]);
 
   return (
-    <div className="grid grid-cols-[310px_1fr] items-start gap-4 max-[1000px]:grid-cols-1">
+    <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[310px_1fr]">
       <Card>
         <CardHeader
           title="Acciones por objetivo"
           meta={`${todasAE.length} acciones`}
         />
-        <div className="scroll-pj max-h-[660px] overflow-y-auto">
+        <div className="scroll-pj max-h-[320px] overflow-y-auto lg:max-h-[660px]">
           {estado.objetivos.map((oe) => (
             <div key={oe.codigo}>
               <div className="sticky top-0 border-b border-linea-2 bg-[#FAFBFC] px-[14px] pb-[5px] pt-2 text-[10px] uppercase tracking-[.08em] text-muted-2">
@@ -96,7 +96,7 @@ export function AccionesView({ estado }: { estado: EstadoPeiDTO }) {
               </div>
               <p className="mb-[14px] text-[13px] leading-[1.45]">{ae.nombre}</p>
 
-              <div className="mb-[14px] grid grid-cols-4 gap-3 max-[800px]:grid-cols-2">
+              <div className="mb-[14px] grid grid-cols-2 gap-3 lg:grid-cols-4">
                 <Stat label="Indicadores" valor={String(ae.indicadores.length)} />
                 <Stat
                   label="Avance agregado"
@@ -135,7 +135,8 @@ export function AccionesView({ estado }: { estado: EstadoPeiDTO }) {
                 ))}
               </div>
 
-              <table className="w-full">
+              <div className="overflow-x-auto">
+              <table className="w-full min-w-[520px]">
                 <thead>
                   <tr className="bg-[#FAFBFC] text-left text-2xs uppercase tracking-[.06em] text-muted">
                     <th className="border-b border-linea px-3 py-2">Código</th>
@@ -175,6 +176,7 @@ export function AccionesView({ estado }: { estado: EstadoPeiDTO }) {
                   ))}
                 </tbody>
               </table>
+              </div>
             </>
           ) : (
             <div className="p-4 text-muted">

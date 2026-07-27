@@ -5,7 +5,7 @@ function Crest() {
   return (
     <div
       aria-hidden="true"
-      className="grid h-[38px] w-[38px] flex-none place-items-center rounded-pj-sm border-[1.5px] border-white/55"
+      className="grid h-[34px] w-[34px] flex-none place-items-center rounded-pj-sm border-[1.5px] border-white/55 sm:h-[38px] sm:w-[38px]"
     >
       <svg
         viewBox="0 0 24 24"
@@ -14,7 +14,7 @@ function Crest() {
         strokeWidth="1.4"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="h-[22px] w-[22px]"
+        className="h-[20px] w-[20px] sm:h-[22px] sm:w-[22px]"
       >
         <path d="M12 3v16" />
         <path d="M6 20h12" />
@@ -26,24 +26,38 @@ function Crest() {
   );
 }
 
-export function AppBar({ children }: { children?: React.ReactNode }) {
+/**
+ * Barra institucional. `left` (hamburguesa móvil) va antes de la marca;
+ * `children` (menú de usuario) al final. El reloj y el badge del plan se
+ * ocultan progresivamente en pantallas chicas.
+ */
+export function AppBar({
+  left,
+  children,
+}: {
+  left?: React.ReactNode;
+  children?: React.ReactNode;
+}) {
   return (
     <header className="border-b-[3px] border-azul bg-navy text-white">
-      <div className="mx-auto flex max-w-[1440px] items-center gap-[18px] px-[22px] py-3">
-        <div className="flex items-center gap-3">
+      <div className="mx-auto flex max-w-[1440px] items-center gap-3 px-3 py-[10px] sm:gap-[18px] sm:px-[22px] sm:py-3">
+        {left}
+        <div className="flex min-w-0 items-center gap-3">
           <Crest />
-          <div className="leading-[1.1]">
-            <div className="font-serif text-[15px] tracking-wide">
+          <div className="min-w-0 leading-[1.1]">
+            <div className="truncate font-serif text-[13.5px] tracking-wide sm:text-[15px]">
               Poder Judicial del Paraguay
             </div>
-            <div className="text-[10.5px] uppercase tracking-[.16em] text-[#B8CADA]">
+            <div className="truncate text-[9.5px] uppercase tracking-[.16em] text-[#B8CADA] sm:text-[10.5px]">
               Corte Suprema de Justicia
             </div>
           </div>
         </div>
         <span className="flex-1" />
-        <Clock />
-        <span className="rounded-pj-sm border border-white/[.18] bg-white/10 px-[10px] py-1 text-[11px] tracking-wider">
+        <span className="hidden xl:inline">
+          <Clock />
+        </span>
+        <span className="hidden whitespace-nowrap rounded-pj-sm border border-white/[.18] bg-white/10 px-[10px] py-1 text-[11px] tracking-wider md:inline">
           PEI 2026–2030
         </span>
         {children}

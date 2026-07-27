@@ -63,7 +63,7 @@ export default async function AdminPage() {
         </Card>
       ) : null}
 
-      <div className="grid grid-cols-3 gap-4 max-[900px]:grid-cols-1">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {secciones.map((s) => (
           <Link key={s.href} href={s.href}>
             <Card className="h-full p-4 transition-colors hover:border-azul-line hover:bg-azul-soft">

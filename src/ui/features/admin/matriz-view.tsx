@@ -111,7 +111,7 @@ export function MatrizView({ items }: { items: MatrizItemDTO[] }) {
   };
 
   return (
-    <div className="grid grid-cols-[340px_1fr] items-start gap-4 max-[980px]:grid-cols-1">
+    <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[340px_1fr]">
       <Card>
         <CardHeader title="Indicadores" meta={`${filtrados.length} de ${items.length}`} />
         <div className="border-b border-linea-2 p-3">
@@ -122,7 +122,7 @@ export function MatrizView({ items }: { items: MatrizItemDTO[] }) {
             className="w-full rounded-pj border border-linea bg-superficie px-[9px] py-[7px] text-[12.5px]"
           />
         </div>
-        <div className="scroll-pj max-h-[600px] overflow-y-auto">
+        <div className="scroll-pj max-h-[300px] overflow-y-auto lg:max-h-[600px]">
           {filtrados.map((i) => (
             <button
               key={i.codigo}
@@ -178,7 +178,7 @@ export function MatrizView({ items }: { items: MatrizItemDTO[] }) {
                   className="mt-1 block w-full resize-y rounded-pj border border-linea bg-superficie px-[9px] py-2 text-[12.5px] normal-case tracking-normal text-tinta"
                 />
               </label>
-              <div className="grid grid-cols-4 gap-3 max-[800px]:grid-cols-2">
+              <div className="grid grid-cols-1 gap-3 min-[480px]:grid-cols-2 lg:grid-cols-4">
                 <label className="block text-2xs uppercase tracking-[.06em] text-muted">
                   Sentido
                   <select
@@ -247,7 +247,7 @@ export function MatrizView({ items }: { items: MatrizItemDTO[] }) {
                 <div className="mb-1 text-2xs uppercase tracking-[.06em] text-muted">
                   Metas anuales 2026–2030 (vacío = sin meta / concluido)
                 </div>
-                <div className="grid grid-cols-5 gap-2 max-[700px]:grid-cols-3">
+                <div className="grid grid-cols-2 gap-2 min-[480px]:grid-cols-3 md:grid-cols-5">
                   {ANIOS_PEI.map((a) => (
                     <label key={a} className="text-[11px] text-muted">
                       {a}

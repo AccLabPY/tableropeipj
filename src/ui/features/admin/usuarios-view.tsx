@@ -108,13 +108,14 @@ export function UsuariosView({
     }));
 
   return (
-    <div className="grid grid-cols-[1fr_380px] items-start gap-4 max-[1050px]:grid-cols-1">
+    <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-[1fr_380px]">
       <Card>
         <CardHeader
           title="Usuarios de la plataforma"
           meta="plano de control: no dependen del modo prueba"
         />
-        <table className="w-full">
+        <div className="overflow-x-auto">
+        <table className="w-full min-w-[640px]">
           <thead>
             <tr className="bg-[#FAFBFC] text-left text-2xs uppercase tracking-[.06em] text-muted">
               <th className="border-b border-linea px-4 py-2">Usuario</th>
@@ -174,6 +175,7 @@ export function UsuariosView({
             ))}
           </tbody>
         </table>
+        </div>
       </Card>
 
       <Card>

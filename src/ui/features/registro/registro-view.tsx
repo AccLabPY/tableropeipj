@@ -131,14 +131,14 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
     startTransition(async () => setToast(await fn()));
 
   return (
-    <div className="grid grid-cols-[320px_1fr] items-start gap-4 max-[980px]:grid-cols-1">
+    <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[320px_1fr]">
       {/* Worklist */}
       <Card>
         <CardHeader
           title="Indicadores a cargo"
           meta={`${data.items.length} del período`}
         />
-        <div className="scroll-pj max-h-[640px] overflow-y-auto">
+        <div className="scroll-pj max-h-[300px] overflow-y-auto lg:max-h-[640px]">
           {data.items.map((i) => {
             const chip = CHIP[i.medicion?.estado ?? "PENDIENTE"];
             return (
@@ -186,7 +186,7 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
           {item ? (
             <>
               {/* Ficha resumida */}
-              <div className="grid grid-cols-4 gap-px overflow-hidden rounded-pj border border-linea bg-linea max-[800px]:grid-cols-2">
+              <div className="grid grid-cols-2 gap-px overflow-hidden rounded-pj border border-linea bg-linea lg:grid-cols-4">
                 <FichaCelda label="Objetivo" valor={item.oeCodigo} />
                 <FichaCelda
                   label="Unidad"
@@ -222,9 +222,9 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
                   disabled={!editable || pendiente}
                   className={cn("mt-4", !editable && "opacity-60")}
                 >
-                  <div className="grid grid-cols-2 gap-[14px] max-[700px]:grid-cols-1">
+                  <div className="grid grid-cols-1 gap-[14px] sm:grid-cols-2">
                     {modoEscala ? (
-                      <label className="col-span-2 text-2xs uppercase tracking-[.06em] text-muted">
+                      <label className="text-2xs uppercase tracking-[.06em] text-muted sm:col-span-2">
                         Nivel alcanzado (escala del indicador)
                         <select
                           value={form.nivel}
@@ -265,7 +265,7 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
                     <label
                       className={cn(
                         "text-2xs uppercase tracking-[.06em] text-muted",
-                        modoEscala || !modoPct ? "" : "col-span-2",
+                        modoEscala || !modoPct ? "" : "sm:col-span-2",
                       )}
                     >
                       Valor observado (calculado)
@@ -279,7 +279,7 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
                         className="mt-1 block w-full rounded-pj border border-linea bg-[#F7F9FB] px-[9px] py-2 text-[12.5px] normal-case tracking-normal text-tinta"
                       />
                     </label>
-                    <label className="col-span-2 text-2xs uppercase tracking-[.06em] text-muted">
+                    <label className="text-2xs uppercase tracking-[.06em] text-muted sm:col-span-2">
                       Fuente / medio de verificación
                       <input
                         value={form.fuente}
@@ -290,7 +290,7 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
                         className="mt-1 block w-full rounded-pj border border-linea bg-superficie px-[9px] py-2 text-[12.5px] normal-case tracking-normal text-tinta"
                       />
                     </label>
-                    <label className="col-span-2 text-2xs uppercase tracking-[.06em] text-muted">
+                    <label className="text-2xs uppercase tracking-[.06em] text-muted sm:col-span-2">
                       Observaciones
                       <textarea
                         value={form.obs}
@@ -479,7 +479,7 @@ function FichaCelda({
   ancho?: boolean;
 }) {
   return (
-    <div className={cn("bg-superficie px-3 py-[10px]", ancho && "col-span-4 max-[800px]:col-span-2")}>
+    <div className={cn("bg-superficie px-3 py-[10px]", ancho && "col-span-2 lg:col-span-4")}>
       <div className="text-[10px] uppercase tracking-[.06em] text-muted-2">
         {label}
       </div>
@@ -521,13 +521,13 @@ function Stepper({ estado }: { estado: EstadoWF | "PENDIENTE" }) {
         : 1;
   const pasos = ["Borrador", "Enviado", "Validado por DGPD"];
   return (
-    <div className="mt-4 flex items-center">
+    <div className="mt-4 flex flex-col gap-2 min-[480px]:flex-row min-[480px]:items-center min-[480px]:gap-0">
       {pasos.map((p, ix) => {
         const n = ix + 1;
         const done = fase > n;
         const now = fase === n;
         return (
-          <div key={p} className="flex flex-1 items-center last:flex-none">
+          <div key={p} className="flex items-center min-[480px]:flex-1 min-[480px]:last:flex-none">
             <div
               className={cn(
                 "flex items-center gap-2 text-[12px]",
@@ -549,7 +549,7 @@ function Stepper({ estado }: { estado: EstadoWF | "PENDIENTE" }) {
               {p}
             </div>
             {ix < pasos.length - 1 ? (
-              <span className="mx-[10px] h-[1.5px] min-w-[24px] flex-1 bg-linea" />
+              <span className="mx-[10px] hidden h-[1.5px] min-w-[24px] flex-1 bg-linea min-[480px]:block" />
             ) : null}
           </div>
         );

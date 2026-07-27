@@ -58,7 +58,7 @@ export default async function DetalleIndicadorPage({
   return (
     <section>
       <BackButton />
-      <div className="my-[14px] flex items-start justify-between gap-4">
+      <div className="my-[14px] flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="font-serif text-[21px] leading-tight">
             <span className="text-azul-d">{est.codigo}</span> · {est.nombre}
@@ -86,7 +86,7 @@ export default async function DetalleIndicadorPage({
       <div className="mb-4 h-px bg-linea" />
 
       {/* Stat row */}
-      <div className="mb-4 grid grid-cols-5 gap-[10px] max-[900px]:grid-cols-2">
+      <div className="mb-4 grid grid-cols-2 gap-[10px] sm:grid-cols-3 xl:grid-cols-5">
         <Stat
           label="Línea base"
           valor={
@@ -130,7 +130,7 @@ export default async function DetalleIndicadorPage({
 
       {/* Simetría modular: ambas tarjetas comparten la altura de la fila;
           la gráfica se estira para llenar la suya. */}
-      <div className="grid grid-cols-[1.15fr_.85fr] items-stretch gap-4 max-[980px]:grid-cols-1">
+      <div className="grid grid-cols-1 items-stretch gap-4 xl:grid-cols-[1.15fr_.85fr]">
         <Card className="flex flex-col">
           <CardHeader
             title="Avance en el tiempo"
@@ -156,7 +156,7 @@ export default async function DetalleIndicadorPage({
         <Card>
           <CardHeader title="Ficha del indicador" />
           <CardBody className="p-0">
-            <dl className="grid grid-cols-2 gap-px bg-linea">
+            <dl className="grid grid-cols-1 gap-px bg-linea sm:grid-cols-2">
               <Ficha label="Objetivo estratégico" valor={`${est.oeCodigo} · ${ficha.oeNombre}`} ancho />
               {est.aeCodigo ? (
                 <Ficha label="Acción estratégica" valor={`${est.aeCodigo} · ${ficha.aeNombre ?? ""}`} ancho />
@@ -229,8 +229,8 @@ export default async function DetalleIndicadorPage({
       {/* Trayectoria */}
       <Card className="mt-4">
         <CardHeader title="Trayectoria de metas y cumplimiento" meta="plan quinquenal" />
-        <CardBody className="p-0">
-          <table className="w-full">
+        <CardBody className="overflow-x-auto p-0">
+          <table className="w-full min-w-[460px]">
             <thead>
               <tr className="bg-[#FAFBFC] text-left text-2xs uppercase tracking-[.06em] text-muted">
                 <th className="border-b border-linea px-4 py-2">Período</th>
@@ -274,7 +274,7 @@ export default async function DetalleIndicadorPage({
       </Card>
 
       {/* Responsables + mediciones */}
-      <div className="mt-4 grid grid-cols-2 gap-4 max-[980px]:grid-cols-1">
+      <div className="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-2">
         <Card>
           <CardHeader title="Responsabilidad y reporte" />
           <CardBody>
@@ -305,13 +305,13 @@ export default async function DetalleIndicadorPage({
             title="Mediciones registradas"
             meta="todas las versiones (historial append-only)"
           />
-          <CardBody className="p-0">
+          <CardBody className="overflow-x-auto p-0">
             {ficha.mediciones.length === 0 ? (
               <p className="px-4 py-6 text-center text-muted">
                 Sin mediciones registradas.
               </p>
             ) : (
-              <table className="w-full">
+              <table className="w-full min-w-[420px]">
                 <thead>
                   <tr className="bg-[#FAFBFC] text-left text-2xs uppercase tracking-[.06em] text-muted">
                     <th className="border-b border-linea px-4 py-2">Período</th>
@@ -372,7 +372,7 @@ function Ficha({
   ancho?: boolean;
 }) {
   return (
-    <div className={`bg-superficie px-3 py-[10px] ${ancho ? "col-span-2" : ""}`}>
+    <div className={`bg-superficie px-3 py-[10px] ${ancho ? "sm:col-span-2" : ""}`}>
       <dt className="text-[10px] uppercase tracking-[.06em] text-muted-2">
         {label}
       </dt>

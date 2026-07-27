@@ -37,7 +37,7 @@ export default async function ObjetivosPage({
         subtitle="Trazabilidad OE → Acción Estratégica → Indicador, con vínculo al PND y ODS 16"
         right={<AnioSelector anio={anio} />}
       />
-      <div className="grid grid-cols-2 gap-4 max-[1080px]:grid-cols-1">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         {estado.objetivos.map((oe) => (
           <Card key={oe.codigo}>
             <CardHeader

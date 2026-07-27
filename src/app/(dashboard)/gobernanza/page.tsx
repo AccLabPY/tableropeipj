@@ -117,15 +117,15 @@ export default async function GobernanzaPage({
         </CardBody>
       </Card>
 
-      <div className="grid grid-cols-2 items-start gap-4 max-[1000px]:grid-cols-1">
+      <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-2">
         {/* Cobertura por dependencia */}
         <Card>
           <CardHeader
             title="Cobertura de reporte por dependencia"
             meta="aprobadas / esperadas · peor cobertura primero"
           />
-          <CardBody className="p-0">
-            <table className="w-full">
+          <CardBody className="overflow-x-auto p-0">
+            <table className="w-full min-w-[420px]">
               <thead>
                 <tr className="bg-[#FAFBFC] text-left text-2xs uppercase tracking-[.06em] text-muted">
                   <th className="border-b border-linea px-4 py-2">
