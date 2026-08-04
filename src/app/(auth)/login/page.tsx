@@ -38,7 +38,7 @@ export default function LoginPage() {
           <LoginForm />
         </div>
         <p className="mt-4 text-center text-[11px] text-[#B8CADA]">
-          Acceso restringido a magistrados y funcionarios autorizados.
+          Acceso restringido a usuarios autorizados.
         </p>
       </div>
     </div>

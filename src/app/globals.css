@@ -34,8 +34,10 @@ body {
     min-height: 40px;
   }
 
+  /* margin (no padding): así se suma al padding-bottom propio del elemento
+     en vez de competir por la misma propiedad y anularlo en el cascade. */
   .safe-b {
-    padding-bottom: env(safe-area-inset-bottom);
+    margin-bottom: env(safe-area-inset-bottom);
   }
 }
 

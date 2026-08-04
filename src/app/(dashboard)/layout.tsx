@@ -3,6 +3,7 @@ import { Sidebar } from "@/ui/layout/sidebar";
 import { MobileNav } from "@/ui/layout/mobile-nav";
 import { TestModeBanner } from "@/ui/layout/test-mode-banner";
 import { UserMenu } from "@/ui/layout/user-menu";
+import { Footer } from "@/ui/layout/footer";
 import { requirePage } from "@/server/auth/guards";
 import { getDbEnv } from "@/server/db/env";
 import { rutasPermitidas } from "@/shared/constants";
@@ -29,10 +30,11 @@ export default async function DashboardLayout({
         <div className="hidden lg:block">
           <Sidebar allowedHrefs={rutas} />
         </div>
-        <main className="safe-b min-w-0 px-3 pb-10 pt-4 xs:px-4 sm:px-[26px] sm:pt-[22px]">
+        <main className="safe-b min-w-0 px-3 pb-16 pt-4 xs:px-4 sm:px-[26px] sm:pb-20 sm:pt-[22px]">
           {children}
         </main>
       </div>
+      <Footer />
     </div>
   );
 }
