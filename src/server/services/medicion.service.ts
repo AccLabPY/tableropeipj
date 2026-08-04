@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { Prisma, type EstadoWF as EstadoWFDb } from "@prisma/client";
 import type { Ctx } from "@/server/db/env";
 import {
@@ -342,7 +343,7 @@ export async function rectificar(
   return medicionOThrow(ctx, nueva.id);
 }
 
-/** Registra metadatos de evidencia (el binario vive en NAS/objeto). */
+/** Registra metadatos de evidencia (legado: URL/ruta externa, sin binario). */
 export async function agregarEvidencia(
   ctx: Ctx,
   id: bigint,
@@ -360,4 +361,80 @@ export async function agregarEvidencia(
       usuarioId: ctx.actor.userId,
     },
   });
+}
+
+const EVIDENCIA_TAMANIO_MAXIMO = 25 * 1024 * 1024; // 25MB
+const EVIDENCIA_TIPOS_PERMITIDOS = new Set([
+  "application/pdf",
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xlsx
+  "application/vnd.ms-excel", // .xls
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+  "text/csv",
+]);
+
+/**
+ * Adjunta un archivo respaldatorio (binario real, almacenado en la BD).
+ * El backend SIEMPRE revalida tamaño y tipo — nunca confía en el cliente.
+ */
+export async function agregarEvidenciaArchivo(
+  ctx: Ctx,
+  id: bigint,
+  archivo: { nombreArchivo: string; mimeType: string; contenido: Buffer },
+): Promise<void> {
+  if (archivo.contenido.length === 0) {
+    throw new ApiError(422, "ARCHIVO_VACIO", "El archivo está vacío.");
+  }
+  if (archivo.contenido.length > EVIDENCIA_TAMANIO_MAXIMO) {
+    throw new ApiError(
+      422,
+      "ARCHIVO_MUY_GRANDE",
+      "El archivo supera el límite de 25 MB.",
+    );
+  }
+  if (!EVIDENCIA_TIPOS_PERMITIDOS.has(archivo.mimeType)) {
+    throw new ApiError(
+      422,
+      "TIPO_NO_PERMITIDO",
+      "Tipo de archivo no permitido. Use PDF, imagen (JPG/PNG/WEBP), Excel, Word o CSV.",
+    );
+  }
+  const m = await medicionOThrow(ctx, id);
+  exigirPropiedad(ctx, m.dependenciaId);
+  const hashSha256 = createHash("sha256").update(archivo.contenido).digest("hex");
+  await ctx.db.evidencia.create({
+    data: {
+      medicionId: m.id,
+      nombreArchivo: archivo.nombreArchivo,
+      rutaOUrl: null,
+      contenido: archivo.contenido,
+      mimeType: archivo.mimeType,
+      tamanioBytes: archivo.contenido.length,
+      hashSha256,
+      usuarioId: ctx.actor.userId,
+    },
+  });
+}
+
+/** Elimina un adjunto propio mientras la medición sigue editable. */
+export async function eliminarEvidencia(
+  ctx: Ctx,
+  evidenciaId: bigint,
+): Promise<void> {
+  const ev = await ctx.db.evidencia.findUnique({
+    where: { id: evidenciaId },
+    include: { medicion: { select: { dependenciaId: true, estado: true } } },
+  });
+  if (!ev) throw noEncontrado("Evidencia");
+  exigirPropiedad(ctx, ev.medicion.dependenciaId);
+  if (!ESTADOS_EDITABLES.includes(ev.medicion.estado as EstadoWF)) {
+    throw new ApiError(
+      409,
+      "MEDICION_EN_CURSO",
+      "Solo se pueden eliminar adjuntos mientras la medición es editable.",
+    );
+  }
+  await ctx.db.evidencia.delete({ where: { id: evidenciaId } });
 }

@@ -19,6 +19,19 @@ export interface EscalaNivelDTO {
   pctMax: number;
 }
 
+/** Evidencia respaldatoria de una medición (sin el binario — ver /api/v1/evidencias/[id]). */
+export interface EvidenciaResumenDTO {
+  id: string; // BigInt → string
+  nombreArchivo: string;
+  tipo: string | null;
+  mimeType: string | null;
+  tamanioBytes: number | null;
+  /** true = binario real en la BD (flujo nuevo); false = solo metadata legada (rutaOUrl). */
+  tieneArchivo: boolean;
+  rutaOUrl: string | null;
+  fecha: string;
+}
+
 export interface ResponsableDTO {
   dependenciaId: number;
   nombre: string;
@@ -41,7 +54,7 @@ export interface MedicionResumenDTO {
   observaciones: string | null;
   dependencia: string;
   periodoAnio: number;
-  evidencias: { nombreArchivo: string; rutaOUrl: string; fecha: string }[];
+  evidencias: EvidenciaResumenDTO[];
   validaciones: {
     resultado: "APROBADO" | "OBSERVADO" | "RECHAZADO";
     comentario: string | null;

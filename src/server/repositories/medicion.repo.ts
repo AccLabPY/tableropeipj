@@ -13,10 +13,25 @@ export function scopeMediciones(actor: Actor): Prisma.MedicionWhereInput {
   return { dependenciaId: { in: actor.dependenciaIds } };
 }
 
+/**
+ * Select liviano de evidencias: NUNCA `contenido` acá — es el binario
+ * (hasta 25MB c/u) y estas queries corren en cada carga de /registro y de
+ * la ficha del indicador. La descarga real vive en su propia ruta dedicada.
+ */
+const SELECT_EVIDENCIA = {
+  id: true,
+  nombreArchivo: true,
+  tipo: true,
+  mimeType: true,
+  tamanioBytes: true,
+  rutaOUrl: true,
+  fecha: true,
+} satisfies Prisma.EvidenciaSelect;
+
 export const INCLUDE_MEDICION = {
   dependencia: true,
   periodo: true,
-  evidencias: { orderBy: { fecha: "desc" as const } },
+  evidencias: { select: SELECT_EVIDENCIA, orderBy: { fecha: "desc" as const } },
   validaciones: { orderBy: { fecha: "desc" as const } },
   historial: { orderBy: { fecha: "asc" as const } },
 } satisfies Prisma.MedicionInclude;
@@ -29,7 +44,7 @@ export type MedicionCompleta = Prisma.MedicionGetPayload<{
 export const INCLUDE_MEDICION_FICHA = {
   dependencia: true,
   periodo: true,
-  evidencias: { orderBy: { fecha: "desc" as const } },
+  evidencias: { select: SELECT_EVIDENCIA, orderBy: { fecha: "desc" as const } },
   validaciones: { orderBy: { fecha: "desc" as const } },
 } satisfies Prisma.MedicionInclude;
 

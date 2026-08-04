@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useMemo, useRef, useState, useTransition } from "react";
 import {
   calcularCumplimiento,
   calcularValorObservado,
@@ -9,15 +9,19 @@ import {
 } from "@/domain";
 import type { EstadoWF } from "@/domain/types";
 import type { RegistroDTO, RegistroItemDTO } from "@/shared/dtos/registro";
+import type { EvidenciaResumenDTO } from "@/shared/dtos/indicador-ficha";
 import {
+  eliminarEvidenciaAction,
   enviarMedicionAction,
   guardarBorradorAction,
+  subirEvidenciaAction,
+  tomarEnRevisionAction,
   validarMedicionAction,
   type ResultadoAccion,
 } from "@/server/services/registro-actions";
 import { Card, CardHeader } from "@/ui/components/card";
 import { SemPill } from "@/ui/components/sem-pill";
-import { cn, fmtNum, fmtPct, fmtValor } from "@/lib/utils";
+import { cn, fmtBytes, fmtFechaCorta, fmtNum, fmtPct, fmtValor } from "@/lib/utils";
 
 const CHIP: Record<EstadoWF | "PENDIENTE", { label: string; cls: string }> = {
   PENDIENTE: { label: "Pendiente", cls: "bg-sem-gris-bg text-muted" },
@@ -356,6 +360,39 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
                 </fieldset>
               ) : null}
 
+              {/* Evidencias respaldatorias */}
+              {data.puedeCargar ? (
+                <div className="mt-4 rounded-pj border border-linea bg-[#FAFBFC] p-4">
+                  <div className="mb-2 text-2xs font-semibold uppercase tracking-[.06em] text-muted">
+                    Evidencias respaldatorias
+                  </div>
+                  {item.medicion ? (
+                    <>
+                      <ListaEvidencias
+                        evidencias={item.medicion.evidencias}
+                        puedeEliminar={editable}
+                        onEliminar={(id) =>
+                          ejecutar(() => eliminarEvidenciaAction(id))
+                        }
+                      />
+                      <SubidorEvidencia
+                        disabled={pendiente}
+                        onSubir={(formData) =>
+                          ejecutar(() =>
+                            subirEvidenciaAction(item.medicion!.id, formData),
+                          )
+                        }
+                      />
+                    </>
+                  ) : (
+                    <p className="text-[11.5px] text-muted">
+                      Guarde un borrador primero para poder adjuntar
+                      evidencias.
+                    </p>
+                  )}
+                </div>
+              ) : null}
+
               {/* Cumplimiento en vivo */}
               <div className="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-pj border border-linea bg-[#FAFBFC] px-4 py-[14px]">
                 <div className="text-[12px] text-muted">
@@ -444,6 +481,32 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
                     {fmtValor(item.medicion.valorObservado, item.unidad)} (v
                     {item.medicion.version})
                   </div>
+
+                  <div className="mb-3">
+                    <div className="mb-1 text-2xs font-semibold uppercase tracking-[.06em] text-azul-d">
+                      Evidencias respaldatorias — revisar antes de resolver
+                    </div>
+                    <ListaEvidencias
+                      evidencias={item.medicion.evidencias}
+                      puedeEliminar={false}
+                    />
+                  </div>
+
+                  {item.medicion.estado === "ENVIADO" ? (
+                    <button
+                      type="button"
+                      disabled={pendiente}
+                      onClick={() =>
+                        ejecutar(() =>
+                          tomarEnRevisionAction(item.medicion!.id),
+                        )
+                      }
+                      className="tap mb-3 rounded-pj border border-azul-line bg-superficie px-3 py-[7px] text-[11.5px] font-semibold text-azul-d hover:bg-azul-soft disabled:opacity-50"
+                    >
+                      Tomar en revisión
+                    </button>
+                  ) : null}
+
                   <textarea
                     value={comentario}
                     onChange={(e) => setComentario(e.target.value)}
@@ -642,6 +705,114 @@ function Stepper({ estado }: { estado: EstadoWF | "PENDIENTE" }) {
           </div>
         );
       })}
+    </div>
+  );
+}
+
+/** Lista de evidencias adjuntas: descarga (binario propio) o link de
+ *  referencia (metadata legada), y eliminar si el llamador lo habilita. */
+function ListaEvidencias({
+  evidencias,
+  puedeEliminar,
+  onEliminar,
+}: {
+  evidencias: EvidenciaResumenDTO[];
+  puedeEliminar: boolean;
+  onEliminar?: (id: string) => void;
+}) {
+  if (evidencias.length === 0) {
+    return (
+      <p className="text-[11.5px] text-muted">Sin evidencias adjuntas.</p>
+    );
+  }
+  return (
+    <ul className="space-y-[6px]">
+      {evidencias.map((e) => (
+        <li
+          key={e.id}
+          className="flex flex-wrap items-center justify-between gap-2 rounded-pj-sm border border-linea bg-superficie px-3 py-2"
+        >
+          <div className="min-w-0 flex-1">
+            <div className="truncate text-[12px] font-medium text-tinta">
+              {e.nombreArchivo}
+            </div>
+            <div className="text-[10.5px] text-muted">
+              {fmtBytes(e.tamanioBytes)} · {fmtFechaCorta(e.fecha)}
+            </div>
+          </div>
+          <div className="flex flex-none items-center gap-[10px]">
+            {e.tieneArchivo ? (
+              <a
+                href={`/api/v1/evidencias/${e.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-pj-sm border border-azul-line bg-azul-soft px-[9px] py-[4px] text-[11px] font-semibold text-azul-d hover:bg-[#DCEAF4]"
+              >
+                Descargar
+              </a>
+            ) : e.rutaOUrl ? (
+              <a
+                href={e.rutaOUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[11px] text-azul-d underline"
+              >
+                Ver referencia
+              </a>
+            ) : null}
+            {puedeEliminar ? (
+              <button
+                type="button"
+                onClick={() => onEliminar?.(e.id)}
+                className="text-[11px] font-semibold text-sem-rojo hover:underline"
+              >
+                Eliminar
+              </button>
+            ) : null}
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** Selector de archivo + botón "Adjuntar" (input no controlado, se limpia
+ *  con el ref tras cada carga exitosa o fallida). */
+function SubidorEvidencia({
+  disabled,
+  onSubir,
+}: {
+  disabled: boolean;
+  onSubir: (formData: FormData) => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  return (
+    <div className="mt-3 flex flex-wrap items-center gap-[10px] border-t border-linea-2 pt-3">
+      <input
+        ref={inputRef}
+        type="file"
+        accept=".pdf,.jpg,.jpeg,.png,.webp,.xlsx,.xls,.docx,.csv"
+        disabled={disabled}
+        className="block max-w-full flex-1 text-[11.5px] text-muted file:mr-2 file:rounded-pj-sm file:border file:border-linea file:bg-superficie file:px-2 file:py-1 file:text-[11px] disabled:opacity-50"
+      />
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={() => {
+          const archivo = inputRef.current?.files?.[0];
+          if (!archivo) return;
+          const formData = new FormData();
+          formData.set("archivo", archivo);
+          onSubir(formData);
+          if (inputRef.current) inputRef.current.value = "";
+        }}
+        className="tap rounded-pj border border-linea bg-superficie px-3 py-[6px] text-[11.5px] font-semibold hover:bg-[#F7F9FB] disabled:opacity-50"
+      >
+        Adjuntar
+      </button>
+      <span className="w-full text-[10px] text-muted-2">
+        PDF, imagen, Excel, Word o CSV · máx. 25 MB
+      </span>
     </div>
   );
 }

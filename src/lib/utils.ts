@@ -43,6 +43,14 @@ export function fmtFechaLarga(d: Date): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
+/** Tamaño en bytes → "480 KB" / "3.2 MB". null → "—". */
+export function fmtBytes(n: number | null | undefined): string {
+  if (n === null || n === undefined) return "—";
+  if (n < 1024) return `${n} B`;
+  if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
+  return `${(n / (1024 * 1024)).toFixed(1)} MB`;
+}
+
 export function fmtFechaCorta(iso: string | null | undefined): string {
   if (!iso) return "—";
   const d = new Date(iso);

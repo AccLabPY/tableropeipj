@@ -6,8 +6,11 @@ import { requireApi } from "@/server/auth/guards";
 import { getCtx } from "@/server/db/env";
 import { ApiError } from "@/server/api/api-error";
 import {
+  agregarEvidenciaArchivo,
+  eliminarEvidencia,
   enviar,
   guardarBorrador,
+  tomarEnRevision,
   validar,
 } from "@/server/services/medicion.service";
 import {
@@ -59,6 +62,66 @@ export async function enviarMedicionAction(
     await enviar(ctx, m.id);
     revalidatePath("/registro");
     return { ok: true, mensaje: "Medición enviada a la DGPD para validación." };
+  } catch (e) {
+    return { ok: false, mensaje: mensajeDeError(e) };
+  }
+}
+
+const EVIDENCIA_TAMANIO_MAXIMO = 25 * 1024 * 1024; // 25MB
+
+/** Adjunta un archivo respaldatorio a la medición (dependencia dueña). */
+export async function subirEvidenciaAction(
+  medicionId: string,
+  formData: FormData,
+): Promise<ResultadoAccion> {
+  try {
+    const actor = await requireApi("DEPENDENCIA_CARGA", "ADMIN");
+    const ctx = await getCtx(actor);
+    const archivo = formData.get("archivo");
+    if (!(archivo instanceof File) || archivo.size === 0) {
+      return { ok: false, mensaje: "Seleccione un archivo para adjuntar." };
+    }
+    if (archivo.size > EVIDENCIA_TAMANIO_MAXIMO) {
+      return { ok: false, mensaje: "El archivo supera el límite de 25 MB." };
+    }
+    const contenido = Buffer.from(await archivo.arrayBuffer());
+    await agregarEvidenciaArchivo(ctx, BigInt(medicionId), {
+      nombreArchivo: archivo.name,
+      mimeType: archivo.type || "application/octet-stream",
+      contenido,
+    });
+    revalidatePath("/registro");
+    return { ok: true, mensaje: "Evidencia adjuntada." };
+  } catch (e) {
+    return { ok: false, mensaje: mensajeDeError(e) };
+  }
+}
+
+/** Elimina un adjunto propio (solo mientras la medición es editable). */
+export async function eliminarEvidenciaAction(
+  evidenciaId: string,
+): Promise<ResultadoAccion> {
+  try {
+    const actor = await requireApi("DEPENDENCIA_CARGA", "ADMIN");
+    const ctx = await getCtx(actor);
+    await eliminarEvidencia(ctx, BigInt(evidenciaId));
+    revalidatePath("/registro");
+    return { ok: true, mensaje: "Evidencia eliminada." };
+  } catch (e) {
+    return { ok: false, mensaje: mensajeDeError(e) };
+  }
+}
+
+/** El validador toma la medición ENVIADO → EN_REVISION antes de resolver. */
+export async function tomarEnRevisionAction(
+  medicionId: string,
+): Promise<ResultadoAccion> {
+  try {
+    const actor = await requireApi("DGPD_VALIDADOR", "ADMIN");
+    const ctx = await getCtx(actor);
+    await tomarEnRevision(ctx, BigInt(medicionId));
+    revalidatePath("/registro");
+    return { ok: true, mensaje: "Medición tomada en revisión." };
   } catch (e) {
     return { ok: false, mensaje: mensajeDeError(e) };
   }

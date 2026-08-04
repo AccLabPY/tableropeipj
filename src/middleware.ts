@@ -9,6 +9,8 @@ export default NextAuth(authConfig).auth;
 
 export const config = {
   matcher: [
-    "/((?!api/auth|api/health|_next/static|_next/image|favicon.ico).*)",
+    // brand/: logos institucionales estáticos (public/brand) — deben verse
+    // en /login, sin sesión.
+    "/((?!api/auth|api/health|_next/static|_next/image|favicon.ico|brand/).*)",
   ],
 };

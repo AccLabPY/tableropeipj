@@ -52,7 +52,12 @@ export function toMedicionResumen(m: MedicionParaDTO): MedicionResumenDTO {
     dependencia: m.dependencia.nombre,
     periodoAnio: m.periodo.anio,
     evidencias: m.evidencias.map((e) => ({
+      id: bigId(e.id),
       nombreArchivo: e.nombreArchivo,
+      tipo: e.tipo,
+      mimeType: e.mimeType,
+      tamanioBytes: e.tamanioBytes,
+      tieneArchivo: e.rutaOUrl === null,
       rutaOUrl: e.rutaOUrl,
       fecha: iso(e.fecha)!,
     })),

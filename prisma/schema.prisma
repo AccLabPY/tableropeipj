@@ -255,7 +255,12 @@ model Evidencia {
   medicionId    BigInt
   nombreArchivo String
   tipo          String?
-  rutaOUrl      String   @db.Text // NAS/objeto; NO el binario
+  /// Legado (flujo solo-metadata, agregarEvidencia): URL/ruta NAS externa.
+  /// null ⇔ el binario real vive en `contenido` (flujo de adjuntos nuevo).
+  rutaOUrl      String?  @db.Text
+  contenido     Bytes?   @db.LongBlob // binario real (máx. 25MB, validado en el service)
+  mimeType      String?
+  tamanioBytes  Int?
   hashSha256    String?
   fecha         DateTime @default(now())
   usuarioId     Int?
