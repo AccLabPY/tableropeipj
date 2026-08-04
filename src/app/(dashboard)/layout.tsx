@@ -20,16 +20,16 @@ export default async function DashboardLayout({
   const rutas = rutasPermitidas(actor.roles);
 
   return (
-    <div className="min-h-screen">
+    <div className="flex min-h-[100svh] flex-col">
       <AppBar left={<MobileNav allowedHrefs={rutas} />}>
         <UserMenu nombre={actor.nombre} roles={actor.roles} />
       </AppBar>
       {dbEnv === "test" ? <TestModeBanner /> : null}
-      <div className="mx-auto grid min-h-[calc(100vh-66px)] max-w-[1440px] grid-cols-1 lg:grid-cols-[224px_1fr]">
+      <div className="mx-auto grid w-full max-w-pj flex-1 grid-cols-1 lg:grid-cols-[224px_1fr]">
         <div className="hidden lg:block">
           <Sidebar allowedHrefs={rutas} />
         </div>
-        <main className="min-w-0 px-4 pb-10 pt-4 sm:px-[26px] sm:pt-[22px]">
+        <main className="safe-b min-w-0 px-3 pb-10 pt-4 xs:px-4 sm:px-[26px] sm:pt-[22px]">
           {children}
         </main>
       </div>

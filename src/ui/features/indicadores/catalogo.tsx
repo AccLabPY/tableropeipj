@@ -6,8 +6,11 @@ import type { EstadoPeiDTO } from "@/shared/dtos/estado-pei";
 import type { Semaforo } from "@/domain/types";
 import { Card, Tag } from "@/ui/components/card";
 import { SemPill } from "@/ui/components/sem-pill";
+import { DataTable, type Columna } from "@/ui/components/data-table";
 import { SEM_COLORS } from "@/ui/theme/tokens";
 import { fmtNum, fmtPct, fmtValor } from "@/lib/utils";
+
+type FilaIndicador = EstadoPeiDTO["indicadores"][number];
 
 /** Catálogo filtrable de los 89 indicadores (filtros client-side). */
 export function CatalogoIndicadores({ estado }: { estado: EstadoPeiDTO }) {
@@ -27,6 +30,106 @@ export function CatalogoIndicadores({ estado }: { estado: EstadoPeiDTO }) {
     );
   }, [estado, oe, sem, q]);
 
+  const columnas: Columna<FilaIndicador>[] = [
+    {
+      key: "codigo",
+      header: "Código",
+      movil: "clave",
+      cell: (i) => (
+        <Link
+          href={`/indicadores/${i.codigo}?anio=${estado.anio}`}
+          className="font-serif font-semibold text-azul-d hover:underline"
+        >
+          {i.codigo}
+        </Link>
+      ),
+    },
+    {
+      key: "nombre",
+      header: "Indicador",
+      movil: "titulo",
+      tdClassName: "text-[12.5px]",
+      cell: (i) => (
+        <>
+          {i.nombre}
+          <div className="mt-[2px] text-[11px] text-muted-2">
+            {i.aeCodigo ?? "Nivel OE"} · {i.dependenciaPrincipal}
+            {i.requiereDiagnostico ? " · requiere diagnóstico" : ""}
+          </div>
+        </>
+      ),
+    },
+    {
+      key: "oe",
+      header: "OE",
+      cell: (i) => <Tag>{i.oeCodigo}</Tag>,
+    },
+    {
+      key: "unidad",
+      header: "Unidad",
+      desde: "xl",
+      tdClassName: "text-[12px] text-muted",
+      cell: (i) =>
+        i.unidad === "PORCENTAJE"
+          ? "%"
+          : i.unidad === "NUMERO"
+            ? "Número"
+            : i.unidad === "PUNTAJE"
+              ? "Puntaje"
+              : "Índice",
+    },
+    {
+      key: "sentido",
+      header: "Sentido",
+      desde: "xl",
+      tdClassName: "text-[12px]",
+      cell: (i) => (i.sentido === "ASC" ? "↑ Asc." : "↓ Desc."),
+    },
+    {
+      key: "base",
+      header: "Base",
+      align: "right",
+      tnum: true,
+      desde: "lg",
+      cell: (i) =>
+        i.basePendiente ? (
+          <span className="text-muted-2">a determinar</span>
+        ) : (
+          fmtNum(i.lineaBase)
+        ),
+    },
+    {
+      key: "meta",
+      header: `Meta ${estado.anio}`,
+      align: "right",
+      tnum: true,
+      cell: (i) =>
+        i.metaConcluida ? (
+          <span className="text-muted-2">concluido</span>
+        ) : (
+          fmtValor(i.meta, i.unidad)
+        ),
+    },
+    {
+      key: "aprobado",
+      header: "Aprobado",
+      align: "right",
+      tnum: true,
+      cell: (i) => fmtValor(i.valor, i.unidad),
+    },
+    {
+      key: "semaforo",
+      header: "Semáforo",
+      movil: "insignia",
+      cell: (i) => (
+        <SemPill
+          sem={i.semaforo}
+          pct={i.capado !== null ? i.capado : undefined}
+        />
+      ),
+    },
+  ];
+
   return (
     <>
       <div className="mb-[14px] flex flex-wrap items-end gap-[10px]">
@@ -35,7 +138,7 @@ export function CatalogoIndicadores({ estado }: { estado: EstadoPeiDTO }) {
           <select
             value={oe}
             onChange={(e) => setOe(e.target.value)}
-            className="mt-1 block rounded-pj border border-linea bg-superficie px-2 py-[7px] text-[12.5px] normal-case tracking-normal text-tinta"
+            className="mt-1 block w-full rounded-pj border border-linea bg-superficie px-2 py-[7px] text-[12.5px] normal-case tracking-normal text-tinta"
           >
             <option value="">Todos los OE</option>
             {estado.objetivos.map((o) => (
@@ -50,7 +153,7 @@ export function CatalogoIndicadores({ estado }: { estado: EstadoPeiDTO }) {
           <select
             value={sem}
             onChange={(e) => setSem(e.target.value as "" | Semaforo)}
-            className="mt-1 block rounded-pj border border-linea bg-superficie px-2 py-[7px] text-[12.5px] normal-case tracking-normal text-tinta"
+            className="mt-1 block w-full rounded-pj border border-linea bg-superficie px-2 py-[7px] text-[12.5px] normal-case tracking-normal text-tinta"
           >
             <option value="">Todos</option>
             <option value="VERDE">En meta</option>
@@ -59,7 +162,7 @@ export function CatalogoIndicadores({ estado }: { estado: EstadoPeiDTO }) {
             <option value="GRIS">Pendiente</option>
           </select>
         </label>
-        <label className="min-w-[180px] flex-1 text-2xs uppercase tracking-[.06em] text-muted">
+        <label className="w-full text-2xs uppercase tracking-[.06em] text-muted xs:min-w-[180px] xs:flex-1">
           Buscar
           <input
             type="text"
@@ -75,95 +178,12 @@ export function CatalogoIndicadores({ estado }: { estado: EstadoPeiDTO }) {
       </div>
 
       <Card>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-[#FAFBFC] text-left text-2xs uppercase tracking-[.06em] text-muted">
-                <th className="border-b border-linea px-3 py-[9px]">Código</th>
-                <th className="border-b border-linea px-3 py-[9px]">Indicador</th>
-                <th className="border-b border-linea px-3 py-[9px]">OE</th>
-                <th className="hidden border-b border-linea px-3 py-[9px] lg:table-cell">Unidad</th>
-                <th className="hidden border-b border-linea px-3 py-[9px] lg:table-cell">Sentido</th>
-                <th className="hidden border-b border-linea px-3 py-[9px] text-right md:table-cell">
-                  Base
-                </th>
-                <th className="hidden border-b border-linea px-3 py-[9px] text-right sm:table-cell">
-                  Meta {estado.anio}
-                </th>
-                <th className="hidden border-b border-linea px-3 py-[9px] text-right sm:table-cell">
-                  Aprobado
-                </th>
-                <th className="border-b border-linea px-3 py-[9px]">Semáforo</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filas.map((i) => (
-                <tr key={i.codigo} className="hover:bg-azul-soft">
-                  <td className="border-b border-linea-2 px-3 py-[10px]">
-                    <Link
-                      href={`/indicadores/${i.codigo}?anio=${estado.anio}`}
-                      className="font-serif font-semibold text-azul-d hover:underline"
-                    >
-                      {i.codigo}
-                    </Link>
-                  </td>
-                  <td className="border-b border-linea-2 px-3 py-[10px] text-[12.5px]">
-                    {i.nombre}
-                    <div className="mt-[2px] text-[11px] text-muted-2">
-                      {i.aeCodigo ?? "Nivel OE"} · {i.dependenciaPrincipal}
-                      {i.requiereDiagnostico ? " · requiere diagnóstico" : ""}
-                    </div>
-                  </td>
-                  <td className="border-b border-linea-2 px-3 py-[10px]">
-                    <Tag>{i.oeCodigo}</Tag>
-                  </td>
-                  <td className="hidden border-b border-linea-2 px-3 py-[10px] text-[12px] text-muted lg:table-cell">
-                    {i.unidad === "PORCENTAJE"
-                      ? "%"
-                      : i.unidad === "NUMERO"
-                        ? "Número"
-                        : i.unidad === "PUNTAJE"
-                          ? "Puntaje"
-                          : "Índice"}
-                  </td>
-                  <td className="hidden border-b border-linea-2 px-3 py-[10px] text-[12px] lg:table-cell">
-                    {i.sentido === "ASC" ? "↑ Asc." : "↓ Desc."}
-                  </td>
-                  <td className="tnum hidden border-b border-linea-2 px-3 py-[10px] text-right md:table-cell">
-                    {i.basePendiente ? (
-                      <span className="text-muted-2">a determinar</span>
-                    ) : (
-                      fmtNum(i.lineaBase)
-                    )}
-                  </td>
-                  <td className="tnum hidden border-b border-linea-2 px-3 py-[10px] text-right sm:table-cell">
-                    {i.metaConcluida ? (
-                      <span className="text-muted-2">concluido</span>
-                    ) : (
-                      fmtValor(i.meta, i.unidad)
-                    )}
-                  </td>
-                  <td className="tnum hidden border-b border-linea-2 px-3 py-[10px] text-right sm:table-cell">
-                    {fmtValor(i.valor, i.unidad)}
-                  </td>
-                  <td className="border-b border-linea-2 px-3 py-[10px]">
-                    <SemPill
-                      sem={i.semaforo}
-                      pct={i.capado !== null ? i.capado : undefined}
-                    />
-                  </td>
-                </tr>
-              ))}
-              {filas.length === 0 ? (
-                <tr>
-                  <td colSpan={9} className="px-3 py-6 text-center text-muted">
-                    Sin indicadores para el filtro seleccionado.
-                  </td>
-                </tr>
-              ) : null}
-            </tbody>
-          </table>
-        </div>
+        <DataTable
+          columnas={columnas}
+          filas={filas}
+          keyFila={(i) => i.codigo}
+          vacio="Sin indicadores para el filtro seleccionado."
+        />
       </Card>
 
       <div className="mt-3 flex flex-wrap gap-4 text-[11.5px] text-muted">

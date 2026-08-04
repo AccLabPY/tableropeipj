@@ -39,10 +39,10 @@ export function AppBar({
   children?: React.ReactNode;
 }) {
   return (
-    <header className="border-b-[3px] border-azul bg-navy text-white">
-      <div className="mx-auto flex max-w-[1440px] items-center gap-3 px-3 py-[10px] sm:gap-[18px] sm:px-[22px] sm:py-3">
+    <header className="sticky top-0 z-40 border-b-[3px] border-azul bg-navy text-white">
+      <div className="mx-auto flex max-w-pj items-center gap-2 px-3 py-[10px] xs:gap-3 sm:gap-[18px] sm:px-[22px] sm:py-3">
         {left}
-        <div className="flex min-w-0 items-center gap-3">
+        <div className="flex min-w-0 items-center gap-2 xs:gap-3">
           <Crest />
           <div className="min-w-0 leading-[1.1]">
             <div className="truncate font-serif text-[13.5px] tracking-wide sm:text-[15px]">

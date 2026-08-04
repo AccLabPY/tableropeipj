@@ -150,14 +150,14 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
     startTransition(async () => setToast(await fn()));
 
   return (
-    <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[320px_1fr]">
+    <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
       {/* Worklist */}
       <Card>
         <CardHeader
           title="Indicadores a cargo"
           meta={`${data.items.length} del período`}
         />
-        <div className="scroll-pj max-h-[300px] overflow-y-auto lg:max-h-[640px]">
+        <div className="scroll-pj max-h-[300px] overflow-y-auto md:max-h-[640px]">
           {data.items.map((i) => {
             const chip = CHIP[i.medicion?.estado ?? "PENDIENTE"];
             return (
@@ -205,7 +205,7 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
           {item ? (
             <>
               {/* Ficha resumida */}
-              <div className="grid grid-cols-2 gap-px overflow-hidden rounded-pj border border-linea bg-linea lg:grid-cols-4">
+              <div className="grid grid-cols-1 gap-px overflow-hidden rounded-pj border border-linea bg-linea xs:grid-cols-2 lg:grid-cols-4">
                 <FichaCelda label="Objetivo" valor={item.oeCodigo} />
                 <FichaCelda
                   label="Unidad"
@@ -360,7 +360,7 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
               <div className="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-pj border border-linea bg-[#FAFBFC] px-4 py-[14px]">
                 <div className="text-[12px] text-muted">
                   Cumplimiento estimado del período
-                  <b className="block font-serif text-[20px] text-tinta">
+                  <b className="block font-serif text-titulo text-tinta">
                     {enVivo && enVivo.estado === "OK"
                       ? fmtPct(enVivo.capado)
                       : "—"}
@@ -404,14 +404,14 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
 
               {/* Acciones de carga */}
               {data.puedeCargar && editable ? (
-                <div className="mt-[18px] flex gap-[10px] border-t border-linea-2 pt-4">
+                <div className="mt-[18px] flex flex-col gap-[10px] border-t border-linea-2 pt-4 xs:flex-row xs:flex-wrap">
                   <button
                     type="button"
                     disabled={pendiente || valorDerivado === null}
                     onClick={() =>
                       ejecutar(() => enviarMedicionAction(inputPayload()))
                     }
-                    className="rounded-pj border border-azul-d bg-azul px-4 py-[9px] text-[12.5px] font-semibold text-white hover:bg-azul-d disabled:opacity-50"
+                    className="tap w-full rounded-pj border border-azul-d bg-azul px-4 py-[9px] text-[12.5px] font-semibold text-white hover:bg-azul-d disabled:opacity-50 xs:w-auto"
                   >
                     {pendiente ? "Procesando…" : "Enviar a validación"}
                   </button>
@@ -421,7 +421,7 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
                     onClick={() =>
                       ejecutar(() => guardarBorradorAction(inputPayload()))
                     }
-                    className="rounded-pj border border-linea bg-superficie px-4 py-[9px] text-[12.5px] font-semibold hover:bg-[#F7F9FB] disabled:opacity-50"
+                    className="tap w-full rounded-pj border border-linea bg-superficie px-4 py-[9px] text-[12.5px] font-semibold hover:bg-[#F7F9FB] disabled:opacity-50 xs:w-auto"
                   >
                     Guardar borrador
                   </button>
@@ -531,7 +531,12 @@ function FichaCelda({
   ancho?: boolean;
 }) {
   return (
-    <div className={cn("bg-superficie px-3 py-[10px]", ancho && "col-span-2 lg:col-span-4")}>
+    <div
+      className={cn(
+        "bg-superficie px-3 py-[10px]",
+        ancho && "xs:col-span-2 lg:col-span-4",
+      )}
+    >
       <div className="text-[10px] uppercase tracking-[.06em] text-muted-2">
         {label}
       </div>
@@ -604,13 +609,13 @@ function Stepper({ estado }: { estado: EstadoWF | "PENDIENTE" }) {
         : 1;
   const pasos = ["Borrador", "Enviado", "Validado por DGPD"];
   return (
-    <div className="mt-4 flex flex-col gap-2 min-[480px]:flex-row min-[480px]:items-center min-[480px]:gap-0">
+    <div className="mt-4 flex flex-col gap-2 xs:flex-row xs:items-center xs:gap-0">
       {pasos.map((p, ix) => {
         const n = ix + 1;
         const done = fase > n;
         const now = fase === n;
         return (
-          <div key={p} className="flex items-center min-[480px]:flex-1 min-[480px]:last:flex-none">
+          <div key={p} className="flex items-center xs:flex-1 xs:last:flex-none">
             <div
               className={cn(
                 "flex items-center gap-2 text-[12px]",
@@ -632,7 +637,7 @@ function Stepper({ estado }: { estado: EstadoWF | "PENDIENTE" }) {
               {p}
             </div>
             {ix < pasos.length - 1 ? (
-              <span className="mx-[10px] hidden h-[1.5px] min-w-[24px] flex-1 bg-linea min-[480px]:block" />
+              <span className="mx-[10px] hidden h-[1.5px] min-w-[24px] flex-1 bg-linea xs:block" />
             ) : null}
           </div>
         );

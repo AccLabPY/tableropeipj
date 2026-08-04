@@ -42,7 +42,7 @@ export function DbSwitch({ actual }: { actual: "prod" | "test" }) {
                 : "border-linea bg-superficie hover:bg-[#F7F9FB]",
             )}
           >
-            <span className="flex items-center gap-2 text-[13px] font-semibold">
+            <span className="flex flex-wrap items-center gap-2 text-[13px] font-semibold">
               <span
                 className={cn(
                   "h-2 w-2 rounded-full",
@@ -68,19 +68,19 @@ export function DbSwitch({ actual }: { actual: "prod" | "test" }) {
             afecta a su usuario administrador; los demás usuarios siguen viendo
             el entorno por defecto.
           </p>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <button
               type="button"
               disabled={pendiente}
               onClick={() => cambiar(confirmando)}
-              className="rounded-pj border border-azul-d bg-azul px-3 py-[6px] text-[12px] font-semibold text-white hover:bg-azul-d disabled:opacity-50"
+              className="tap rounded-pj border border-azul-d bg-azul px-3 py-[6px] text-[12px] font-semibold text-white hover:bg-azul-d disabled:opacity-50"
             >
               {pendiente ? "Cambiando…" : "Confirmar cambio"}
             </button>
             <button
               type="button"
               onClick={() => setConfirmando(null)}
-              className="rounded-pj border border-linea bg-superficie px-3 py-[6px] text-[12px] font-semibold"
+              className="tap rounded-pj border border-linea bg-superficie px-3 py-[6px] text-[12px] font-semibold"
             >
               Cancelar
             </button>

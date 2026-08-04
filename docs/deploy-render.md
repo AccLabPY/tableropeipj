@@ -30,9 +30,17 @@ Opción B — manual: **New → Web Service**, runtime Node:
 
 | Campo | Valor |
 |---|---|
-| Build command | `npm ci && npx prisma generate && npm run build` |
+| Build command | `npm ci --include=dev && npx prisma generate && npm run build` |
 | Start command | `npm run start` |
 | Health check | `/api/health` |
+
+> **`--include=dev` es obligatorio en Render.** La plataforma setea
+> `NODE_ENV=production` también durante el *build* (no solo en runtime), y con
+> esa variable presente `npm ci` omite `devDependencies` por defecto. Ahí
+> viven `typescript`, `tailwindcss` y `postcss` — sin `typescript` instalado,
+> Next.js no puede resolver los path aliases `@/*` de `tsconfig.json` y el
+> build falla con `Module not found` en prácticamente todos los imports.
+> Sin este flag, `npm ci` instala ~83 paquetes en vez de ~490.
 
 ## 3. Variables de entorno (dashboard de Render)
 

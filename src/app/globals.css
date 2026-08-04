@@ -2,17 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 /* Estética institucional sobria (§10): gris/blanco con azul como único acento */
 body {
   @apply bg-fondo text-tinta font-sans antialiased;
   font-size: 14px;
   line-height: 1.45;
+  overflow-wrap: break-word;
+}
+
+/* Safari iOS hace zoom al enfocar controles por debajo de 16px */
+@media (max-width: 767px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
 }
 
 @layer utilities {
   /* Números tabulares para columnas de cifras */
   .tnum {
     font-variant-numeric: tabular-nums;
+  }
+
+  /* Objetivo táctil mínimo en dispositivos sin puntero fino */
+  .tap {
+    min-height: 40px;
+  }
+
+  .safe-b {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
 

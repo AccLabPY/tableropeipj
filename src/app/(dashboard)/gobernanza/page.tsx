@@ -6,6 +6,7 @@ import { estadoPEI } from "@/server/services/estado-cache";
 import { AnioQuery } from "@/shared/schemas/query";
 import { PageHeader } from "@/ui/components/page-header";
 import { Card, CardBody, CardHeader, Tag } from "@/ui/components/card";
+import { DataTable } from "@/ui/components/data-table";
 import { AnioSelector } from "@/ui/components/anio-selector";
 import { fmtPct } from "@/lib/utils";
 import type { EstadoWF } from "@/domain/types";
@@ -96,14 +97,14 @@ export default async function GobernanzaPage({
               return (
                 <div
                   key={k}
-                  className="min-w-[120px] flex-1 rounded-pj border border-linea px-[13px] py-[11px]"
+                  className="min-w-[100px] flex-1 rounded-pj border border-linea px-[13px] py-[11px] xs:min-w-[120px]"
                 >
                   <span
                     className={`inline-block rounded-[10px] px-2 py-[2px] text-[10.5px] font-semibold ${w.cls}`}
                   >
                     {w.label}
                   </span>
-                  <div className="tnum mt-2 font-serif text-[24px]">{n}</div>
+                  <div className="tnum mt-2 font-serif text-seccion">{n}</div>
                 </div>
               );
             })}
@@ -124,37 +125,42 @@ export default async function GobernanzaPage({
             title="Cobertura de reporte por dependencia"
             meta="aprobadas / esperadas · peor cobertura primero"
           />
-          <CardBody className="overflow-x-auto p-0">
-            <table className="w-full min-w-[420px]">
-              <thead>
-                <tr className="bg-[#FAFBFC] text-left text-2xs uppercase tracking-[.06em] text-muted">
-                  <th className="border-b border-linea px-4 py-2">
-                    Dependencia (principal)
-                  </th>
-                  <th className="border-b border-linea px-4 py-2 text-right">
-                    Aprob./Esper.
-                  </th>
-                  <th className="border-b border-linea px-4 py-2 text-right">
-                    Cobertura
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {depsOrdenadas.map(([dep, d]) => (
-                  <tr key={dep} className="hover:bg-[#F8FAFB]">
-                    <td className="border-b border-linea-2 px-4 py-2 text-[12.5px]">
-                      {dep}
-                    </td>
-                    <td className="tnum border-b border-linea-2 px-4 py-2 text-right">
-                      {d.aprobadas}/{d.esperadas}
-                    </td>
-                    <td className="tnum border-b border-linea-2 px-4 py-2 text-right font-semibold">
+          <CardBody className="p-0">
+            <DataTable
+              celdaClassName="px-4 py-2"
+              columnas={[
+                {
+                  key: "dep",
+                  header: "Dependencia (principal)",
+                  movil: "titulo",
+                  tdClassName: "text-[12.5px]",
+                  cell: ([dep]) => dep,
+                },
+                {
+                  key: "razon",
+                  header: "Aprob./Esper.",
+                  align: "right",
+                  tnum: true,
+                  cell: ([, d]) => `${d.aprobadas}/${d.esperadas}`,
+                },
+                {
+                  key: "cobertura",
+                  header: "Cobertura",
+                  align: "right",
+                  tnum: true,
+                  movil: "insignia",
+                  tdClassName: "font-semibold",
+                  cell: ([, d]) => (
+                    <span className="tnum font-semibold">
                       {fmtPct(d.aprobadas / d.esperadas)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </span>
+                  ),
+                },
+              ]}
+              filas={depsOrdenadas}
+              keyFila={([dep]) => dep}
+              vacio="Sin dependencias con indicadores reportables."
+            />
           </CardBody>
         </Card>
 
@@ -166,28 +172,46 @@ export default async function GobernanzaPage({
               meta={`${diagnostico.length} indicadores`}
             />
             <CardBody className="scroll-pj max-h-[300px] overflow-y-auto p-0">
-              <table className="w-full">
-                <tbody>
-                  {diagnostico.map((i) => (
-                    <tr key={i.codigo} className="hover:bg-azul-soft">
-                      <td className="w-[60px] border-b border-linea-2 px-4 py-2">
-                        <Link
-                          href={`/indicadores/${i.codigo}?anio=${anio}`}
-                          className="font-serif font-semibold text-azul-d hover:underline"
-                        >
-                          {i.codigo}
-                        </Link>
-                      </td>
-                      <td className="border-b border-linea-2 px-4 py-2 text-[12.5px]">
-                        {i.nombre.length > 80 ? `${i.nombre.slice(0, 80)}…` : i.nombre}
-                      </td>
-                      <td className="w-[54px] border-b border-linea-2 px-4 py-2">
-                        <Tag>{i.oeCodigo}</Tag>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <DataTable
+                sinCabecera
+                celdaClassName="px-4 py-2"
+                columnas={[
+                  {
+                    key: "codigo",
+                    header: "Código",
+                    movil: "clave",
+                    thClassName: "w-[60px]",
+                    cell: (i) => (
+                      <Link
+                        href={`/indicadores/${i.codigo}?anio=${anio}`}
+                        className="font-serif font-semibold text-azul-d hover:underline"
+                      >
+                        {i.codigo}
+                      </Link>
+                    ),
+                  },
+                  {
+                    key: "nombre",
+                    header: "Indicador",
+                    movil: "titulo",
+                    tdClassName: "text-[12.5px]",
+                    cell: (i) =>
+                      i.nombre.length > 80
+                        ? `${i.nombre.slice(0, 80)}…`
+                        : i.nombre,
+                  },
+                  {
+                    key: "oe",
+                    header: "OE",
+                    movil: "insignia",
+                    thClassName: "w-[54px]",
+                    cell: (i) => <Tag>{i.oeCodigo}</Tag>,
+                  },
+                ]}
+                filas={diagnostico}
+                keyFila={(i) => i.codigo}
+                vacio="Ningún indicador requiere diagnóstico previo."
+              />
             </CardBody>
           </Card>
 
@@ -197,28 +221,46 @@ export default async function GobernanzaPage({
               meta="cumplimiento en gris hasta determinarla"
             />
             <CardBody className="p-0">
-              <table className="w-full">
-                <tbody>
-                  {basePendiente.map((i) => (
-                    <tr key={i.codigo} className="hover:bg-azul-soft">
-                      <td className="w-[60px] border-b border-linea-2 px-4 py-2">
-                        <Link
-                          href={`/indicadores/${i.codigo}?anio=${anio}`}
-                          className="font-serif font-semibold text-azul-d hover:underline"
-                        >
-                          {i.codigo}
-                        </Link>
-                      </td>
-                      <td className="border-b border-linea-2 px-4 py-2 text-[12.5px]">
-                        {i.nombre.length > 80 ? `${i.nombre.slice(0, 80)}…` : i.nombre}
-                      </td>
-                      <td className="border-b border-linea-2 px-4 py-2 text-[11.5px] text-muted">
-                        a determinar al cierre de 2025
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <DataTable
+                sinCabecera
+                celdaClassName="px-4 py-2"
+                columnas={[
+                  {
+                    key: "codigo",
+                    header: "Código",
+                    movil: "clave",
+                    thClassName: "w-[60px]",
+                    cell: (i) => (
+                      <Link
+                        href={`/indicadores/${i.codigo}?anio=${anio}`}
+                        className="font-serif font-semibold text-azul-d hover:underline"
+                      >
+                        {i.codigo}
+                      </Link>
+                    ),
+                  },
+                  {
+                    key: "nombre",
+                    header: "Indicador",
+                    movil: "titulo",
+                    tdClassName: "text-[12.5px]",
+                    cell: (i) =>
+                      i.nombre.length > 80
+                        ? `${i.nombre.slice(0, 80)}…`
+                        : i.nombre,
+                  },
+                  {
+                    key: "nota",
+                    header: "Estado",
+                    movil: "subtitulo",
+                    tdClassName: "text-[11.5px] text-muted",
+                    cell: () => "a determinar al cierre de 2025",
+                  },
+                ]}
+                filas={basePendiente}
+                keyFila={(i) => i.codigo}
+                vacio="Todos los indicadores tienen línea base determinada."
+              />
             </CardBody>
           </Card>
         </div>

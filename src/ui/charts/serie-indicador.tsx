@@ -38,8 +38,8 @@ export function SerieIndicador({
     })),
   ];
   return (
-    <div className="flex h-full min-h-[280px] flex-col">
-      <div className="min-h-[240px] flex-1">
+    <div className="flex h-full min-h-[220px] flex-col sm:min-h-[280px]">
+      <div className="min-h-[190px] flex-1 sm:min-h-[240px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 10, right: 16, bottom: 0, left: 0 }}>
           <CartesianGrid stroke="#EDF0F3" vertical={false} />
@@ -77,7 +77,7 @@ export function SerieIndicador({
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <div className="mt-2 flex justify-center gap-4 text-[11px] text-muted">
+      <div className="mt-2 flex flex-wrap justify-center gap-x-4 gap-y-1 text-[11px] text-muted">
         <span className="inline-flex items-center gap-[6px]">
           <span
             className="inline-block h-2 w-2 rounded-full"

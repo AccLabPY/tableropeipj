@@ -27,8 +27,10 @@ export function CardHeader({
   meta?: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center justify-between border-b border-linea-2 px-4 py-3">
-      <h3 className="text-[12.5px] font-semibold tracking-wide">{title}</h3>
+    <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-b border-linea-2 px-4 py-3">
+      <h3 className="min-w-0 text-[12.5px] font-semibold tracking-wide">
+        {title}
+      </h3>
       {meta ? <span className="text-[11px] text-muted-2">{meta}</span> : null}
     </div>
   );

@@ -81,7 +81,7 @@ export function NavLinks({
                 onClick={onNavigate}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex items-center gap-[11px] border-l-[3px] border-transparent px-4 py-[10px] text-tinta hover:bg-[#F7F9FB]",
+                  "flex min-h-[44px] items-center gap-[11px] border-l-[3px] border-transparent px-4 py-[10px] text-tinta hover:bg-[#F7F9FB] lg:min-h-0",
                   active &&
                     "border-azul bg-azul-soft font-semibold text-azul-d",
                 )}

@@ -6,6 +6,7 @@ import { fichaIndicador } from "@/server/services/indicador-ficha.service";
 import { ApiError } from "@/server/api/api-error";
 import { AnioQuery, CodigoParam } from "@/shared/schemas/query";
 import { Card, CardBody, CardHeader, Tag } from "@/ui/components/card";
+import { DataTable } from "@/ui/components/data-table";
 import { SemPill } from "@/ui/components/sem-pill";
 import { BackButton } from "@/ui/components/back-button";
 import { LazySerieIndicador } from "@/ui/charts/lazy";
@@ -59,7 +60,7 @@ export default async function DetalleIndicadorPage({
     <section>
       <BackButton />
       <div className="my-[14px] flex flex-wrap items-start justify-between gap-x-8 gap-y-4">
-        <div className="min-w-0 flex-1 basis-[420px]">
+        <div className="min-w-0 flex-1 basis-full sm:basis-[420px]">
           {/* Jerarquía OE › AE */}
           <div className="flex flex-wrap items-center gap-[7px]">
             <span className="rounded-pj-sm bg-navy px-2 py-[3px] text-2xs font-semibold uppercase tracking-[.06em] text-white">
@@ -84,7 +85,7 @@ export default async function DetalleIndicadorPage({
             ) : null}
           </div>
 
-          <h1 className="mt-[10px] font-serif text-[21px] leading-tight">
+          <h1 className="mt-[10px] font-serif text-titulo leading-tight">
             <span className="text-azul-d">{est.codigo}</span> · {est.nombre}
           </h1>
 
@@ -130,12 +131,12 @@ export default async function DetalleIndicadorPage({
             </div>
           </div>
         </div>
-        <div className="flex-none text-right">
+        <div className="flex-none text-left sm:text-right">
           <div className="text-[10px] uppercase tracking-[.06em] text-muted">
             Cumplimiento {anio}
           </div>
           <div
-            className="font-serif text-[30px] leading-none"
+            className="font-serif text-kpi"
             style={{ color: SEM_COLORS[est.semaforo] }}
           >
             {fmtPct(est.capado)}
@@ -148,7 +149,7 @@ export default async function DetalleIndicadorPage({
       <div className="mb-4 h-px bg-linea" />
 
       {/* Stat row */}
-      <div className="mb-4 grid grid-cols-2 gap-[10px] sm:grid-cols-3 xl:grid-cols-5">
+      <div className="mb-4 grid grid-cols-1 gap-[10px] xs:grid-cols-2 sm:grid-cols-3 xl:grid-cols-5">
         <Stat
           label="Línea base"
           valor={
@@ -205,7 +206,7 @@ export default async function DetalleIndicadorPage({
                 el cumplimiento no se computa hasta definirla.
               </p>
             ) : null}
-            <div className="min-h-[280px] flex-1">
+            <div className="min-h-[220px] flex-1 sm:min-h-[280px]">
               <LazySerieIndicador
                 trayectoria={ficha.trayectoria}
                 lineaBase={est.lineaBase}
@@ -284,23 +285,44 @@ export default async function DetalleIndicadorPage({
             meta="el % del nivel reportado alimenta el cumplimiento"
           />
           <CardBody className="p-0">
-            <table className="w-full">
-              <tbody>
-                {ficha.escala.map((e) => (
-                  <tr key={e.nivel}>
-                    <td className="w-[80px] whitespace-nowrap border-b border-linea-2 px-4 py-2 text-[11.5px] font-semibold uppercase tracking-[.04em] text-azul-d">
-                      Nivel {e.nivel}
-                    </td>
-                    <td className="border-b border-linea-2 px-4 py-2 text-[12.5px]">
-                      {e.descripcion}
-                    </td>
-                    <td className="tnum w-[80px] border-b border-linea-2 px-4 py-2 text-right font-semibold">
+            <DataTable
+              sinCabecera
+              celdaClassName="px-4 py-2"
+              columnas={[
+                {
+                  key: "nivel",
+                  header: "Nivel",
+                  movil: "clave",
+                  thClassName: "w-[80px]",
+                  tdClassName:
+                    "whitespace-nowrap text-[11.5px] font-semibold uppercase tracking-[.04em] text-azul-d",
+                  cell: (e) => `Nivel ${e.nivel}`,
+                },
+                {
+                  key: "descripcion",
+                  header: "Descripción",
+                  movil: "titulo",
+                  tdClassName: "text-[12.5px]",
+                  cell: (e) => e.descripcion,
+                },
+                {
+                  key: "pct",
+                  header: "% máx.",
+                  align: "right",
+                  tnum: true,
+                  movil: "insignia",
+                  thClassName: "w-[80px]",
+                  tdClassName: "font-semibold",
+                  cell: (e) => (
+                    <span className="tnum font-semibold">
                       {fmtNum(e.pctMax)}%
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </span>
+                  ),
+                },
+              ]}
+              filas={ficha.escala}
+              keyFila={(e) => e.nivel}
+            />
           </CardBody>
         </Card>
       ) : null}
@@ -308,47 +330,62 @@ export default async function DetalleIndicadorPage({
       {/* Trayectoria */}
       <Card className="mt-4">
         <CardHeader title="Trayectoria de metas y cumplimiento" meta="plan quinquenal" />
-        <CardBody className="overflow-x-auto p-0">
-          <table className="w-full min-w-[460px]">
-            <thead>
-              <tr className="bg-[#FAFBFC] text-left text-2xs uppercase tracking-[.06em] text-muted">
-                <th className="border-b border-linea px-4 py-2">Período</th>
-                <th className="border-b border-linea px-4 py-2 text-right">Meta</th>
-                <th className="border-b border-linea px-4 py-2 text-right">Aprobado</th>
-                <th className="border-b border-linea px-4 py-2 text-right">Cumplimiento</th>
-                <th className="border-b border-linea px-4 py-2">Estado</th>
-              </tr>
-            </thead>
-            <tbody>
-              {ficha.trayectoria.map((t) => (
-                <tr key={t.anio} className="hover:bg-[#F8FAFB]">
-                  <td className="border-b border-linea-2 px-4 py-[10px] font-semibold">
-                    {t.anio}
-                  </td>
-                  <td className="tnum border-b border-linea-2 px-4 py-[10px] text-right">
-                    {t.metaConcluida ? (
-                      <span className="text-muted-2">concluido</span>
-                    ) : (
-                      `${fmtNum(t.meta)}${unidadSufijo}`
-                    )}
-                  </td>
-                  <td className="tnum border-b border-linea-2 px-4 py-[10px] text-right">
-                    {t.valor === null ? "—" : `${fmtNum(t.valor)}${unidadSufijo}`}
-                  </td>
-                  <td className="tnum border-b border-linea-2 px-4 py-[10px] text-right">
-                    {fmtPct(t.capado)}
-                  </td>
-                  <td className="border-b border-linea-2 px-4 py-[10px]">
-                    {t.valor !== null && t.semaforo ? (
-                      <SemPill sem={t.semaforo} />
-                    ) : (
-                      <Tag>{t.metaConcluida ? "Concluido" : "Planificado"}</Tag>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <CardBody className="p-0">
+          <DataTable
+            celdaClassName="px-4 py-[10px]"
+            columnas={[
+              {
+                key: "periodo",
+                header: "Período",
+                movil: "titulo",
+                tdClassName: "font-semibold",
+                cell: (t) => (
+                  <span className="font-serif font-semibold">{t.anio}</span>
+                ),
+              },
+              {
+                key: "meta",
+                header: "Meta",
+                align: "right",
+                tnum: true,
+                cell: (t) =>
+                  t.metaConcluida ? (
+                    <span className="text-muted-2">concluido</span>
+                  ) : (
+                    `${fmtNum(t.meta)}${unidadSufijo}`
+                  ),
+              },
+              {
+                key: "aprobado",
+                header: "Aprobado",
+                align: "right",
+                tnum: true,
+                cell: (t) =>
+                  t.valor === null ? "—" : `${fmtNum(t.valor)}${unidadSufijo}`,
+              },
+              {
+                key: "cumplimiento",
+                header: "Cumplimiento",
+                align: "right",
+                tnum: true,
+                cell: (t) => fmtPct(t.capado),
+              },
+              {
+                key: "estado",
+                header: "Estado",
+                movil: "insignia",
+                cell: (t) =>
+                  t.valor !== null && t.semaforo ? (
+                    <SemPill sem={t.semaforo} />
+                  ) : (
+                    <Tag>{t.metaConcluida ? "Concluido" : "Planificado"}</Tag>
+                  ),
+              },
+            ]}
+            filas={ficha.trayectoria}
+            keyFila={(t) => t.anio}
+            vacio="Sin trayectoria de metas definida."
+          />
         </CardBody>
       </Card>
 
@@ -384,52 +421,64 @@ export default async function DetalleIndicadorPage({
             title="Mediciones registradas"
             meta="todas las versiones (historial append-only)"
           />
-          <CardBody className="overflow-x-auto p-0">
-            {ficha.mediciones.length === 0 ? (
-              <p className="px-4 py-6 text-center text-muted">
-                Sin mediciones registradas.
-              </p>
-            ) : (
-              <table className="w-full min-w-[420px]">
-                <thead>
-                  <tr className="bg-[#FAFBFC] text-left text-2xs uppercase tracking-[.06em] text-muted">
-                    <th className="border-b border-linea px-4 py-2">Período</th>
-                    <th className="border-b border-linea px-4 py-2">Versión</th>
-                    <th className="border-b border-linea px-4 py-2 text-right">Valor</th>
-                    <th className="border-b border-linea px-4 py-2">Estado</th>
-                    <th className="border-b border-linea px-4 py-2">Reporte</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {ficha.mediciones.map((m) => (
-                    <tr key={m.id}>
-                      <td className="border-b border-linea-2 px-4 py-2">
-                        {m.periodoAnio}
-                      </td>
-                      <td className="border-b border-linea-2 px-4 py-2">
-                        v{m.version}
-                      </td>
-                      <td className="tnum border-b border-linea-2 px-4 py-2 text-right">
+          <CardBody className="p-0">
+            <DataTable
+              celdaClassName="px-4 py-2"
+              columnas={[
+                {
+                  key: "periodo",
+                  header: "Período",
+                  movil: "clave",
+                  cell: (m) => (
+                    <span className="font-serif font-semibold">
+                      {m.periodoAnio}
+                    </span>
+                  ),
+                },
+                {
+                  key: "version",
+                  header: "Versión",
+                  movil: "insignia",
+                  cell: (m) => <Tag>v{m.version}</Tag>,
+                },
+                {
+                  key: "valor",
+                  header: "Valor",
+                  align: "right",
+                  tnum: true,
+                  movil: "titulo",
+                  cell: (m) => (
+                    <>
+                      <span className="tnum">
                         {fmtValor(m.valorObservado, est.unidad)}
-                        {m.valoresVariables ? (
-                          <div className="text-[10.5px] font-normal text-muted-2">
-                            {Object.entries(m.valoresVariables)
-                              .map(([k, v]) => `${k}: ${fmtNum(v)}`)
-                              .join(" · ")}
-                          </div>
-                        ) : null}
-                      </td>
-                      <td className="border-b border-linea-2 px-4 py-2 text-[12px]">
-                        {ESTADO_WF_LABEL[m.estado] ?? m.estado}
-                      </td>
-                      <td className="border-b border-linea-2 px-4 py-2 text-[12px] text-muted">
-                        {fmtFechaCorta(m.fechaReporte)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
+                      </span>
+                      {m.valoresVariables ? (
+                        <div className="text-[10.5px] font-normal text-muted-2">
+                          {Object.entries(m.valoresVariables)
+                            .map(([k, v]) => `${k}: ${fmtNum(v)}`)
+                            .join(" · ")}
+                        </div>
+                      ) : null}
+                    </>
+                  ),
+                },
+                {
+                  key: "estado",
+                  header: "Estado",
+                  tdClassName: "text-[12px]",
+                  cell: (m) => ESTADO_WF_LABEL[m.estado] ?? m.estado,
+                },
+                {
+                  key: "reporte",
+                  header: "Reporte",
+                  tdClassName: "text-[12px] text-muted",
+                  cell: (m) => fmtFechaCorta(m.fechaReporte),
+                },
+              ]}
+              filas={ficha.mediciones}
+              keyFila={(m) => m.id}
+              vacio="Sin mediciones registradas."
+            />
           </CardBody>
         </Card>
       </div>
@@ -443,7 +492,9 @@ function Stat({ label, valor }: { label: string; valor: string }) {
       <div className="text-[10px] uppercase tracking-[.06em] text-muted">
         {label}
       </div>
-      <div className="tnum mt-[5px] font-serif text-[20px]">{valor}</div>
+      <div className="tnum mt-[5px] break-words font-serif text-[20px]">
+        {valor}
+      </div>
     </div>
   );
 }

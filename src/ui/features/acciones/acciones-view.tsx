@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { AEEstadoDTO, EstadoPeiDTO } from "@/shared/dtos/estado-pei";
 import { SemPill } from "@/ui/components/sem-pill";
 import { Card, CardHeader, Tag } from "@/ui/components/card";
+import { DataTable } from "@/ui/components/data-table";
 import { SEM_COLORS } from "@/ui/theme/tokens";
 import { cn, fmtPct } from "@/lib/utils";
 
@@ -26,13 +27,13 @@ export function AccionesView({ estado }: { estado: EstadoPeiDTO }) {
   }, [ae]);
 
   return (
-    <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[310px_1fr]">
+    <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-[270px_1fr] lg:grid-cols-[310px_1fr]">
       <Card>
         <CardHeader
           title="Acciones por objetivo"
           meta={`${todasAE.length} acciones`}
         />
-        <div className="scroll-pj max-h-[320px] overflow-y-auto lg:max-h-[660px]">
+        <div className="scroll-pj max-h-[320px] overflow-y-auto md:max-h-[660px]">
           {estado.objetivos.map((oe) => (
             <div key={oe.codigo}>
               <div className="sticky top-0 border-b border-linea-2 bg-[#FAFBFC] px-[14px] pb-[5px] pt-2 text-[10px] uppercase tracking-[.08em] text-muted-2">
@@ -91,12 +92,12 @@ export function AccionesView({ estado }: { estado: EstadoPeiDTO }) {
               <div className="text-[11px] text-muted">
                 {oeDe(ae.codigo)?.codigo} · {oeDe(ae.codigo)?.nombre}
               </div>
-              <div className="my-1 font-serif text-[21px] text-azul-d">
+              <div className="my-1 font-serif text-titulo text-azul-d">
                 {ae.codigo}
               </div>
               <p className="mb-[14px] text-[13px] leading-[1.45]">{ae.nombre}</p>
 
-              <div className="mb-[14px] grid grid-cols-2 gap-3 lg:grid-cols-4">
+              <div className="mb-[14px] grid grid-cols-1 gap-3 xs:grid-cols-2 lg:grid-cols-4">
                 <Stat label="Indicadores" valor={String(ae.indicadores.length)} />
                 <Stat
                   label="Avance agregado"
@@ -135,48 +136,56 @@ export function AccionesView({ estado }: { estado: EstadoPeiDTO }) {
                 ))}
               </div>
 
-              <div className="overflow-x-auto">
-              <table className="w-full min-w-[520px]">
-                <thead>
-                  <tr className="bg-[#FAFBFC] text-left text-2xs uppercase tracking-[.06em] text-muted">
-                    <th className="border-b border-linea px-3 py-2">Código</th>
-                    <th className="border-b border-linea px-3 py-2">Indicador</th>
-                    <th className="border-b border-linea px-3 py-2 text-right">
-                      Cumpl.
-                    </th>
-                    <th className="border-b border-linea px-3 py-2">Estado</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {ae.indicadores.map((i) => (
-                    <tr key={i.codigo} className="hover:bg-azul-soft">
-                      <td className="border-b border-linea-2 px-3 py-2">
-                        <Link
-                          href={`/indicadores/${i.codigo}?anio=${estado.anio}`}
-                          className="font-serif font-semibold text-azul-d hover:underline"
-                        >
-                          {i.codigo}
-                        </Link>
-                      </td>
-                      <td className="border-b border-linea-2 px-3 py-2 text-[12.5px]">
+              <DataTable
+                celdaClassName="px-3 py-2"
+                columnas={[
+                  {
+                    key: "codigo",
+                    header: "Código",
+                    movil: "clave",
+                    cell: (i) => (
+                      <Link
+                        href={`/indicadores/${i.codigo}?anio=${estado.anio}`}
+                        className="font-serif font-semibold text-azul-d hover:underline"
+                      >
+                        {i.codigo}
+                      </Link>
+                    ),
+                  },
+                  {
+                    key: "nombre",
+                    header: "Indicador",
+                    movil: "titulo",
+                    tdClassName: "text-[12.5px]",
+                    cell: (i) => (
+                      <>
                         {i.nombre}{" "}
                         {i.requiereDiagnostico ? (
                           <span className="ml-1 inline-flex items-center gap-1 whitespace-nowrap rounded-[10px] border border-[#DDCBEC] bg-[#EFE7F5] px-[7px] text-[10px] font-semibold text-[#6b3fa0]">
                             requiere diagnóstico
                           </span>
                         ) : null}
-                      </td>
-                      <td className="tnum border-b border-linea-2 px-3 py-2 text-right">
-                        {fmtPct(i.capado)}
-                      </td>
-                      <td className="border-b border-linea-2 px-3 py-2">
-                        <SemPill sem={i.semaforo} />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              </div>
+                      </>
+                    ),
+                  },
+                  {
+                    key: "cumplimiento",
+                    header: "Cumpl.",
+                    align: "right",
+                    tnum: true,
+                    cell: (i) => fmtPct(i.capado),
+                  },
+                  {
+                    key: "estado",
+                    header: "Estado",
+                    movil: "insignia",
+                    cell: (i) => <SemPill sem={i.semaforo} />,
+                  },
+                ]}
+                filas={ae.indicadores}
+                keyFila={(i) => i.codigo}
+                vacio="Esta acción no tiene indicadores asociados."
+              />
             </>
           ) : (
             <div className="p-4 text-muted">
@@ -203,7 +212,7 @@ function Stat({
       <div className="text-[10px] uppercase tracking-[.05em] text-muted">
         {label}
       </div>
-      <div className="mt-[5px] font-serif text-[22px]" style={{ color }}>
+      <div className="mt-[5px] font-serif text-titulo" style={{ color }}>
         {valor}
       </div>
     </div>

@@ -8,6 +8,7 @@ import { UltimasCargas } from "@/ui/features/ejecutivo/ultimas-cargas";
 import { AnioQuery } from "@/shared/schemas/query";
 import { PageHeader } from "@/ui/components/page-header";
 import { Card, CardBody, CardHeader, Tag } from "@/ui/components/card";
+import { DataTable } from "@/ui/components/data-table";
 import { SemPill } from "@/ui/components/sem-pill";
 import { ProgressBar } from "@/ui/components/progress";
 import { AnioSelector } from "@/ui/components/anio-selector";
@@ -45,12 +46,12 @@ export default async function EjecutivoPage({
       />
 
       {/* KPIs */}
-      <div className="mb-4 grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-5">
+      <div className="mb-4 grid grid-cols-1 gap-3 xs:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-5">
         <Card className="p-4">
           <div className="text-2xs uppercase tracking-[.08em] text-muted">
             Índice de cumplimiento {anio}
           </div>
-          <div className="tnum mt-2 font-serif text-[30px] leading-none">
+          <div className="tnum mt-2 font-serif text-kpi">
             {fmtPct(estado.indicePEI)}
           </div>
           <div className="mt-2 text-[11px] text-muted">
@@ -75,7 +76,7 @@ export default async function EjecutivoPage({
               />
               {label}
             </div>
-            <div className="tnum mt-2 font-serif text-[30px] leading-none">
+            <div className="tnum mt-2 font-serif text-kpi">
               {estado.distribucion[sem]}
             </div>
             <div className="mt-2 text-[11px] text-muted">{foot}</div>
@@ -85,7 +86,7 @@ export default async function EjecutivoPage({
           <div className="text-2xs uppercase tracking-[.08em] text-muted">
             Cobertura de reporte
           </div>
-          <div className="tnum mt-2 font-serif text-[30px] leading-none">
+          <div className="tnum mt-2 font-serif text-kpi">
             {fmtPct(estado.cobertura.fraccion)}
           </div>
           <div className="mt-2 text-[11px] text-muted">
@@ -114,19 +115,19 @@ export default async function EjecutivoPage({
             {estado.objetivos.map((oe) => (
               <div
                 key={oe.codigo}
-                className="grid grid-cols-[44px_1fr_52px] items-center gap-3 border-b border-linea-2 py-[10px] last:border-b-0"
+                className="grid grid-cols-[38px_1fr_44px] items-center gap-2 border-b border-linea-2 py-[10px] last:border-b-0 xs:grid-cols-[44px_1fr_52px] xs:gap-3"
               >
                 <div className="font-serif text-[14px] font-semibold text-azul-d">
                   {oe.codigo}
                 </div>
-                <div>
+                <div className="min-w-0">
                   <div className="text-[12.5px]">{oe.nombre}</div>
                   <div className="mt-[6px]">
                     <ProgressBar frac={oe.avance} sem={oe.semaforo} />
                   </div>
                 </div>
                 <div
-                  className="tnum text-right text-[14px] font-semibold"
+                  className="tnum text-right text-[13px] font-semibold xs:text-[14px]"
                   style={{ color: SEM_COLORS[oe.semaforo] }}
                 >
                   {fmtPct(oe.avance)}
@@ -171,77 +172,74 @@ export default async function EjecutivoPage({
           title="Indicadores que requieren atención"
           meta="ordenados por cumplimiento ascendente"
         />
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-[#FAFBFC] text-left text-2xs uppercase tracking-[.06em] text-muted">
-                <th className="border-b border-linea px-3 py-[9px]">Código</th>
-                <th className="border-b border-linea px-3 py-[9px]">
-                  Indicador
-                </th>
-                <th className="hidden border-b border-linea px-3 py-[9px] sm:table-cell">OE</th>
-                <th className="hidden border-b border-linea px-3 py-[9px] lg:table-cell">
-                  Dependencia responsable
-                </th>
-                <th className="hidden border-b border-linea px-3 py-[9px] text-right md:table-cell">
-                  Meta {anio}
-                </th>
-                <th className="hidden border-b border-linea px-3 py-[9px] text-right md:table-cell">
-                  Aprobado
-                </th>
-                <th className="border-b border-linea px-3 py-[9px] text-right">
-                  Cumplim.
-                </th>
-                <th className="border-b border-linea px-3 py-[9px]">
-                  Semáforo
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {atencion.map((i) => (
-                <tr key={i.codigo} className="hover:bg-[#F8FAFB]">
-                  <td className="border-b border-linea-2 px-3 py-[10px]">
-                    <Link
-                      href={`/indicadores/${i.codigo}?anio=${anio}`}
-                      className="font-serif font-semibold text-azul-d hover:underline"
-                    >
-                      {i.codigo}
-                    </Link>
-                  </td>
-                  <td className="border-b border-linea-2 px-3 py-[10px] text-[12.5px]">
-                    {i.nombre}
-                  </td>
-                  <td className="hidden border-b border-linea-2 px-3 py-[10px] sm:table-cell">
-                    <Tag>{i.oeCodigo}</Tag>
-                  </td>
-                  <td className="hidden border-b border-linea-2 px-3 py-[10px] text-[12.5px] text-muted lg:table-cell">
-                    {i.dependenciaPrincipal}
-                  </td>
-                  <td className="tnum hidden border-b border-linea-2 px-3 py-[10px] text-right md:table-cell">
-                    {fmtValor(i.meta, i.unidad)}
-                  </td>
-                  <td className="tnum hidden border-b border-linea-2 px-3 py-[10px] text-right md:table-cell">
-                    {fmtValor(i.valor, i.unidad)}
-                  </td>
-                  <td className="tnum border-b border-linea-2 px-3 py-[10px] text-right font-semibold">
-                    {fmtPct(i.capado)}
-                  </td>
-                  <td className="border-b border-linea-2 px-3 py-[10px]">
-                    <SemPill sem={i.semaforo} />
-                  </td>
-                </tr>
-              ))}
-              {atencion.length === 0 ? (
-                <tr>
-                  <td colSpan={8} className="px-3 py-6 text-center text-muted">
-                    Sin mediciones aprobadas en el período: no hay cumplimientos
-                    computados todavía.
-                  </td>
-                </tr>
-              ) : null}
-            </tbody>
-          </table>
-        </div>
+        <DataTable
+          columnas={[
+            {
+              key: "codigo",
+              header: "Código",
+              movil: "clave",
+              cell: (i) => (
+                <Link
+                  href={`/indicadores/${i.codigo}?anio=${anio}`}
+                  className="font-serif font-semibold text-azul-d hover:underline"
+                >
+                  {i.codigo}
+                </Link>
+              ),
+            },
+            {
+              key: "nombre",
+              header: "Indicador",
+              movil: "titulo",
+              tdClassName: "text-[12.5px]",
+              cell: (i) => i.nombre,
+            },
+            {
+              key: "oe",
+              header: "OE",
+              cell: (i) => <Tag>{i.oeCodigo}</Tag>,
+            },
+            {
+              key: "dependencia",
+              header: "Dependencia responsable",
+              desde: "lg",
+              movil: "subtitulo",
+              tdClassName: "text-[12.5px] text-muted",
+              cell: (i) => i.dependenciaPrincipal,
+            },
+            {
+              key: "meta",
+              header: `Meta ${anio}`,
+              align: "right",
+              tnum: true,
+              cell: (i) => fmtValor(i.meta, i.unidad),
+            },
+            {
+              key: "aprobado",
+              header: "Aprobado",
+              align: "right",
+              tnum: true,
+              cell: (i) => fmtValor(i.valor, i.unidad),
+            },
+            {
+              key: "cumplimiento",
+              header: "Cumplim.",
+              align: "right",
+              tnum: true,
+              tdClassName: "font-semibold",
+              cell: (i) => fmtPct(i.capado),
+            },
+            {
+              key: "semaforo",
+              header: "Semáforo",
+              movil: "insignia",
+              cell: (i) => <SemPill sem={i.semaforo} />,
+            },
+          ]}
+          filas={atencion}
+          keyFila={(i) => i.codigo}
+          vacio="Sin mediciones aprobadas en el período: no hay cumplimientos computados todavía."
+        />
       </Card>
 
       {/* Últimas cargas reales */}

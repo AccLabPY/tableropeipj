@@ -111,7 +111,7 @@ export function MatrizView({ items }: { items: MatrizItemDTO[] }) {
   };
 
   return (
-    <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[340px_1fr]">
+    <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-[280px_1fr] lg:grid-cols-[340px_1fr]">
       <Card>
         <CardHeader title="Indicadores" meta={`${filtrados.length} de ${items.length}`} />
         <div className="border-b border-linea-2 p-3">
@@ -122,7 +122,7 @@ export function MatrizView({ items }: { items: MatrizItemDTO[] }) {
             className="w-full rounded-pj border border-linea bg-superficie px-[9px] py-[7px] text-[12.5px]"
           />
         </div>
-        <div className="scroll-pj max-h-[300px] overflow-y-auto lg:max-h-[600px]">
+        <div className="scroll-pj max-h-[300px] overflow-y-auto md:max-h-[600px]">
           {filtrados.map((i) => (
             <button
               key={i.codigo}
@@ -178,7 +178,7 @@ export function MatrizView({ items }: { items: MatrizItemDTO[] }) {
                   className="mt-1 block w-full resize-y rounded-pj border border-linea bg-superficie px-[9px] py-2 text-[12.5px] normal-case tracking-normal text-tinta"
                 />
               </label>
-              <div className="grid grid-cols-1 gap-3 min-[480px]:grid-cols-2 lg:grid-cols-4">
+              <div className="grid grid-cols-1 gap-3 xs:grid-cols-2 lg:grid-cols-4">
                 <label className="block text-2xs uppercase tracking-[.06em] text-muted">
                   Sentido
                   <select
@@ -247,7 +247,7 @@ export function MatrizView({ items }: { items: MatrizItemDTO[] }) {
                 <div className="mb-1 text-2xs uppercase tracking-[.06em] text-muted">
                   Metas anuales 2026–2030 (vacío = sin meta / concluido)
                 </div>
-                <div className="grid grid-cols-2 gap-2 min-[480px]:grid-cols-3 md:grid-cols-5">
+                <div className="grid grid-cols-1 gap-2 xs:grid-cols-3 md:grid-cols-5">
                   {ANIOS_PEI.map((a) => (
                     <label key={a} className="text-[11px] text-muted">
                       {a}
@@ -268,7 +268,7 @@ export function MatrizView({ items }: { items: MatrizItemDTO[] }) {
                 </div>
               </div>
 
-              <div className="flex items-center gap-4">
+              <div className="flex flex-wrap items-center gap-4">
                 <label className="block text-2xs uppercase tracking-[.06em] text-muted">
                   Peso en agregaciones
                   <input
@@ -292,11 +292,11 @@ export function MatrizView({ items }: { items: MatrizItemDTO[] }) {
                 </label>
               </div>
 
-              <div className="flex items-center gap-3 border-t border-linea-2 pt-4">
+              <div className="flex flex-col items-start gap-3 border-t border-linea-2 pt-4 xs:flex-row xs:items-center">
                 <button
                   type="button"
                   onClick={guardar}
-                  className="rounded-pj border border-azul-d bg-azul px-4 py-[9px] text-[12.5px] font-semibold text-white hover:bg-azul-d disabled:opacity-50"
+                  className="tap w-full flex-none rounded-pj border border-azul-d bg-azul px-4 py-[9px] text-[12.5px] font-semibold text-white hover:bg-azul-d disabled:opacity-50 xs:w-auto"
                 >
                   {pendiente ? "Guardando…" : "Guardar cambios"}
                 </button>

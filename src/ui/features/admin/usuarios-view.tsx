@@ -10,6 +10,7 @@ import {
 import { ROLES, ROL_LABEL } from "@/shared/constants";
 import type { RolUsuario } from "@/domain/types";
 import { Card, CardHeader, Tag } from "@/ui/components/card";
+import { DataTable } from "@/ui/components/data-table";
 import { cn } from "@/lib/utils";
 
 export interface UsuarioAdminDTO {
@@ -108,74 +109,93 @@ export function UsuariosView({
     }));
 
   return (
-    <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-[1fr_380px]">
+    <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[1fr_360px]">
       <Card>
         <CardHeader
           title="Usuarios de la plataforma"
           meta="plano de control: no dependen del modo prueba"
         />
-        <div className="overflow-x-auto">
-        <table className="w-full min-w-[640px]">
-          <thead>
-            <tr className="bg-[#FAFBFC] text-left text-2xs uppercase tracking-[.06em] text-muted">
-              <th className="border-b border-linea px-4 py-2">Usuario</th>
-              <th className="border-b border-linea px-4 py-2">Roles</th>
-              <th className="border-b border-linea px-4 py-2">Dependencias</th>
-              <th className="border-b border-linea px-4 py-2">Estado</th>
-              <th className="w-16 border-b border-linea px-4 py-2" />
-            </tr>
-          </thead>
-          <tbody>
-            {usuarios.map((u) => (
-              <tr key={u.id} className="hover:bg-[#F8FAFB]">
-                <td className="border-b border-linea-2 px-4 py-[10px]">
+        <DataTable
+          celdaClassName="px-4 py-[10px]"
+          columnas={[
+            {
+              key: "usuario",
+              header: "Usuario",
+              movil: "titulo",
+              cell: (u) => (
+                <>
                   <div className="text-[12.5px] font-semibold">{u.nombre}</div>
                   <div className="text-[11.5px] text-muted">{u.email}</div>
-                </td>
-                <td className="border-b border-linea-2 px-4 py-[10px]">
-                  <div className="flex flex-wrap gap-1">
-                    {u.roles.map((r) => (
-                      <Tag key={r}>{ROL_LABEL[r]}</Tag>
-                    ))}
-                  </div>
-                </td>
-                <td className="border-b border-linea-2 px-4 py-[10px] text-[11.5px] text-muted">
-                  {u.dependenciaIds.length
-                    ? u.dependenciaIds
-                        .map(
-                          (id) =>
-                            dependencias.find((d) => d.id === id)?.nombre ?? id,
-                        )
-                        .map((n) => String(n).replace("Dirección General de ", "DG "))
-                        .join(" · ")
-                    : "—"}
-                </td>
-                <td className="border-b border-linea-2 px-4 py-[10px]">
-                  <span
-                    className={cn(
-                      "rounded-[10px] px-2 py-[2px] text-[10.5px] font-semibold",
-                      u.activo
-                        ? "bg-sem-verde-bg text-[#1f6a49]"
-                        : "bg-sem-rojo-bg text-[#8f2f2f]",
-                    )}
-                  >
-                    {u.activo ? "Activo" : "Inactivo"}
-                  </span>
-                </td>
-                <td className="border-b border-linea-2 px-4 py-[10px]">
-                  <button
-                    type="button"
-                    onClick={() => editar(u)}
-                    className="text-[12px] font-semibold text-azul-d hover:underline"
-                  >
-                    Editar
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        </div>
+                </>
+              ),
+            },
+            {
+              key: "roles",
+              header: "Roles",
+              movilAncho: true,
+              cell: (u) => (
+                <div className="flex flex-wrap gap-1">
+                  {u.roles.map((r) => (
+                    <Tag key={r}>{ROL_LABEL[r]}</Tag>
+                  ))}
+                </div>
+              ),
+            },
+            {
+              key: "dependencias",
+              header: "Dependencias",
+              movilAncho: true,
+              tdClassName: "text-[11.5px] text-muted",
+              cell: (u) =>
+                u.dependenciaIds.length
+                  ? u.dependenciaIds
+                      .map(
+                        (id) =>
+                          dependencias.find((d) => d.id === id)?.nombre ?? id,
+                      )
+                      .map((n) =>
+                        String(n).replace("Dirección General de ", "DG "),
+                      )
+                      .join(" · ")
+                  : "—",
+            },
+            {
+              key: "estado",
+              header: "Estado",
+              movil: "insignia",
+              cell: (u) => (
+                <span
+                  className={cn(
+                    "whitespace-nowrap rounded-[10px] px-2 py-[2px] text-[10.5px] font-semibold",
+                    u.activo
+                      ? "bg-sem-verde-bg text-[#1f6a49]"
+                      : "bg-sem-rojo-bg text-[#8f2f2f]",
+                  )}
+                >
+                  {u.activo ? "Activo" : "Inactivo"}
+                </span>
+              ),
+            },
+            {
+              key: "acciones",
+              header: <span className="sr-only">Acciones</span>,
+              movil: "insignia",
+              thClassName: "w-16",
+              cell: (u) => (
+                <button
+                  type="button"
+                  onClick={() => editar(u)}
+                  className="text-[12px] font-semibold text-azul-d hover:underline"
+                >
+                  Editar
+                </button>
+              ),
+            },
+          ]}
+          filas={usuarios}
+          keyFila={(u) => u.id}
+          vacio="Sin usuarios registrados."
+        />
       </Card>
 
       <Card>

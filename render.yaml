@@ -9,7 +9,12 @@ services:
     name: pei-pj-plataforma
     runtime: node
     plan: starter
-    buildCommand: npm ci && npx prisma generate && npm run build
+    # --include=dev: Render setea NODE_ENV=production también durante el
+    # build, y por defecto npm omite devDependencies con esa env var — pero
+    # typescript/tailwindcss/postcss (necesarios para compilar) viven ahí.
+    # Sin esto, Next.js no puede leer los path aliases (@/*) de tsconfig.json
+    # y el build falla con "Module not found" en TODOS los imports @/...
+    buildCommand: npm ci --include=dev && npx prisma generate && npm run build
     startCommand: npm run start
     healthCheckPath: /api/health
     envVars:

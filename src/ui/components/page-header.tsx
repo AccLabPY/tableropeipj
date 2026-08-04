@@ -11,13 +11,13 @@ export function PageHeader({
   return (
     <>
       <div className="mb-[6px] flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
-        <div>
-          <h1 className="font-serif text-[22px] font-semibold">{title}</h1>
+        <div className="min-w-0">
+          <h1 className="font-serif text-titulo font-semibold">{title}</h1>
           {subtitle ? (
             <div className="mt-[3px] text-[12.5px] text-muted">{subtitle}</div>
           ) : null}
         </div>
-        {right}
+        {right ? <div className="w-full sm:w-auto">{right}</div> : null}
       </div>
       <div className="mb-5 mt-[14px] h-px bg-linea" />
     </>
@@ -27,7 +27,7 @@ export function PageHeader({
 /** Nota ámbar de contexto (ej. "datos de ejemplo"). */
 export function DemoNote({ children }: { children: React.ReactNode }) {
   return (
-    <div className="whitespace-nowrap rounded-pj-sm border border-[#EAD9AE] bg-sem-ambar-bg px-[9px] py-1 text-[11px] text-sem-ambar">
+    <div className="rounded-pj-sm border border-[#EAD9AE] bg-sem-ambar-bg px-[9px] py-1 text-[11px] text-sem-ambar">
       {children}
     </div>
   );

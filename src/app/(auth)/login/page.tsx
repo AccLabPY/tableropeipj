@@ -5,7 +5,7 @@ export const metadata: Metadata = { title: "Iniciar sesión" };
 
 export default function LoginPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-navy px-4">
+    <div className="safe-b flex min-h-[100svh] items-center justify-center bg-navy px-4 py-8">
       <div className="w-full max-w-[400px]">
         <div className="mb-6 text-center text-white">
           <div className="mx-auto mb-3 grid h-14 w-14 place-items-center rounded-pj border-[1.5px] border-white/55">
@@ -26,14 +26,12 @@ export default function LoginPage() {
               <path d="M20 8l-2 5a3 3 0 0 0 6 0z" />
             </svg>
           </div>
-          <h1 className="font-serif text-[20px]">
-            Poder Judicial del Paraguay
-          </h1>
+          <h1 className="font-serif text-titulo">Poder Judicial del Paraguay</h1>
           <p className="mt-1 text-[11px] uppercase tracking-[.16em] text-[#B8CADA]">
             Plataforma de Seguimiento · PEI 2026–2030
           </p>
         </div>
-        <div className="rounded-pj border border-linea bg-superficie p-6 shadow-card">
+        <div className="rounded-pj border border-linea bg-superficie p-4 shadow-card sm:p-6">
           <h2 className="mb-4 font-serif text-[16px] font-semibold">
             Iniciar sesión
           </h2>

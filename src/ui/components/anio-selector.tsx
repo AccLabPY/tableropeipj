@@ -9,7 +9,7 @@ export function AnioSelector({ anio }: { anio: number }) {
   const pathname = usePathname();
   const sp = useSearchParams();
   return (
-    <label className="flex items-center gap-2 text-[11px] text-muted">
+    <label className="flex w-full items-center gap-2 text-[11px] text-muted sm:w-auto">
       Ejercicio
       <select
         value={anio}
@@ -18,7 +18,7 @@ export function AnioSelector({ anio }: { anio: number }) {
           p.set("anio", e.target.value);
           router.push(`${pathname}?${p.toString()}`);
         }}
-        className="rounded-pj border border-linea bg-superficie px-2 py-[6px] text-[12.5px] text-tinta"
+        className="flex-1 rounded-pj border border-linea bg-superficie px-2 py-[6px] text-[12.5px] text-tinta sm:flex-none"
       >
         {ANIOS_CONSULTA.map((a) => (
           <option key={a} value={a}>

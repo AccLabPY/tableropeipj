@@ -17,7 +17,7 @@ export function DonutSemaforo({
     color: SEM_COLORS[s],
   }));
   return (
-    <div className="h-[210px]">
+    <div className="h-[180px] sm:h-[210px]">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie

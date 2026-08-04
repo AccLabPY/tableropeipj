@@ -29,7 +29,7 @@ export function UltimasCargas({ cargas }: { cargas: UltimaCargaDTO[] }) {
                 <span className="font-serif text-[13.5px] font-semibold text-azul-d">
                   {c.codigo}
                 </span>
-                <span className="min-w-0 flex-1 basis-52 truncate text-[12.5px]">
+                <span className="min-w-0 flex-1 basis-full truncate text-[12.5px] xs:basis-52">
                   {c.nombre}
                 </span>
                 <Tag>

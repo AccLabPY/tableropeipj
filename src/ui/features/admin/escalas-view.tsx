@@ -9,6 +9,7 @@ import {
 } from "@/server/services/admin-actions";
 import type { UmbralRow } from "@/server/repositories/umbral.repo";
 import { Card, CardBody, CardHeader } from "@/ui/components/card";
+import { DataTable } from "@/ui/components/data-table";
 import { SEM_COLORS } from "@/ui/theme/tokens";
 import { cn } from "@/lib/utils";
 
@@ -176,33 +177,41 @@ export function EscalasView({
             </label>
           ) : null}
 
-          <div className="my-[14px] flex items-center gap-3">
-            <label className="w-[110px] text-[11px] sm:w-[150px] sm:text-[12px]">Umbral verde (≥)</label>
-            <input
-              type="range"
-              min={1}
-              max={100}
-              value={verde}
-              onChange={(e) => setVerde(Number(e.target.value))}
-              className="flex-1 accent-azul"
-            />
-            <span className="tnum w-[52px] text-right font-serif font-semibold">
-              {verde}%
-            </span>
+          <div className="my-[14px] flex flex-col gap-1 xs:flex-row xs:items-center xs:gap-3">
+            <label className="text-[11px] xs:w-[110px] sm:w-[150px] sm:text-[12px]">
+              Umbral verde (≥)
+            </label>
+            <div className="flex flex-1 items-center gap-3">
+              <input
+                type="range"
+                min={1}
+                max={100}
+                value={verde}
+                onChange={(e) => setVerde(Number(e.target.value))}
+                className="min-w-0 flex-1 accent-azul"
+              />
+              <span className="tnum w-[52px] flex-none text-right font-serif font-semibold">
+                {verde}%
+              </span>
+            </div>
           </div>
-          <div className="my-[14px] flex items-center gap-3">
-            <label className="w-[110px] text-[11px] sm:w-[150px] sm:text-[12px]">Umbral amarillo (≥)</label>
-            <input
-              type="range"
-              min={0}
-              max={99}
-              value={amarilloOk}
-              onChange={(e) => setAmarillo(Number(e.target.value))}
-              className="flex-1 accent-azul"
-            />
-            <span className="tnum w-[52px] text-right font-serif font-semibold">
-              {amarilloOk}%
-            </span>
+          <div className="my-[14px] flex flex-col gap-1 xs:flex-row xs:items-center xs:gap-3">
+            <label className="text-[11px] xs:w-[110px] sm:w-[150px] sm:text-[12px]">
+              Umbral amarillo (≥)
+            </label>
+            <div className="flex flex-1 items-center gap-3">
+              <input
+                type="range"
+                min={0}
+                max={99}
+                value={amarilloOk}
+                onChange={(e) => setAmarillo(Number(e.target.value))}
+                className="min-w-0 flex-1 accent-azul"
+              />
+              <span className="tnum w-[52px] flex-none text-right font-serif font-semibold">
+                {amarilloOk}%
+              </span>
+            </div>
           </div>
 
           {/* Preview de banda */}
@@ -255,12 +264,12 @@ export function EscalasView({
             )}
           </p>
 
-          <div className="mt-4 flex gap-[10px] border-t border-linea-2 pt-4">
+          <div className="mt-4 flex flex-col gap-[10px] border-t border-linea-2 pt-4 xs:flex-row xs:flex-wrap">
             <button
               type="button"
               disabled={pendiente}
               onClick={guardar}
-              className="rounded-pj border border-azul-d bg-azul px-4 py-[9px] text-[12.5px] font-semibold text-white hover:bg-azul-d disabled:opacity-50"
+              className="tap w-full rounded-pj border border-azul-d bg-azul px-4 py-[9px] text-[12.5px] font-semibold text-white hover:bg-azul-d disabled:opacity-50 xs:w-auto"
             >
               {pendiente ? "Guardando…" : "Guardar escala"}
             </button>
@@ -269,7 +278,7 @@ export function EscalasView({
                 type="button"
                 disabled={pendiente}
                 onClick={() => eliminar(scope, entidad)}
-                className="rounded-pj border border-linea bg-superficie px-4 py-[9px] text-[12.5px] font-semibold hover:bg-[#F7F9FB] disabled:opacity-50"
+                className="tap w-full rounded-pj border border-linea bg-superficie px-4 py-[9px] text-[12.5px] font-semibold hover:bg-[#F7F9FB] disabled:opacity-50 xs:w-auto"
               >
                 Restablecer a heredado
               </button>
@@ -296,57 +305,71 @@ export function EscalasView({
           title="Escalas configuradas"
           meta="lo específico prevalece sobre lo heredado"
         />
-        <CardBody className="overflow-x-auto p-0">
-          <table className="w-full min-w-[440px]">
-            <thead>
-              <tr className="bg-[#FAFBFC] text-left text-2xs uppercase tracking-[.06em] text-muted">
-                <th className="border-b border-linea px-4 py-2">Ámbito</th>
-                <th className="border-b border-linea px-4 py-2 text-right">Verde ≥</th>
-                <th className="border-b border-linea px-4 py-2 text-right">Amarillo ≥</th>
-                <th className="border-b border-linea px-4 py-2">Rojo</th>
-                <th className="w-10 border-b border-linea px-2 py-2" />
-              </tr>
-            </thead>
-            <tbody>
-              {umbrales.map((u) => (
-                <tr key={`${u.scope}:${u.entidad}`}>
-                  <td className="border-b border-linea-2 px-4 py-2 text-[12.5px]">
-                    {u.scope === "GLOBAL"
-                      ? "Global (por defecto)"
-                      : u.scope === "OE"
-                        ? `Objetivo ${u.entidad}`
-                        : u.scope === "AE"
-                          ? `Acción ${u.entidad}`
-                          : `Indicador ${u.entidad}`}
-                  </td>
-                  <td className="tnum border-b border-linea-2 px-4 py-2 text-right">
-                    {u.verde}%
-                  </td>
-                  <td className="tnum border-b border-linea-2 px-4 py-2 text-right">
-                    {u.amarillo}%
-                  </td>
-                  <td className="border-b border-linea-2 px-4 py-2">
-                    <span className="rounded-pj-sm bg-sem-rojo-bg px-2 py-[2px] text-[11px] font-semibold text-[#8f2f2f]">
-                      &lt; {u.amarillo}%
-                    </span>
-                  </td>
-                  <td className="border-b border-linea-2 px-2 py-2 text-center">
-                    {u.scope !== "GLOBAL" ? (
-                      <button
-                        type="button"
-                        title="Eliminar (vuelve a heredar)"
-                        disabled={pendiente}
-                        onClick={() => eliminar(u.scope, u.entidad)}
-                        className="font-bold text-sem-rojo hover:opacity-70"
-                      >
-                        ✕
-                      </button>
-                    ) : null}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <CardBody className="p-0">
+          <DataTable
+            celdaClassName="px-4 py-2"
+            columnas={[
+              {
+                key: "ambito",
+                header: "Ámbito",
+                movil: "titulo",
+                tdClassName: "text-[12.5px]",
+                cell: (u) =>
+                  u.scope === "GLOBAL"
+                    ? "Global (por defecto)"
+                    : u.scope === "OE"
+                      ? `Objetivo ${u.entidad}`
+                      : u.scope === "AE"
+                        ? `Acción ${u.entidad}`
+                        : `Indicador ${u.entidad}`,
+              },
+              {
+                key: "verde",
+                header: "Verde ≥",
+                align: "right",
+                tnum: true,
+                cell: (u) => `${u.verde}%`,
+              },
+              {
+                key: "amarillo",
+                header: "Amarillo ≥",
+                align: "right",
+                tnum: true,
+                cell: (u) => `${u.amarillo}%`,
+              },
+              {
+                key: "rojo",
+                header: "Rojo",
+                cell: (u) => (
+                  <span className="whitespace-nowrap rounded-pj-sm bg-sem-rojo-bg px-2 py-[2px] text-[11px] font-semibold text-[#8f2f2f]">
+                    &lt; {u.amarillo}%
+                  </span>
+                ),
+              },
+              {
+                key: "acciones",
+                header: <span className="sr-only">Eliminar</span>,
+                movil: "insignia",
+                thClassName: "w-10 px-2",
+                tdClassName: "px-2 text-center",
+                cell: (u) =>
+                  u.scope !== "GLOBAL" ? (
+                    <button
+                      type="button"
+                      title="Eliminar (vuelve a heredar)"
+                      disabled={pendiente}
+                      onClick={() => eliminar(u.scope, u.entidad)}
+                      className="font-bold text-sem-rojo hover:opacity-70"
+                    >
+                      ✕
+                    </button>
+                  ) : null,
+              },
+            ]}
+            filas={umbrales}
+            keyFila={(u) => `${u.scope}:${u.entidad}`}
+            vacio="Sin escalas configuradas."
+          />
           <p className="border-t border-linea-2 px-4 py-3 text-[11.5px] text-muted">
             Herencia: el indicador toma su escala; si no tiene, hereda de su
             Acción; luego de su Objetivo; y por último de la Global. Cambiar un

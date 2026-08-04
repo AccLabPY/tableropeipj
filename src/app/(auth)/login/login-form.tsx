@@ -9,7 +9,7 @@ function BotonEntrar() {
     <button
       type="submit"
       disabled={pending}
-      className="w-full rounded-pj border border-azul-d bg-azul px-4 py-[10px] text-[13px] font-semibold text-white hover:bg-azul-d disabled:opacity-60"
+      className="tap w-full rounded-pj border border-azul-d bg-azul px-4 py-[10px] text-[13px] font-semibold text-white hover:bg-azul-d disabled:opacity-60"
     >
       {pending ? "Verificando…" : "Iniciar sesión"}
     </button>

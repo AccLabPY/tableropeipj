@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import defaultTheme from "tailwindcss/defaultTheme";
 
 /**
  * Design system institucional del Poder Judicial (§10 del prompt maestro).
@@ -7,7 +8,14 @@ import type { Config } from "tailwindcss";
 const config: Config = {
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
+    screens: {
+      xs: "420px",
+      ...defaultTheme.screens,
+    },
     extend: {
+      maxWidth: {
+        pj: "1440px",
+      },
       colors: {
         navy: { DEFAULT: "#14395B", 2: "#0F2C46" },
         azul: {
@@ -54,6 +62,10 @@ const config: Config = {
       },
       fontSize: {
         "2xs": ["10.5px", "1.3"],
+        // Escala fluida: evita cifras y titulares desbordados por debajo de 420px
+        kpi: ["clamp(21px, 6vw, 30px)", "1.1"],
+        seccion: ["clamp(18px, 4.5vw, 26px)", "1.15"],
+        titulo: ["clamp(17px, 4vw, 22px)", "1.2"],
       },
     },
   },
