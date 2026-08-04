@@ -1,7 +1,12 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
-import { calcularCumplimiento, semaforo as clasificar } from "@/domain";
+import {
+  calcularCumplimiento,
+  calcularValorObservado,
+  formulaLegible,
+  semaforo as clasificar,
+} from "@/domain";
 import type { EstadoWF } from "@/domain/types";
 import type { RegistroDTO, RegistroItemDTO } from "@/shared/dtos/registro";
 import {
@@ -28,9 +33,8 @@ const CHIP: Record<EstadoWF | "PENDIENTE", { label: string; cls: string }> = {
 const EDITABLES: (EstadoWF | "PENDIENTE")[] = ["PENDIENTE", "BORRADOR", "OBSERVADO"];
 
 interface FormState {
-  numerador: string;
-  denominador: string;
-  valor: string;
+  /** Valores base por clave de variable ("a","b","c" o "valor"), como texto. */
+  valores: Record<string, string>;
   nivel: string;
   fuente: string;
   obs: string;
@@ -38,13 +42,23 @@ interface FormState {
 
 function formDesdeItem(it: RegistroItemDTO | undefined): FormState {
   const m = it?.medicion;
+  const valores: Record<string, string> = {};
+  if (it) {
+    for (const def of it.variablesDef) {
+      // Rehidratación: variables guardadas → legacy num/den → valor directo.
+      const guardado = m?.valoresVariables?.[def.clave];
+      let v: number | null | undefined = guardado;
+      if (v == null && m) {
+        if (def.clave === "a") v = m.numerador;
+        else if (def.clave === "b") v = m.denominador;
+        else if (def.clave === "valor" && m.nivelEscala == null)
+          v = m.valorObservado;
+      }
+      valores[def.clave] = v != null ? String(v) : "";
+    }
+  }
   return {
-    numerador: m?.numerador != null ? String(m.numerador) : "",
-    denominador: m?.denominador != null ? String(m.denominador) : "",
-    valor:
-      m?.valorObservado != null && m.numerador == null && m.nivelEscala == null
-        ? String(m.valorObservado)
-        : "",
+    valores,
     nivel: m?.nivelEscala != null ? String(m.nivelEscala) : "",
     fuente: m?.fuente ?? "",
     obs: m?.observaciones ?? "",
@@ -70,28 +84,34 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
 
   const estadoWF: EstadoWF | "PENDIENTE" = item?.medicion?.estado ?? "PENDIENTE";
   const editable = data.puedeCargar && EDITABLES.includes(estadoWF);
-  const modoEscala = !!item?.esEscala && item.escala.length > 0;
-  const modoPct = item?.unidad === "PORCENTAJE" && !modoEscala;
+  const modoEscala = item?.tipoCalculo === "NIVEL_ESCALA";
 
-  /** Valor observado derivado del formulario (misma lógica que el backend). */
-  const valorDerivado = useMemo(() => {
-    if (!item) return null;
+  /** Valores numéricos del form (NaN → null). */
+  const valoresNumericos = useMemo(() => {
+    const out: Record<string, number | null> = {};
+    if (!item) return out;
+    for (const def of item.variablesDef) {
+      const v = parseFloat(form.valores[def.clave] ?? "");
+      out[def.clave] = Number.isNaN(v) ? null : v;
+    }
+    return out;
+  }, [item, form.valores]);
+
+  /**
+   * CÁLCULO AUTOMÁTICO del valor observado con el MISMO motor de fórmulas
+   * del dominio que usa el backend (formula.ts).
+   */
+  const derivado = useMemo(() => {
+    if (!item) return { valor: null as number | null, error: undefined };
     if (modoEscala) {
       const n = parseInt(form.nivel, 10);
       const esc = item.escala.find((e) => e.nivel === n);
-      return esc ? esc.pctMax : null;
+      return { valor: esc ? esc.pctMax : null, error: undefined };
     }
-    if (modoPct) {
-      const num = parseFloat(form.numerador);
-      const den = parseFloat(form.denominador);
-      if (!Number.isNaN(num) && !Number.isNaN(den) && den !== 0)
-        return (num / den) * 100;
-      const directo = parseFloat(form.valor);
-      return Number.isNaN(directo) ? null : directo;
-    }
-    const v = parseFloat(form.valor);
-    return Number.isNaN(v) ? null : v;
-  }, [item, form, modoEscala, modoPct]);
+    const r = calcularValorObservado(item.tipoCalculo, valoresNumericos);
+    return { valor: r.valor, error: r.error };
+  }, [item, form.nivel, valoresNumericos, modoEscala]);
+  const valorDerivado = derivado.valor;
 
   /** CÁLCULO EN VIVO con el MISMO motor de dominio que usa el backend. */
   const enVivo = useMemo(() => {
@@ -110,22 +130,21 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
     return { ...r, sem };
   }, [item, valorDerivado]);
 
-  const inputPayload = () =>
-    item && {
+  const inputPayload = () => {
+    if (!item) return null;
+    const valores: Record<string, number> = {};
+    for (const [k, v] of Object.entries(valoresNumericos)) {
+      if (v !== null) valores[k] = v;
+    }
+    return {
       indicadorCodigo: item.codigo,
       anio: data.anio,
-      numerador: form.numerador === "" ? null : Number(form.numerador),
-      denominador: form.denominador === "" ? null : Number(form.denominador),
       nivelEscala: form.nivel === "" ? null : Number(form.nivel),
-      valorObservado:
-        modoEscala || (modoPct && form.numerador !== "")
-          ? null
-          : form.valor === ""
-            ? null
-            : Number(form.valor),
+      valores: modoEscala || Object.keys(valores).length === 0 ? null : valores,
       fuente: form.fuente || null,
       observaciones: form.obs || null,
     };
+  };
 
   const ejecutar = (fn: () => Promise<ResultadoAccion>) =>
     startTransition(async () => setToast(await fn()));
@@ -216,6 +235,37 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
                 ) : null}
               </div>
 
+              {/* Cómo se calcula: fórmula + descripción de cada variable */}
+              <div className="mt-4 rounded-pj border border-azul-line bg-azul-soft px-4 py-3">
+                <div className="text-2xs font-semibold uppercase tracking-[.06em] text-azul-d">
+                  Cómo se calcula
+                </div>
+                <div className="tnum mt-1 font-serif text-[14px] text-tinta">
+                  {formulaLegible(item.tipoCalculo, item.formula)}
+                </div>
+                {modoEscala ? (
+                  <p className="mt-2 text-[11.5px] leading-[1.45] text-muted">
+                    Este indicador reporta el <b>nivel cualitativo alcanzado</b>{" "}
+                    en su escala de avance ({item.escala.length} niveles): el %
+                    del nivel seleccionado es el valor observado del período.
+                  </p>
+                ) : (
+                  <ul className="mt-2 space-y-1">
+                    {item.variablesDef.map((v) => (
+                      <li
+                        key={v.clave}
+                        className="flex gap-2 text-[11.5px] leading-[1.45]"
+                      >
+                        <span className="tnum flex-none font-serif font-semibold text-azul-d">
+                          {v.clave === "valor" ? "valor" : `(${v.clave})`}
+                        </span>
+                        <span className="text-tinta">{v.descripcion}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
               {/* Formulario de carga */}
               {data.puedeCargar ? (
                 <fieldset
@@ -242,41 +292,43 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
                           ))}
                         </select>
                       </label>
-                    ) : modoPct ? (
-                      <>
-                        <Campo
-                          label="Numerador"
-                          value={form.numerador}
-                          onChange={(v) => setForm({ ...form, numerador: v })}
-                        />
-                        <Campo
-                          label="Denominador"
-                          value={form.denominador}
-                          onChange={(v) => setForm({ ...form, denominador: v })}
-                        />
-                      </>
                     ) : (
-                      <Campo
-                        label="Valor reportado"
-                        value={form.valor}
-                        onChange={(v) => setForm({ ...form, valor: v })}
-                      />
+                      /* Inputs dinámicos: un campo por variable de la fórmula,
+                         con su descripción breve visible. */
+                      item.variablesDef.map((def) => (
+                        <CampoVariable
+                          key={def.clave}
+                          clave={def.clave}
+                          descripcion={def.descripcion}
+                          unidad={item.unidad}
+                          value={form.valores[def.clave] ?? ""}
+                          onChange={(v) =>
+                            setForm({
+                              ...form,
+                              valores: { ...form.valores, [def.clave]: v },
+                            })
+                          }
+                        />
+                      ))
                     )}
-                    <label
-                      className={cn(
-                        "text-2xs uppercase tracking-[.06em] text-muted",
-                        modoEscala || !modoPct ? "" : "sm:col-span-2",
-                      )}
-                    >
-                      Valor observado (calculado)
+                    <label className="text-2xs uppercase tracking-[.06em] text-muted sm:col-span-2">
+                      Valor observado (calculado automáticamente)
                       <input
                         readOnly
                         value={
                           valorDerivado === null
-                            ? ""
+                            ? derivado.error === "DENOMINADOR_CERO"
+                              ? "El denominador no puede ser cero"
+                              : ""
                             : `${fmtNum(valorDerivado)}${item.unidad === "PORCENTAJE" ? " %" : ""}`
                         }
-                        className="mt-1 block w-full rounded-pj border border-linea bg-[#F7F9FB] px-[9px] py-2 text-[12.5px] normal-case tracking-normal text-tinta"
+                        placeholder="Se calcula al completar las variables"
+                        className={cn(
+                          "mt-1 block w-full rounded-pj border px-[9px] py-2 text-[12.5px] font-semibold normal-case tracking-normal",
+                          derivado.error === "DENOMINADOR_CERO"
+                            ? "border-[#E7C4C4] bg-sem-rojo-bg text-sem-rojo"
+                            : "border-linea bg-[#F7F9FB] text-tinta",
+                        )}
                       />
                     </label>
                     <label className="text-2xs uppercase tracking-[.06em] text-muted sm:col-span-2">
@@ -488,25 +540,56 @@ function FichaCelda({
   );
 }
 
-function Campo({
-  label,
+/**
+ * Input de una variable base de la fórmula: label con la clave "(a)" y la
+ * descripción breve de la variable visible para el usuario que carga.
+ */
+function CampoVariable({
+  clave,
+  descripcion,
+  unidad,
   value,
   onChange,
 }: {
-  label: string;
+  clave: string;
+  descripcion: string;
+  unidad: string;
   value: string;
   onChange: (v: string) => void;
 }) {
+  const esDirecta = clave === "valor";
+  const sufijoUnidad = esDirecta
+    ? unidad === "PUNTAJE"
+      ? " (puntaje)"
+      : unidad === "NUMERO"
+        ? " (número)"
+        : ""
+    : "";
   return (
-    <label className="text-2xs uppercase tracking-[.06em] text-muted">
-      {label}
+    <label
+      className={cn(
+        "text-2xs uppercase tracking-[.06em] text-muted",
+        esDirecta && "sm:col-span-2",
+      )}
+    >
+      <span className="flex items-baseline gap-[6px]">
+        <span className="tnum font-serif text-[13px] font-semibold normal-case text-azul-d">
+          {esDirecta ? "Valor" : `(${clave})`}
+        </span>
+        <span className="normal-case tracking-normal">
+          {descripcion.length > 90
+            ? `${descripcion.slice(0, 90)}…`
+            : descripcion}
+          {sufijoUnidad}
+        </span>
+      </span>
       <input
         type="number"
         step="any"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="0"
-        className="mt-1 block w-full rounded-pj border border-linea bg-superficie px-[9px] py-2 text-[12.5px] normal-case tracking-normal text-tinta"
+        className="mt-1 block w-full rounded-pj border border-linea bg-superficie px-[9px] py-2 text-[13px] normal-case tracking-normal text-tinta"
       />
     </label>
   );

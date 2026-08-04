@@ -1,0 +1,807 @@
+﻿Objetivo Estratégico,Acción Estratégica,(1) Nombre del indicador,(2) Código,(3) Dimensión del indicador,(4) Ámbito del indicador,(5) Descripción del indicador,(6) Variables,(7) Fórmula para el cálculo,(8) Unidad de medida del Indicador,(9) Frecuencia de medición,(10) Cobertura geográfica,(11) Sentido del Indicador,(12) Línea de Base del Indicador,(13) Metas del indicador,(14) Fuente (s) de información,(15) Dependencia Responsable del indicador,(16) Comentarios
+O.E.1 - Fortalecer la institucionalidad de la Corte Suprema de Justicia - Poder Judicial.,A.E.1.1 Actualizar el marco normativo que permita una reingeniería de la estructura organizacional y la innovación en la gestión institucional,"Porcentaje del marco normativo institucional actualizado y armonizado (reglamentos, manuales, resoluciones, acordadas, etc.)",1101,Calidad,Acciones Estratégicas,"Mide el avance porcentual en la actualización del marco normativo (reglamentos, manuales, etc.) bajo criterios de pertinencia y alineación estratégica.","(a) Cantidad de normativas institucionales actualizadas
+(b) Cantidad total del marco normativo",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 10
+2027: 35
+2028: 55
+2029: 75
+2030: 100","* Inventario normativo institucional 
+* Informes de la Dirección de Asuntos Jurídicos
+* Registros administrativos de la Secretaría General
+* Actas de aprobación de normativa actualizada","Secretaría General
+, Dirección General de Planificación y Desarrollo, Dirección Asuntos Juridicos, Instituto de Investigaciones Jurídicas","Para medir el indicador, primero se debe elaborar un inventario normativo, luego implementar un sistema de revisión periódico y participativo de normas internas y contar con un repositorio institucional público y actualizado de normas internas (actividades prioritarias)."
+O.E.1 - Fortalecer la institucionalidad de la Corte Suprema de Justicia - Poder Judicial.,"A.E. 1.2 Mejorar la imagen institucional y la percepción de la ciudadanía respecto a la confiabilidad, previsibilidad y transparencia del Poder Judicial, con la implementación de estrategias de comunicación efectivas",Porcentaje de usuarios con percepción positiva de la imagen institucional,1201,Calidad,Acciones Estratégicas,"Mide el nivel de percepción de usuarios sobre la atención, transparencia y resolución mediante encuestas representativas.","(a) Número de usuarios con percepción positiva
+(b) Número total de usuarios encuestados",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 0
+2027: 25
+2028: 30
+2029: 40
+2030: 50",* Encuestas de percepción ciudadana,"Dirección de Comunicación , Dirección de Estadísticas Judiciales",Ninguno
+O.E.1 - Fortalecer la institucionalidad de la Corte Suprema de Justicia - Poder Judicial.,A.E.1.3 - Implementar y gestionar un banco de proyectos priorizados para el fortalecimiento institucional.,Nivel de implementación del Banco de Proyectos,1301,Eficacia,Acciones Estratégicas,Mide el progreso desde la propuesta inicial hasta la plena implementación del banco de proyectos institucional.,"(a) Nivel de implementación alcanzado según escala definida
+(b) Nivel máximo posible en la escala",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 20
+2027: 40
+2028: 60
+2029: 80
+2030: 100","* Informes de avance del Banco de Proyectos
+* Actas de aprobación institucional
+* Documentación de seguimiento de implementación",Dirección General de Planificación y Desarrollo,"""ESCALA DE AVANCES: esta escala refleja el proceso natural de maduración, desde la propuesta inicial hasta la plena implementación y evaluación.
+Niveles - Descripción del Avance
+1- Nivel de Planificación: Propuesta de creación del Banco de Proyectos elaborada y presentada. 20%
+2- Nivel Inicial: Banco de Proyectos aprobado formalmente y con lineamientos definidos. 40%
+3- Nivel Intermedio: Banco de Proyectos en fase de carga inicial de proyectos priorizados. 60%
+4- Nivel Avanzado: Banco de Proyectos en funcionamiento con registros consolidados y actualizado periódicamente. 80%
+5- Nivel de Optimización continua: Banco de Proyectos implementado, utilizado como herramienta de gestión institucional y con mecanismos de evaluación de impacto. 100%"""
+O.E.1 - Fortalecer la institucionalidad de la Corte Suprema de Justicia - Poder Judicial.,A.E.1.4- Mejorar la respuesta de las dependencias de Apoyo y Asistencia Jurisdiccional a requerimientos de Órganos Jurisdiccionales.,Número de procedimientos operacionales aprobados para la atención de requerimientos,1401,Eficiencia,Acciones Estratégicas,Contabiliza los nuevos procedimientos formalizados para optimizar la respuesta a órganos jurisdiccionales.,Número de procedimientos operacionales aprobados,Sumatoria de procedimientos operacionales aprobados,Número,Anual,Nacional,Ascendente,2026:00:00,"2026: 60
+2027: 80
+2028: 80
+2029: 80
+2030: 80","* Procedimientos aprobados
+* Resoluciones administrativas
+* Registros de la Unidad/dependencia responsable",Dirección General de Planificación y Desarrollo,Ninguno
+O.E.1 - Fortalecer la institucionalidad de la Corte Suprema de Justicia - Poder Judicial.,A.E.1.4- Mejorar la respuesta de las dependencias de Apoyo y Asistencia Jurisdiccional a requerimientos de Órganos Jurisdiccionales.,Porcentaje de requerimientos atendidos por las dependencias de apoyo y asistencia jurisdiccional,1402,Eficacia,Acciones Estratégicas,Proporción de solicitudes de órganos jurisdiccionales resueltas por las áreas de apoyo.,"(a) Número de requerimientos atendidos por dependencia 
+(b) Número total de requerimientos recibidos por dependencia",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2027:05:00,"2026: 0
+2027: 60
+2028: 70
+2029: 80
+2030: 80","* Registros administrativos de las dependencias de apoyo y asistencia jurisdiccional
+* Informes de cumplimiento
+* Informes periódicos de las dependencias de apoyo y asistencia jurisdiccional
+* Registros físicos o digitales de requerimientos atendidos
+* Sistema de Información de Planificación Operativa Institucional (SIPOI)","Dirección General de Planificación y Desarrollo, Dirección de Estadísticas Judiciales",Ninguno
+O.E.1 - Fortalecer la institucionalidad de la Corte Suprema de Justicia - Poder Judicial.,"A.E.1.5 - Implementar el Sistema de Control Interno, a través del uso de las herramientas del MECIP, en las áreas jurisdiccional, administrativa y registral.","Nivel de madurez del Sistema de Control Interno SCI/MECIP por componentes y su implementación por dependencias de la institución, mediante evaluaciones independientes externas (Contraloría General de la República)",1501,Calidad,Acciones Estratégicas,Calificación del nivel de madurez del control interno otorgado por la Contraloría General de la República.,"Niveles de madurez, según Resolución CGR N° 147/19
+0 a 0,99 = Deficiente
+1 a 1,99 = Inicial
+2 a 2, 99 = Diseñado
+3 a 3,99 = Gestionado
+4 a 4,99 = Optimizado
+5 = Excelencia",Nivel de madurez = puntaje obtenido,Número,Anual,Nacional,Ascendente,44:02.8,"2026: 2,2
+2027: 2,5
+2028: 2,6
+2029: 2,8
+2030: 3",* Informes de evaluación externa (Contraloría General de la República),Dirección General de Planificación y Desarrollo,"""Niveles de madurez, según Resolución CGR N° 147/19
+1- Deficiente: el control no está sistematizado, algunos pocos elementos del SCI se encuentran definidos. 0 a 0,99 
+2- Inicial: el SCI se encuentra en fase de diseño; algunos controles básicos están establecidos, pero en general se trata de impulsos personales. 1 a 1,99 
+3- Diseñado: El SCI está correctamente definido, los controles se ejecutan de acuerdo a lo planificado y existe cierta disciplina respecto a ellos. 2 a 2,99 
+4- Gestionado: el SCI se encuentra desplegado e implementado y se cuenta con mediciones de los factores de desempeño asociados. 3 a 3,99 
+5- Optimizado; la organización optimiza continuamente su SCI, logrando mejoras comprobables en su desempeño. 4 a 4,99 
+6- Excelencia: la organización demuestra un nivel de excelencia que la coloca como """"primera en su clase"""" para el elemento evaluado. 5"""
+O.E.1 - Fortalecer la institucionalidad de la Corte Suprema de Justicia - Poder Judicial.,"A.E.1.5 - Implementar el Sistema de Control Interno, a través del uso de las herramientas del MECIP, en las áreas jurisdiccional, administrativa y registral.",Nivel de madurez del Sistema de Control Interno SCI/MECIP por componentes y su implementación por dependencias de la institución mediante evaluaciones internas (Dirección General de Auditoría Interna).,1502,Calidad,Acciones Estratégicas,Calificación del nivel de madurez según la evaluación realizada por la Auditoría Interna institucional.,"Niveles de madurez, según Resolución CGR N° 147/19
+0 a 0,99 = Deficiente
+1 a 1,99 = Inicial
+2 a 2, 99 = Diseñado
+3 a 3,99 = Gestionado
+4 a 4,99 = Optimizado
+5 = Excelencia",Nivel de madurez = puntaje obtenido,Número,Anual,Nacional,Ascendente,44:03.2,"2026: 3,2
+2027: 3,4
+2028: 3,6
+2029: 3,8
+2030: 4","* Informes de evaluación interna del SCI/MECIP
+* Matrices de autoevaluación institucional por componentes MECIP.
+* Actas y reportes de seguimiento del Comité de Control Interno.",Dirección General de Planificación y Desarrollo,"""Niveles de madurez, según Resolución CGR N° 147/19
+1- Deficiente: el control no está sistematizado, algunos pocos elementos del SCI se encuentran definidos. 0 a 0,99 
+2- Inicial: el SCI se encuentra en fase de diseño; algunos controles básicos están establecidos, pero en general se trata de impulsos personales. 1 a 1,99 
+3- Diseñado: El SCI está correctamente definido, los controles se ejecutan de acuerdo a lo planificado y existe cierta disciplina respecto a ellos. 2 a 2,99 
+4- Gestionado: el SCI se encuentra desplegado e implementado y se cuenta con mediciones de los factores de desempeño asociados. 3 a 3,99 
+5- Optimizado; la organización optimiza continuamente su SCI, logrando mejoras comprobables en su desempeño. 4 a 4,99 
+6- Excelencia: la organización demuestra un nivel de excelencia que la coloca como """"primera en su clase"""" para el elemento evaluado. 5"""
+O.E.1 - Fortalecer la institucionalidad de la Corte Suprema de Justicia - Poder Judicial.,"A.E.1.5 - Implementar el Sistema de Control Interno, a través del uso de las herramientas del MECIP, en las áreas jurisdiccional, administrativa y registral.",Nivel de implementación del plan para mitigar riesgos,1503,Eficacia,Acciones Estratégicas,Mide el grado de ejecución de acciones preventivas y correctivas en la gestión de riesgos.,"(a) Nivel de implementación alcanzado
+(b) Nivel máximo de implementación posible",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 25
+2027: 50
+2028: 75
+2029: 100
+2030: 0","*Informes de avance del MECIP
+* Registros del Comité de Control Interno
+* Documentación de mapas de riesgos institucionales
+* Resoluciones o actas de validación",Dirección General de Planificación y Desarrollo,"""Escala de Avance
+NIVEL - DESCRIPCIÓN - PORCENTAJE
+1- Nivel de Planificación: Diagnóstico, diseño y aprobación del plan. 25%
+2- Nivel Inicial: Implementación inicial e intermedia. 50%
+3- Nivel Avanzado: Implementación avanzada. 75%
+4- Nivel de Optimización continua: Evaluación y ajustes. 100%"""
+O.E.1 - Fortalecer la institucionalidad de la Corte Suprema de Justicia - Poder Judicial.,A.E.1.6 - Implementar la transformación digital en la gestión administrativa del Poder Judicial.,Nivel de implementación del expediente electrónico administrativo,1601,Eficiencia,Acciones Estratégicas,Avance en la digitalización de la gestión administrativa interna para la despapelización.,"(a) Nivel de implementación alcanzado
+(b) Nivel máximo de implementación posible",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 20
+2027: 40
+2028: 60
+2029: 80
+2030: 100","* Informes de avances
+* Reportes de uso del sistema de expediente electrónico administrativo","Dirección General de Tecnología de la Información y las Comunicaciones , Dirección General de Administración y Finanzas","""Escala de avance
+1- Nivel de Planificación: se cuenta con el proyecto o propuesta formal para la creación e implementación del expediente electrónico administrativo. 0-20%
+2- Nivel Inicial: Desarrollo técnico y normativo: se han elaborado y aprobado las normativas, manuales y requerimientos técnicos necesarios. El sistema se encuentra en fase de diseño o desarrollo tecnológico. 21-40%
+3- Nivel Intermedio: el expediente electrónico administrativo se encuentra en fase piloto en una o varias dependencias seleccionadas, con capacitación inicial al personal y primeros expedientes digitalizados. 41-60%
+4- Nivel Avanzado: El sistema está operativo en varias dependencias administrativas del Poder Judicial, con uso regular en la gestión de expedientes y soporte técnico activo. 61-80% 
+5- Nivel de Optimización contínua: Implementación plena y sostenida: el expediente electrónico administrativo está implementado en todas las dependencias administrativas del Poder Judicial, con funcionamiento consolidado, mantenimiento regular y evaluación continua de resultados. 81 - 100%"""
+O.E.1 - Fortalecer la institucionalidad de la Corte Suprema de Justicia - Poder Judicial.,"A.E.1.7 - Fortalecer la colaboración entre instituciones mediante la revisión y actualización de los convenios, con mecanismos efectivos para el seguimiento y la supervisión de las actividades.",Nivel de implementación de mecanismos efectivos para el seguimiento y la supervisión de las actividades derivadas de convenios,1701,Eficacia,Acciones Estratégicas,Grado de ejecución de herramientas de supervisión de compromisos interinstitucionales.,"(a) Nivel de implementación alcanzado
+(b) Nivel máximo de implementación posible",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 20
+2027: 40
+2028: 60
+2029: 80
+2030: 100","* Informes de seguimiento de convenios
+* Actas y reportes de supervisión
+* Resoluciones o documentos internos que regulen los mecanismos
+* Evaluaciones institucionales sobre cumplimiento de convenios","Secretaría General
+, Dirección General de Planificación y Desarrollo, Dirección Asuntos Juridicos, Dirección de Cooperación y Asistencia Judicial Internacional","""Escala de avance
+1- Nivel de Planificación: Se cuenta con un borrador o propuesta preliminar de mecanismos de seguimiento y supervisión, aún sin validación ni aprobación institucional. 0-20% 
+2- Nivel Inicial: Los mecanismos han sido diseñados, revisados y aprobados formalmente mediante resolución o normativa interna, pero aún no se han aplicado. 21-40%
+3- Nivel Intermedio: Los mecanismos se implementan de manera parcial o en fase piloto, aplicándose a algunos convenios o actividades de forma experimental. 41-60% 
+4- Nivel Avanzado: Los mecanismos se aplican de manera institucionalizada a todos los convenios vigentes, con registros sistemáticos de seguimiento y supervisión. 61-80% 
+5- Nivel de Optimización continua: Consolidación y evaluación: Los mecanismos están plenamente implementados, con evaluaciones periódicas de su efectividad, retroalimentación y mejoras continuas incorporadas. 81-100% """
+O.E.1 - Fortalecer la institucionalidad de la Corte Suprema de Justicia - Poder Judicial.,"A.E.1.7 - Fortalecer la colaboración entre instituciones mediante la revisión y actualización de los convenios, con mecanismos efectivos para el seguimiento y la supervisión de las actividades.",Porcentaje de convenios interinstitucionales revisados,1702,Eficacia,Acciones Estratégicas,Proporción de acuerdos revisados y actualizados respecto al inventario institucional.,"(a) Número de convenios revisados 
+(b) Número total de convenios interinstitucionales",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 0
+2027: 20
+2028: 40
+2029: 60
+2030: 80","* Registro de convenios institucionales
+* Informes de revisión y seguimiento de convenios
+* Actas de actualización o renovación
+* Sistema de gestión documental","Secretaría General
+, Dirección General de Planificación y Desarrollo, Dirección Asuntos Juridicos, Dirección de Cooperación y Asistencia Judicial Internacional","""El indicador solo se podrá medir una vez se tenga el inventario institucional de convenios.
+Actividad prioritaria: Elaboración de Inventario Institucional de convenios."""
+O.E.1 - Fortalecer la institucionalidad de la Corte Suprema de Justicia - Poder Judicial.,A.E.1.8 - Implementar el sistema de calidad en la gestión institucional.,Cantidad de dependencias judiciales certificadas con sellos de calidad,1801,Calidad,Acciones Estratégicas,Número de oficinas que obtienen acreditaciones nacionales o internacionales de calidad.,Número de dependencias judiciales certificadas con sellos calidad,Sumatoria de dependencias judiciales certificadas con sellos de calidad,Número,Anual,Nacional,Ascendente,2026:00:00,"2026: 2
+2027: 4
+2028: 4
+2029: 4
+2030: 6","* Informes de auditoría de calidad
+* Certificados emitidos por organismos certificadores
+* Registros administrativos de la dependencia encargada de la gestión de la calidad",Dirección General de Planificación y Desarrollo,Ninguno
+O.E.1 - Fortalecer la institucionalidad de la Corte Suprema de Justicia - Poder Judicial.,A.E.1.8 - Implementar el sistema de calidad en la gestión institucional.,Porcentaje de funcionarios capacitados en normas de gestión de calidad,1802,Calidad,Acciones Estratégicas,Proporción de personal formado en estándares de calidad institucional.,"(a) Número de funcionarios capacitados en gestión de calidad
+(b) Total de funcionarios del Poder Judicial",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 5
+2027: 15
+2028: 20
+2029: 25
+2030: 30","* Registros del CIEJ
+* Informes de asistencia a cursos y talleres
+* Certificados de participación y evaluaciones de capacitación","Centro Internacional de Estudios Judiciales 
+, Dirección General de Planificación y Desarrollo",Ninguno
+O.E.2 - Asegurar el acceso a la justicia y la vigencia de los Derechos Humanos.,"A.E.2.1 - Establecer mecanismos de acceso efectivo a la justicia con enfoque en derechos humanos, simplificando los procesos judiciales con énfasis en las personas en situación de vulnerabilidad.",Nivel de avance en la revisión de mecanismos de acceso efectivo a la justicia con enfoque en DDHH,2101,,,Mide el progreso en la adecuación de mecanismos que aseguran acceso efectivo con enfoque en DDHH.,"(a) Nivel alcanzado según escala definida
+(b) Nivel máximo posible en la escala",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 50
+2027: 100
+2028: 0
+2029: 0
+2030: 0","* Informes institucionales de acceso a la justicia
+* Reportes de avance de programas y proyectos con enfoque en derechos humanos
+* Documentación de la Dirección de Derechos Humanos del Poder Judicial",,"Escala de avance del indicador
+1- Nivel Inicial: Realización de diagnóstico, propuestas o planes. 50%
+2- Nivel Avanzado: Aprobación e implementación. 100%"
+O.E.2 - Asegurar el acceso a la justicia y la vigencia de los Derechos Humanos.,"A.E.2.1 - Establecer mecanismos de acceso efectivo a la justicia con enfoque en derechos humanos, simplificando los procesos judiciales con énfasis en las personas en situación de vulnerabilidad.",Nivel de avance en nuevos mecanismos para simplificación de procesos judiciales,2102,Eficacia,Acciones Estratégicas,"Refleja el progreso en acciones para reducir trámites y tiempos, priorizando personas vulnerables.","(a) Nivel alcanzado según escala definida
+(b) Nivel máximo posible en la escala",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 50
+2027: 75
+2028: 100
+2029: 0
+2030: 0","* Informes de gestión institucional
+* Reportes de avance de proyectos de simplificación procesal
+* Documentación de dependencias judiciales involucradas en la simplificación de procesos","Dirección de Derechos Humanos, Instituto de Investigaciones Jurídicas, Dirección Asuntos Juridicos","Escala de avance del indicador
+1- Nivel de Planificación: Identificación de procesos complejos y se han formulado propuestas de simplificación. 0% - 25%
+2- Nivel Inicial: Puesta en marcha acciones piloto o parciales de simplificación en determinados procesos judiciales. 26% - 50%
+3- Nivel Intermedio: La mayoría de las medidas planificadas de simplificación han sido implementadas. Se observan mejoras en tiempos y reducción de trámites en varias áreas del sistema judicial. 51% - 75%
+4- Nivel Avanzado: Todas las medidas de simplificación previstas han sido implementadas con éxito. Los procesos judiciales muestran mayor agilidad, menor burocracia y un impacto directo en el acceso efectivo a la justicia. 76% - 100%"
+O.E.2 - Asegurar el acceso a la justicia y la vigencia de los Derechos Humanos.,"A.E.2.2 - Implementar mecanismos de acceso a la justicia, incluyendo los de género, adultos mayores y personas con discapacidad.",Nivel de implementación de mecanismos de acceso a la justicia con perspectiva de género,2201,Eficiencia,Acciones Estratégicas,Grado de implementación de protocolos y capacitación para asegurar igualdad de género.,"(a) Nivel de implementación alcanzado según escala definida
+(b) Nivel maximo posible en la escala",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026: 0%,"2026: 25
+2027: 50
+2028: 75
+2029: 100
+2030: 0","* Informes institucionales sobre políticas de género
+* Reportes de la Dirección de Derechos Humanos, de la Secretaría de Género.
+* Documentación de proyectos y protocolos implementados","Dirección de Derechos Humanos, Secretaría de Género , Dirección Asuntos Juridicos, Instituto de Investigaciones Jurídicas","Escala de avance del indicador 
+1- Nivel de Planificación: Identificación de las necesidades de incorporación de la perspectiva de género y se cuenta con propuestas o planes preliminares. 0% - 25%
+2- Nivel Inicial: Implementación de algunas acciones o mecanismos piloto con perspectiva de género (protocolos específicos, capacitaciones iniciales, oficinas de atención), de manera parcial. 26% - 50%
+3- Nivel Intermedio: La mayoría de los mecanismos planificados con perspectiva de género están en ejecución. Se observan mejoras significativas en la atención y acceso a la justicia para mujeres y grupos vulnerables. 51% - 75%
+4- Nivel Avanzado: Todos los mecanismos planificados han sido implementados y en funcionamiento; con impacto positivo y sostenido en la equidad y acceso a la justicia. 76% - 100%"
+O.E.2 - Asegurar el acceso a la justicia y la vigencia de los Derechos Humanos.,"A.E.2.2 - Implementar mecanismos de acceso a la justicia, incluyendo los de género, adultos mayores y personas con discapacidad.",Nivel de implementación de mecanismos de acceso a la justicia para adultos mayores,2202,Calidad,Acciones Estratégicas,"Avance en oficinas, asistencia jurídica y protocolos de trato digno para este grupo.","(a) Nivel de implementación alcanzado según escala definida
+(b) Nivel maximo posible en la escala",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 0
+2027: 25
+2028: 50
+2029: 75
+2030: 100","* Informes institucionales de programas de atención a adultos mayores
+* Reportes de la Dirección de Derechos Humanos
+* Documentación de oficinas especializadas y protocolos implementados","Dirección de Derechos Humanos, Dirección Asuntos Juridicos, Instituto de Investigaciones Jurídicas","Escala de avance del indicador
+1- Nivel de Planificación: Identificación de necesidades de los adultos mayores y elaboración de propuestas o planes preliminares. 0% - 25%
+2- Nivel Inicial: Implementación de algunas medidas piloto o parciales (ejemplo: capacitaciones específicas, oficinas de orientación). 26% - 50%
+3- Nivel Intermedio: La mayoría de los mecanismos planificados se encuentra en ejecución. Se observan mejoras tangibles en la atención y acceso a la justicia de los adultos mayores. 51% - 75%
+4- Nivel Avanzado: Todos los mecanismos previstos han sido implementados y funcionan plenamente. Se garantiza un acceso inclusivo y diferenciado para adultos mayores en todo el sistema judicial. 76% - 100%"
+O.E.2 - Asegurar el acceso a la justicia y la vigencia de los Derechos Humanos.,"A.E.2.2 - Implementar mecanismos de acceso a la justicia, incluyendo los de género, adultos mayores y personas con discapacidad.",Nivel de implementación de mecanismos de acceso a la justicia para personas con discapacidad,2203,Calidad,Acciones Estratégicas,"Refleja avance en infraestructura, intérpretes y tecnologías adaptativas para inclusión.","(a) Nivel de implementación alcanzado según escala definida
+(b) Nivel maximo posible en la escala",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 0
+2027: 25
+2028: 50
+2029: 75
+2030: 100","* Informes institucionales sobre accesibilidad e inclusión
+* Reportes de la Dirección de Derechos Humanos 
+* Documentación de proyectos de adecuación de infraestructura y servicios judiciales","Dirección de Derechos Humanos, Instituto de Investigaciones Jurídicas, Dirección Asuntos Juridicos","""Escala de avance del indicador
+1- Nivel de Planificación: Identificación de las necesidades de accesibilidad y elaborado planes preliminares. 0% - 25%
+2- Nivel Inicial: Implementación de medidas piloto o parciales (ejemplo: intérpretes en ciertos casos, capacitaciones básicas, accesibilidad en algunos edificios). 26% - 50%
+3- Nivel Intermedio: La mayoría de los mecanismos planificados están en ejecución. Se observan mejoras claras en accesibilidad física, comunicacional y procedimental en varias dependencias judiciales. 51% - 75%
+4- Nivel Avanzado: Todos los mecanismos previstos han sido implementados y funcionan de forma sostenida. El sistema judicial garantiza el acceso pleno a la justicia de las personas con discapacidad, cumpliendo estándares nacionales e internacionales de inclusión. 76% - 100%"""
+O.E.2 - Asegurar el acceso a la justicia y la vigencia de los Derechos Humanos.,"A.E.2.2 - Implementar mecanismos de acceso a la justicia, incluyendo los de género, adultos mayores y personas con discapacidad.","Porcentaje de funcionarios judiciales capacitados en acceso a la justicia con enfoque en género, discapacidad y adultos mayores",2204,Calidad,Acciones Estratégicas,Mide capacitación del personal jurisdiccional y de apoyo en temáticas de inclusión.,"(a) Número de funcionarios judiciales capacitados en acceso a la justicia con enfoque en género, discapacidad y personas mayores 
+(b) Número total de funcionarios de las áreas jurisdiccional, de apoyo y asistencia jurisdiccional",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 10
+2027: 20
+2028: 30
+2029: 40
+2030: 50","* Registros de capacitaciones (CIEJ)
+* Listados de asistencia
+* Informes institucionales de seguimiento y evaluación","Centro Internacional de Estudios Judiciales , Dirección de Derechos Humanos, Secretaría de Género",Ninguno
+O.E.2 - Asegurar el acceso a la justicia y la vigencia de los Derechos Humanos.,"A.E.2.3 - Promover la aplicación del control de convencionalidad en las decisiones judiciales, asegurando la primacía de los tratados internacionales de derechos humanos ratificados por Paraguay.",Porcentaje de aplicación del control de convencionalidad en las decisiones judiciales,2301,Calidad,Acciones Estratégicas,Proporción de decisiones que citan expresamente tratados internacionales de DDHH.,"(a) Número de decisiones judiciales que aplican el control de convencionalidad
+(b) Número total de decisiones judiciales analizadas",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 5
+2027: 10
+2028: 15
+2029: 20
+2030: 30","* Base de datos de jurisprudencia de la CSJ y juzgados
+* Revisión de contenido por áreas técnicas jurídicas
+* Informes de monitoreo jurisdiccional
+* Observatorios de DDHH del sistema de justicia","Dirección de Derechos Humanos, Instituto de Investigaciones Jurídicas",Ninguno
+O.E.2 - Asegurar el acceso a la justicia y la vigencia de los Derechos Humanos.,"A.E.2.3 - Promover la aplicación del control de convencionalidad en las decisiones judiciales, asegurando la primacía de los tratados internacionales de derechos humanos ratificados por Paraguay.",Cantidad de magistrados y funcionarios capacitados en Derechos Humanos.,2302,Eficacia,Acciones Estratégicas,Cantidad de personal con formación específica en DDHH y tratados.,"Total de participantes en las capacitaciones
+Tipo de capacitación (curso, taller, diplomado, etc.)
+Categoría del participante (magistrado o funcionario)",Suma total de magistrados y funcionarios capacitados en el periodo,Número,Anual,Nacional,Ascendente,2026:00:00,"2026: 500
+2027: 1500
+2028: 2500
+2029: 3500
+2030: 4000","* Registros de asistencia de la capacitación
+* Informes de evaluación de capacitaciones 
+* Planes de capacitación institucional","Centro Internacional de Estudios Judiciales, Dirección de Derechos Humanos",Ninguno
+O.E.2 - Asegurar el acceso a la justicia y la vigencia de los Derechos Humanos.,"A.E.2.4 - Fortalecer la protección de las mujeres y niñas en situación de violencia con protocolos especializados, en los procesos judiciales.",Cantidad de dependencias jurisdiccionales y de apoyo que aplican protocolos especializados en protección de las mujeres y niñas en situación de violencia.,2401,Calidad,Acciones Estratégicas,Mide dependencias que implementan protocolos especializados contra la violencia.,Número de dependencias jurisdiccionales y de apoyo que aplican protocolos especializados,Sumatoria de dependencias jurisdiccionales y de apoyo que aplican protocolos especializados,Número,Anual,Nacional,Ascendente,2026:00:00,"2026: 400
+2027: 400
+2028: 400
+2029: 400
+2030: 400","* Registros de implementación de protocolos
+* Reportes de la Secretaría de Género","Secretaría de Género , Dirección de Derechos Humanos",Ninguno
+O.E.2 - Asegurar el acceso a la justicia y la vigencia de los Derechos Humanos.,"A.E.2.4 - Fortalecer la protección de las mujeres y niñas en situación de violencia con protocolos especializados, en los procesos judiciales.",Porcentaje de funcionarios capacitados en atención especializada a víctimas de violencia,2402,Calidad,Acciones Estratégicas,Proporción de personal formado en atención con enfoque de género y DDHH.,"(a) Número de funcionarios capacitados en atención especializada a víctimas de violencia
+(b) Número total de funcionarios de las áreas jurisdiccional, de apoyo y asistencia jurisdiccional del Poder Judicial",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2025:00:00,"2026: 20
+2027: 30
+2028: 40
+2029: 50
+2030: 60","* Registros de capacitaciones
+* Planes y reportes de capacitación
+* Informes de Capital Humano
+* Informes de ejecución de planes de formación","Centro Internacional de Estudios Judiciales , Dirección de Derechos Humanos, Secretaría de Género",Ninguno
+O.E.2 - Asegurar el acceso a la justicia y la vigencia de los Derechos Humanos.,A.E.2.5 - Implementar soluciones tecnológicas para facilitar el acceso a la justicia y promover la transparencia institucional.,Porcentaje de servicios judiciales accesibles mediante la implementación de herramientas tecnológicas,2501,Eficacia,Acciones Estratégicas,Grado de incorporación de tecnología para mejorar accesibilidad y transparencia.,"(a) Número de servicios judiciales con herramientas tecnológicas implementadas.
+(b) Número de servicios tecnológicos planificados.",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2025:00:00,"2026: 0
+2027: 25
+2028: 50
+2029: 75
+2030: 100",* Informes institucionales y registros de plataformas digitales implementadas,"Dirección General de Tecnología de la Información y las Comunicaciones , Dirección de Derechos Humanos, Dirección de Transparencia y Acceso a la Información Pública",Ninguno
+"O.E.3 - Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros.",A.E.3.1 – Aumentar la cantidad de casos resueltos sobre los ingresados para reducir la congestión y la pendencia.,Tasa de Resolución,3101,Eficacia,Acciones Estratégicas,Porcentaje de casos resueltos respecto a ingresados en un periodo.,"(a) Casos resueltos
+(b) Casos ingresados",(a) / (b),Número,Anual,Nacional,Ascendente,A determinar al cierre del 2025,"2026: 1,05
+2027: 1,2
+2028: 1,4
+2029: 1,5
+2030: 1,5",* Informes estadísticos de la Dirección de Estadísticas Judiciales de las circunscripciones judiciales.,Dirección de Estadísticas Judiciales,Ninguno
+"O.E.3 - Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros.",A.E.3.1 – Aumentar la cantidad de casos resueltos sobre los ingresados para reducir la congestión y la pendencia.,Tasa de congestión,3102,Eficacia,Acciones Estratégicas,Grado de acumulación de casos en trámite respecto a resueltos.,"(a) Casos pendientes al inicio del periodo + 
+(b) Casos ingresados / 
+( c ) Casos resueltos en ese periodo",((a) + (b)) / (c),Número,Anual,Nacional,Descendente,A determinar al cierre del 2025,"2026: 6,25
+2027: 5,75
+2028: 5,25
+2029: 4,75
+2030: 4,25",* Informes estadísticos de la Dirección de Estadísticas Judiciales de las circunscripciones judiciales,Dirección de Estadísticas Judiciales,Ninguno
+"O.E.3 - Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros.",A.E.3.1 – Aumentar la cantidad de casos resueltos sobre los ingresados para reducir la congestión y la pendencia.,Tasa de pendencia,3103,Eficiencia,Acciones Estratégicas,Relación entre casos pendientes al final y resueltos en el periodo.,"(a) Casos pendientes al final del año 
+(b) Casos resueltos en el año",(a) / (b),Número,Anual,Nacional,Descendente,A determinar al cierre del 2025,"2026: 5,50
+2027: 5,00
+2028: 4,50
+2029: 4,00
+2030: 3,50",* Informes estadísticos de la Dirección de Estadísticas Judiciales de las circunscripciones judiciales,Dirección de Estadísticas Judiciales,Ninguno
+"O.E.3 - Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros.",A.E.3.1 – Aumentar la cantidad de casos resueltos sobre los ingresados para reducir la congestión y la pendencia.,Nivel de implementación de mecanismos para mejorar la gestión de Juzgados de Primera Instancia con alta congestión en las circunscripciones judiciales,3104,Eficiencia,Acciones Estratégicas,Avance en mecanismos aplicados en 1ra Instancia para mejorar procesos y tiempos.,"(a) Nivel de implementación alcanzado según escala definida
+(b) Nivel máximo posible en la escala",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 25
+2027: 50
+2028: 75
+2029: 100
+2030: 0","* Informes de seguimiento de planes de gestión de despachos
+* Reportes de la Dirección de Estadísticas Judiciales
+* Documentación de la Dirección General de Planificación y Desarrollo","Dirección General de Planificación y Desarrollo, Dirección de Estadísticas Judiciales, Departamento de Administración de Fueros, Dirección General de Auditoria de Gestión Jurisdiccional","""Escala de avance
+1- Nivel de Planificación: Diagnóstico, planificación, diseño y aprobación. 25%
+2- Nivel Inicial: Aplicación inicial (plan piloto). 50%
+3- Nivel Avanzado: Aplicación general. 75%
+4- Nivel de Optimización continua: Evaluación y ajustes. 100%"""
+"O.E.3 - Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros.",A.E.3.2 - Implementar acciones para la disminución de los tiempos en los procesos judiciales,Porcentaje de Juzgados que superan el tiempo promedio de duración de los procesos judiciales en el fuero Civil y Comercial de Primera Instancia,3201,Eficiencia,Acciones Estratégicas,Proporción de juzgados que exceden el tiempo promedio de duración de procesos.,"(a) Número de juzgados del fuero Civil y Comercial que superan el tiempo promedio de duración de procesos judiciales.
+(b) Número total de juzgados del fuero Civil y Comercial evaluados",(a) / (b) * 100,Porcentaje,Anual,Nacional,Descendente,2025: 100,"2026: 95
+2027: 90
+2028: 80
+2029: 70
+2030: 60","* Informes estadísticos de gestión judicial
+* Base de datos de seguimiento de causas por fuero",Dirección de Estadísticas Judiciales,Ninguno
+"O.E.3 - Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros.",A.E.3.2 - Implementar acciones para la disminución de los tiempos en los procesos judiciales,Porcentaje de Juzgados que superan el tiempo promedio de duración de los procesos judiciales en el fuero Penal,3202,Eficiencia,Acciones Estratégicas,Proporción de juzgados penales de 1ra Instancia que exceden el tiempo promedio.,"(a) Número de juzgados penales que superan el tiempo promedio de duración de procesos judiciales.
+(b) Número total de juzgados penales evaluados.",(a) / (b) * 100,Porcentaje,Anual,Nacional,Descendente,2026: 100,"2026: 95
+2027: 90
+2028: 80
+2029: 70
+2030: 60","* Informes estadísticos de gestión judicial
+* Base de datos de seguimiento de causas por fuero",Dirección de Estadísticas Judiciales,Ninguno
+"O.E.3 - Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros.",A.E.3.2 - Implementar acciones para la disminución de los tiempos en los procesos judiciales,Porcentaje de Juzgados que superan el tiempo promedio de duración de los procesos judiciales en el fuero Laboral,3203,Eficiencia,Acciones Estratégicas,Proporción de juzgados laborales de 1ra Instancia que exceden el tiempo promedio.,"(a) Número de juzgados laborales que superan el tiempo promedio de duración de procesos judiciales.
+(b) Número total de juzgados laborales evaluados.",(a) / (b) * 100,Porcentaje,Anual,Nacional,Descendente,2025: 100,"2026: 95
+2027: 90
+2028: 80
+2029: 70
+2030: 60","* Informes estadísticos de gestión judicial
+* Base de datos de seguimiento de causas por fuero",Dirección de Estadísticas Judiciales,Ninguno
+"O.E.3 - Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros.",A.E.3.2 - Implementar acciones para la disminución de los tiempos en los procesos judiciales,Porcentaje de Juzgados que superan el tiempo promedio de duración de los procesos judiciales en el fuero de la Niñez y Adolescencia,3204,Eficiencia,Acciones Estratégicas,Proporción de juzgados de Niñez y Adolescencia que exceden tiempo promedio.,"(a) Número de juzgados de la Niñez y Adolescencia que superan el tiempo promedio de duración de procesos judiciales.
+(b) Número total de juzgados de la Niñez y Adolescencia evaluados.",(a) / (b) * 100,Porcentaje,Anual,Nacional,Descendente,2026: 100,"2026: 95
+2027: 90
+2028: 80
+2029: 70
+2030: 60","* Informes estadísticos de gestión judicial
+* Base de datos de seguimiento de causas por fuero",Dirección de Estadísticas Judiciales,Ninguno
+"O.E.3 - Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros.","A.E.3.3 - Implementar nuevos modelos de gestión jurisdiccional, innovadores y eficientes.",Nivel de implementación del modelo de gestión jurisdiccional,3301,Eficiencia,Acciones Estratégicas,Avance en la implementación del modelo conforme a lo planificado para eficiencia.,"(a) Nivel de implementación alcanzado seguún escala definida 
+(b) Nivel máximo posible en la escala",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 20
+2027: 40
+2028: 60
+2029: 80
+2030: 100","* Resoluciones y actas de adopción del modelo
+* Reportes de implementación por juzgado o circunscripción
+* Informes de avance y reportes de implementación
+* Actas de verificación de implementación","Dirección General de Planificación y Desarrollo, Oficinas Técnicas de Apoyo, Dirección General de Capital Humano, Dirección General de Auditoria de Gestión Jurisdiccional, Departamento de Administración de Fueros","""Escala de avance:
+1- Nivel de Planificación: Modelo diseñado y aprobado. 20% 
+2- Nivel Inicial: Implementación piloto en juzgados seleccionados. 40% (implica capacitación)
+3- Nivel Intermedio: Implementación piloto en tribunales seleccionados. 60% (implica capacitación)
+4- Nivel Avanzado: Uso efectivo del modelo, con evidencia de aplicación. 80%
+5- Nivel de Optimización continua: Evaluación del modelo y mejoras en base al resultado. 100%
+
+*Indicador de tipo Cualitativo, puede escalar por niveles de implementación (diseño → piloto → uso → evaluación → estandarización) o expresarse en forma de índice o matriz de puntuación por etapas. """
+"O.E.3 - Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros.","A.E.3.4 - Consolidar la gestión eficiente de los Juzgados Especializados de Niñez y Adolescencia, Crimen Organizado y de Paz, con la estructura, los equipos de apoyo y los recursos necesarios.",Porcentaje de juzgados especializados de la Niñez y Adolescencia que cuentan con equipo interdisciplinario asesor de la justicia,3401,Eficiencia,Acciones Estratégicas,Dotación de equipos completos (perfiles mínimos) según Art. 165 Ley 6083/2018.,"(a) Número de juzgados de la Niñez y Adolescencia con equipo interdisciplinario asesor de la justicia establecido por ley
+(b) Total de juzgados de la Niñez y Adolescencia existentes",(a) / (b)* 100,Porcentaje,Anual,Nacional,Ascendente,2025:00:00,"2026: 20
+2027: 30
+2028: 40
+2029: 50
+2030: 60","* Informes de gestión de juzgados especializados
+* Informe de necesidades de juzgados","Dirección General de Capital Humano, Dirección Técnico Forense",Ninguno
+"O.E.3 - Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros.","A.E.3.4 - Consolidar la gestión eficiente de los Juzgados Especializados de Niñez y Adolescencia, Crimen Organizado y de Paz, con la estructura, los equipos de apoyo y los recursos necesarios.",Porcentaje de Juzgados de Paz de zonas urbanas con estructura funcional adecuada,3402,Calidad,Acciones Estratégicas,"Porcentaje que cumple infraestructura, tecnología, personal y atención.","(a) Número de Juzgados de Paz urbanos con estructura funcional adecuada
+(b) Total de Juzgados de Paz urbanos existentes",(a) / (b)* 100,Porcentaje,Anual,Nacional,Ascendente,2025:00:00,"2026: 0
+2027: 15
+2028: 30
+2029: 40
+2030: 50","*Informes de infraestructura edilicia y mantenimiento
+*Informes de la Dirección General de Capital Humano
+*Informes de Patrimonio/Suministros","Dirección General de Planificación y Desarrollo, Dirección General de Administración y Finanzas , Dirección General de Capital Humano, Dirección de Infraestructura Física, Departamento de Administración de Fueros, Oficina Técnica de Apoyo a la Justicia de Paz",Ninguno
+"O.E.3 - Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros.","A.E.3.4 - Consolidar la gestión eficiente de los Juzgados Especializados de Niñez y Adolescencia, Crimen Organizado y de Paz, con la estructura, los equipos de apoyo y los recursos necesarios.",Porcentaje de Juzgados de la Niñez y Adolescencia con estructura funcional adecuada,3403,Calidad,Acciones Estratégicas,"Porcentaje que cumple infraestructura, tecnología, personal y atención.","(a) Número de Juzgados de la Niñez y Adolescencia con estructura funcional adecuada
+(b) Total de Juzgados de la Niñez y Adolescencia existentes",(a) / (b)* 100,Porcentaje,Anual,Nacional,Ascendente,2025:00:00,"2026: 0
+2027: 15
+2028: 30
+2029: 40
+2030: 50","*Informes de infraestructura edilicia y mantenimiento
+*Informes de la Dirección General de Capital Humano
+*Informes de Patrimonio/Suministros","Dirección General de Planificación y Desarrollo, Dirección General de Administración y Finanzas , Dirección General de Capital Humano, Dirección de Infraestructura Física, Departamento de Administración de Fueros, Oficina Técnica de Apoyo al Fuero de la Niñez y la Adolescencia",Ninguno
+"O.E.3 - Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros.","A.E.3.4 - Consolidar la gestión eficiente de los Juzgados Especializados de Niñez y Adolescencia, Crimen Organizado y de Paz, con la estructura, los equipos de apoyo y los recursos necesarios.",Porcentaje de Juzgados de Crimen Organizado con estructura funcional adecuada,3404,Calidad,Acciones Estratégicas,"Porcentaje que cumple infraestructura, tecnología, personal y atención.","(a) Número de Juzgados de Crimen Organizado con estructura funcional adecuada
+(b) Total de Juzgados de Crimen Organizado existentes",(a) / (b)* 100,Porcentaje,Anual,Nacional,Ascendente,2025:00:00,"2026: 0
+2027: 15
+2028: 30
+2029: 40
+2030: 50","*Informes de infraestructura edilicia y mantenimiento
+*Informes de la Dirección General de Capital Humano
+*Informes de Patrimonio/Suministros","Dirección General de Planificación y Desarrollo, Dirección General de Administración y Finanzas , Dirección General de Capital Humano, Dirección de Infraestructura Física, Departamento de Administración de Fueros, Oficina Técnica de Apoyo Penal",Ninguno
+"O.E.3 - Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros.","A.E.3.4 - Consolidar la gestión eficiente de los Juzgados Especializados de Niñez y Adolescencia, Crimen Organizado y de Paz, con la estructura, los equipos de apoyo y los recursos necesarios.",Porcentaje de funcionarios de juzgados especializados con formación continua en su área,3405,Calidad,Acciones Estratégicas,Porcentaje de funcionarios que participan en cursos vinculados a su área.,"(a) Número de funcionarios de juzgados especializados con formación continua en su área.
+(b) Total de funcionarios de juzgados especializados.",(a) / (b)* 100,Porcentaje,Anual,Nacional,Ascendente,2025:00:00,"2026: 20
+2027: 40
+2028: 60
+2029: 80
+2030: 100",* Registros del CIEJ,Centro Internacional de Estudios Judiciales,Ninguno
+"O.E.3 - Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros.",A.E.3.5 - Diseñar e implementar indicadores de calidad de las resoluciones judiciales.,Nivel de implementacion de indicadores de calidad de las resoluciones,3501,Eficacia,Acciones Estratégicas,Grado de avance en indicadores aplicados a resoluciones para mejora continua.,"(a) Nivel de implementación alcanzado según escala definida
+(b) Nivel máximo posible en la escala",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 20
+2027: 40
+2028: 60
+2029: 80
+2030: 100","* Informes técnicos
+* Documentos oficiales de planificación y seguimiento institucional
+* Reportes de áreas responsables de calidad judicial","Oficinas Técnicas de Apoyo, Dirección General de Planificación y Desarrollo, Instituto de Investigaciones Jurídicas","""Escala de progreso
+1- Nivel de Planificación: Indicadores diseñados y aprobados. 20% 
+2- Nivel Inicial: Medición en tribunales y juzgados seleccionados. 40%
+3- Nivel Intermedio: Medición en tribunales y juzgados seleccionados. 60% 
+4- Nivel Avanzado: Ajustes de los indicadores de calidad. 80%
+5- Nivel de Optimización continua: Estandarización de los indicadores de calidad. 100%"""
+"O.E.3 - Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros.","A.E.3.6 - Gestionar de manera eficiente la información estadística de las áreas jurisdiccional, administrativa y registral, para mejorar la calidad de los datos institucionales.",Nivel de implementación del Sistema Estadístico Judicial,3601,Eficiencia,Acciones Estratégicas,"Avance en desarrollo y uso en áreas jurisdiccional, administrativa y registral.","(a) Nivel de implementación alcanzado según escala definida 
+(b) Nivel máximo posible en la escala",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 20
+2027: 40
+2028: 60
+2029: 80
+2030: 100","* Actas de reuniones y reportes de seguimiento
+* Registros y bases de datos de la Dirección de Estadísticas Judiciales
+* Reportes de avance de implementación del sistema",Dirección de Estadísticas Judiciales,"""Escala de Avance:
+1- Nivel de Planificación: Sistema diseñado y aprobado. 20% 
+2- Nivel Inicial: Implementación inicial y ajustes al sistema. 40% 
+3- Nivel Intermedio: Implementacion intermedia y ajustes al sistema. 60% 
+4- Nivel Avanzado: Implementacion avanzada. 80%
+5- Nivel de Optimización: Evaluación del modelo y mejoras en base al resultado. 100%"""
+"O.E.3 - Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros.",A.E.3.7 - Fortalecer el servicio de mediación en todas las Circunscripciones Judiciales.,Nivel de avance en el fortalecimiento de los servicios de mediación en todo el país,3701,Eficacia,Acciones Estratégicas,"Grado de consolidación: disponibilidad, RRHH e infraestructura.","(a) Nivel de implementación alcanzado según escala definida 
+(b) Nivel máximo posible en la escala",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2025:00:00,2026:20:00,"* Registros de la Dirección de Mediación
+* Informes de gestión de las Circunscripciones Judiciales.",Dirección de Mediación,"""Escala de Avance: 
+1- Nivel de Planificación: Diagnóstico, definicion de acciones para el fortalecimiento y aprobación. 20% 
+2- Nivel Inicial: Etapa incial para el desarrollo de las acciones para el fortalecimiento. 40% 
+3- Nivel Intermedio: Expansión hacia circunscripciones de mayor complejidad y seguimiento a las instaladas. 60% 
+4- Nivel Avanzado: Ajustes finales, mejoras de calidad y cobertura casi total. 80%
+5- Nivel de Optimización continua: Servicios de mediación fortalecidos en todo el país. 100%"""
+"O.E.3 - Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros.",A.E.3.7 - Fortalecer el servicio de mediación en todas las Circunscripciones Judiciales.,Tasa de acuerdos logrados sobre casos ingresados,3702,Eficacia,Acciones Estratégicas,Proporción de casos en mediación que finalizan con acuerdo formal.,"(a) Número de acuerdos logrados en mediación en un periodo determinado
+(b) Número de casos ingresados a mediación en el mismo periodo",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2024:00:00,"2026: 55
+2027: 60
+2028: 65
+2029: 70
+2030: 75","* Registros de la Dirección de Mediación
+* Actas y reportes de cierre de casos",Dirección de Mediación,Ninguno
+"O.E.3 - Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros.","A.E.3.8 - Consolidar la gestión digital en todas las instancias y fueros, incorporando herramientas de inteligencia artificial para la optimización de la gestión de los procesos judiciales.",Porcentaje de tribunales de apelación gestionados electrónicamente en el Sistema Integral de Tramitación Judicial Electrónica (SITJE),3801,Eficiencia,Acciones Estratégicas,Grado de implementación de gestión electrónica (SITJE) en Tribunales de Apelación para optimización de procesos.,"(a) Número de tribunales de apelación gestionados en SITJE
+(b) Número total de tribunales de apelación",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2025:00:00,"2026: 5
+2027: 15
+2028: 20
+2029: 25
+2030: 30","* Actas de incorporación de cada tribunal al SITJE
+* Reportes de implementación y uso del SITJE
+* Listado oficial de tribunales integrados al sistema
+* Informes estadísticos sobre cobertura del SITJE por fueros y circunscripciones
+* Base de datos del sistema con registro de tribunales activos",Dirección General de Tecnología de la Información y las Comunicaciones,Ninguno
+"O.E.3 - Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros.","A.E.3.8 - Consolidar la gestión digital en todas las instancias y fueros, incorporando herramientas de inteligencia artificial para la optimización de la gestión de los procesos judiciales.",Porcentaje de juzgados de primera instancia gestionados electrónicamente en el Sistema Integral de Tramitación Judicial Electrónica (SITJE),3802,Eficiencia,Acciones Estratégicas,Grado de implementación de gestión electrónica en juzgados de 1ra Instancia.,"(a) Número de juzgados de primera instancia gestionados en SITJE
+(b) Número total de juzgados de primera instancia",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2025:00:00,"2026: 5
+2027: 15
+2028: 20
+2029: 25
+2030: 30","* Actas de incorporación de cada juzgado al SITJE
+* Reportes de implementación y uso del SITJE
+* Listado oficial de Juzgados de primera instancia integrados al sistema
+* Informes estadísticos sobre cobertura del SITJE por fueros y circunscripciones
+* Base de datos del sistema con registro de juzgados de primera instancia activos",Dirección General de Tecnología de la Información y las Comunicaciones,Ninguno
+"O.E.3 - Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros.","A.E.3.8 - Consolidar la gestión digital en todas las instancias y fueros, incorporando herramientas de inteligencia artificial para la optimización de la gestión de los procesos judiciales.",Porcentaje de juzgados de paz gestionados electrónicamente en el Sistema Integral de Tramitación Judicial Electrónica (SITJE),3803,Eficiencia,Acciones Estratégicas,Grado de implementación de gestión electrónica en juzgados de paz.,"(a) Número de juzgados de paz gestionados en SITJE
+(b) Número total de juzgados de paz",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2025:00:00,"2026: 5
+2027: 15
+2028: 20
+2029: 25
+2030: 30","* Actas de incorporación de cada juzgado al SITJE
+* Reportes de implementación y uso del SITJE
+* Listado oficial de Juzgados de Paz integrados al sistema
+* Informes estadísticos sobre cobertura del SITJE por fueros y circunscripciones
+* Base de datos del sistema con registro de Juzgados de paz activos",Dirección General de Tecnología de la Información y las Comunicaciones,Ninguno
+"O.E.3 - Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros.","A.E.3.8 - Consolidar la gestión digital en todas las instancias y fueros, incorporando herramientas de inteligencia artificial para la optimización de la gestión de los procesos judiciales.",Porcentaje de las Salas de la Corte Suprema de Justicia gestionadas electrónicamente en el Sistema Integral de Tramitación Judicial Electrónica (SITJE),3804,Eficiencia,Acciones Estratégicas,Grado de implementación de gestión electrónica en las Salas de la CSJ.,"(a) Número de las Salas de la CSJ gestionadas en SITJE
+(b) Número total de las Salas de la CSJ",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2025:00:00,"2026: 5
+2027: 15
+2028: 20
+2029: 25
+2030: 30","* Actas de incorporación de cada Sala al SITJE
+* Reportes de implementación y uso del SITJE
+* Listado oficial de Salas de la CSJ integradas al sistema
+* Informes estadísticos sobre cobertura del SITJE por fueros y circunscripciones judiciales
+* Base de datos del sistema con registro de Salas de la CSJ",Dirección General de Tecnología de la Información y las Comunicaciones,Ninguno
+"O.E.3 - Optimizar el servicio de justicia, con una gestión eficiente en todos los fueros.","A.E.3.8 - Consolidar la gestión digital en todas las instancias y fueros, incorporando herramientas de inteligencia artificial para la optimización de la gestión de los procesos judiciales.",Nivel de implementación de IA en procesos judiciales,3805,Eficiencia,Acciones Estratégicas,Uso de IA y plataformas digitales para modernizar la gestión en distintos fueros.,"(a) Nivel de implementación alcanzado según escala definida
+(b) Nivel máximo posible en la escala",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 10
+2027: 25
+2028: 45
+2029: 70
+2030: 100","* Informes de avance de proyectos tecnológicos
+* Planes y cronogramas de implementación aprobados",Dirección General de Tecnología de la Información y las Comunicaciones,"""Escala de avance: 
+1- Nivel de Planificación: Diagnóstico inicial, selección de procesos pilotos. 10% 
+2- Nivel Inicial: Primeras pruebas de IA en fueros específicos, implementación en procesos simples, capacitación inicial de funcionarios. 25%
+3- Nivel Intermedio: Integración progresiva en fueros de mayor carga procesal, interoperabilidad con otros sistemas digitales del Poder Judicial. 45% 
+4- Nivel Avanzado: Consolidación del uso de IA en la mayoría de los fueros, retroalimentación y ajustes normativos y técnicos. 70% 
+5- Nivel de Optimización continua: Implementación plena y sostenida de herramientas de IA en todos los procesos judiciales identificados como susceptibles. 100%"""
+"O.E.4 - Mejorar las capacidades del Capital Humano, con los procesos de selección, conocimiento y formación continua para lograr una gestión institucional eficiente.",A.E.4.1 - Mejorar los procedimientos de concursos públicos para el ingreso y ascenso de funcionarios.,Nivel de avance en la revisión de la normativa vigente de Concursos de Mérito y Oposición,4101,Eficacia,Acciones Estratégicas,"Mide el porcentaje de avance en la revisión y actualización de la normativa vigente relacionada con los concursos de mérito y oposición para el ingreso y ascenso de funcionarios, asegurando que los procedimientos sean claros, transparentes y ajustados a la legislación vigente.","(a) Nivel alcanzado 
+(b) Nivel máximo posible",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 50
+2027: 50
+2028: 0
+2029: 0
+2030: 0","* Informes del área responsable de la revisión normativa
+* Documentos de actualización normativa de concursos públicos
+* Registros de la Dirección General de Capital Humano
+* Informes del área de Concursos y Selección de Personal","Dirección General de Capital Humano, Dirección Asuntos Juridicos","""Escala de avance:
+1- Nivel de Planificación: revisión, diagnóstico y priorización de artículos/normas, revisión completa de la mayoría de los artículos/normas y propuesta de ajustes. 50 %
+2- Nivel Avanzado: finalización de la revisión, ajustes finales, aprobación institucional y normativa lista para implementación. 100 %
+3- Nivel de Optimización continua: desde 2028 se realizarán evaluaciones anuales."""
+"O.E.4 - Mejorar las capacidades del Capital Humano, con los procesos de selección, conocimiento y formación continua para lograr una gestión institucional eficiente.",A.E.4.1 - Mejorar los procedimientos de concursos públicos para el ingreso y ascenso de funcionarios.,Número de personas que accedieron al cargo a través de concursos,4102,Eficacia,Acciones Estratégicas,"Mide la cantidad de personas que ingresaron o ascendieron a cargos dentro de la institución mediante procesos de concursos públicos realizados conforme a la normativa vigente, durante un período determinado. Permite evaluar la implementación de prácticas transparentes y meritocráticas en la gestión del capital humano.",Número total de personas que accedieron al cargo por concursos realizados,Suma de nombramientos y ascensos en virtud de concursos realizados en el periodo,Número,Anual,Nacional,Ascendente,2024: 248,"2026: 257
+2027: 265
+2028: 278
+2029: 285
+2030: 298","* Registros de la Dirección de Capital Humano
+* Informes del Departamento de Selección de Personal, dependiente de la Dirección de Planeación y Selección de Personal
+* Decretos y/o Resoluciones de nombramientos y/o ascensos en el marco de concursos realizados",Dirección General de Capital Humano,Ninguno
+"O.E.4 - Mejorar las capacidades del Capital Humano, con los procesos de selección, conocimiento y formación continua para lograr una gestión institucional eficiente.","A.E.4.2 - Fortalecer la evaluación de desempeño en las áreas jurisdiccional, administrativa y registral, en los procesos de ascenso, confirmación o desvinculación de funcionarios.",Nivel de revisión de la normativa de Evaluación de Desempeño,4201,Eficacia,Acciones Estratégicas,"Mide el porcentaje de avance en la revisión y actualización de la normativa vigente sobre evaluación de desempeño en las áreas jurisdiccional, administrativa y registral, asegurando que los procesos de ascenso, confirmación o desvinculación de funcionarios sean claros, objetivos y ajustados a la legislación y políticas institucionales.","(a) Nivel alcanzado 
+(b) Nivel máximo posible",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 30
+2027: 65
+2028: 100
+2029: 0
+2030: 0","* Informes del área responsable de la revisión normativa.
+* Documentos de actualización normativa de evaluacion de desempeño
+* Registros de la Dirección General de Capital Humano
+* Informes del área de evaluacion y desempeño",Dirección General de Capital Humano,"""Escala de avances:
+1- Nivel de Planificación: Revisión, diagnóstico y priorización de artículos/normas. 30%
+2- Nivel Inicial: Revisión completa de la mayoría de los artículos/normas y propuesta de ajustes. 65 %
+3- Nivel Avanzado: Finalización de la revisión, ajustes finales, aprobación institucional y normativa lista para implementación. 100 %"""
+"O.E.4 - Mejorar las capacidades del Capital Humano, con los procesos de selección, conocimiento y formación continua para lograr una gestión institucional eficiente.","A.E.4.2 - Fortalecer la evaluación de desempeño en las áreas jurisdiccional, administrativa y registral, en los procesos de ascenso, confirmación o desvinculación de funcionarios.",Porcentaje de funcionarios evaluados anualmente,4202,Eficacia,Acciones Estratégicas,"Refleja la proporción de funcionarios/as judiciales que cuentan con evaluación de desempeño concluida y registrada durante el año, respecto del total de funcionarios/as sujetos a evaluación en el mismo período. Permite verificar la cobertura efectiva del sistema de evaluación del desempeño.","(a) Número de funcionarios con evaluación de desempeño realizada en el año
+(b) Número total de funcionarios",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,"2024: 18,87","2026: 20
+2027: 25
+2028: 50
+2029: 65
+2030: 75","* Registros del área encargada de las evaluaciones de desempeño
+* Informes anuales de la Dirección General de Capital Humano
+* Resoluciones/actas de cierre de procesos de evaluación",Dirección General de Capital Humano,Ninguno
+"O.E.4 - Mejorar las capacidades del Capital Humano, con los procesos de selección, conocimiento y formación continua para lograr una gestión institucional eficiente.",A.E.4.3 - Implementar la carrera judicial para Magistrados y funcionarios.,Nivel de avance en el diseño y elaboración de la carrera judicial,4301,Eficacia,Acciones Estratégicas,"Este indicador refleja el grado de avance en el diseño y elaboración de la carrera judicial para Magistrados y funcionarios, considerando aspectos normativos, organizativos y operativos, de acuerdo con el plan institucional establecido. Permite conocer en qué medida se han cumplido las fases de diseño y elaboración del sistema.","(a) Nivel de avance en el diseño y elaboración 
+(b) Nivel de avance máximo posible",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 25
+2027: 50
+2028: 75
+2029: 100
+2030: 0","* Informes de avance del proyecto de ley
+* Documentos normativos y manuales elaborados","Dirección Asuntos Juridicos, Dirección General de Capital Humano, Instituto de Investigaciones Jurídicas","""Escala de avance: 
+1- Nivel de Planificación: Diseño preliminar y diagnóstico de necesidades. 0–25%
+2- Nivel Inicial: Elaboración de borradores y definición de perfiles. 26–50%
+3- Nivel Intermedio: Validación de documentos y planificación de formación. 51–75%
+4- Nivel Avanzado: Documentación completa y lista para su presentación. 76–100%"""
+"O.E.4 - Mejorar las capacidades del Capital Humano, con los procesos de selección, conocimiento y formación continua para lograr una gestión institucional eficiente.",A.E.4.4 - Implementar programas motivacionales para la mejora del clima laboral en la institución.,Índice de satisfacción del clima laboral,4401,Calidad,Acciones Estratégicas,"Este indicador permite evaluar cómo perciben los magistrados y funcionarios el ambiente laboral, permitiendo establecer relaciones entre la implementación de programas motivacionales y las mejoras en el clima interno de la institución.","Puntaje 1 a 1,9 = Deficiente
+Puntaje 2 a 2,9 = Poco Satisfactorio
+Puntaje 3 a 3,4 = Regular - Dentro de lo esperado
+Puntaje 3,5 a 4 = Satisfactorio",Índice = Puntaje obtenido,Puntaje,Anual,Nacional,Ascendente,"2024: 3,26","2026: 3,5
+2027: 3,5
+2028: 3,7
+2029: 3,8
+2030: 3,9","* Informes de la Dirección General de Capital Humano
+* Registros de ejecución de programas motivacionales
+* Reportes de seguimiento de clima laboral
+* Encuesta institucional de clima laboral aplicada al personal",Dirección General de Capital Humano,Ninguno
+"O.E.4 - Mejorar las capacidades del Capital Humano, con los procesos de selección, conocimiento y formación continua para lograr una gestión institucional eficiente.",A.E.4.4 - Implementar programas motivacionales para la mejora del clima laboral en la institución.,Nivel de avance en la implementación del programa motivacional,4402,Eficacia,Acciones Estratégicas,"Evalúa el progreso alcanzado en la implementación de los programas motivacionales destinados a mejorar el clima laboral, considerando etapas de diseño, ejecución y evaluación.","(a) Nivel alcanzado en la implementación de los programas motivacionales 
+(b) Nivel máximo posible",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 20
+2027: 40
+2028: 60
+2029: 80
+2030: 100","* Informes de la Dirección General de Capital Humano
+* Registros de ejecución de programas motivacionales
+* Reportes de seguimiento de clima laboral",Dirección General de Capital Humano,"""Escala de avance:
+1- Nivel de Planificación: Programa motivacional diseñado y aprobado. 20%
+2- Nivel Inicial: Ejecución inicial de actividades motivacionales. 40%
+3- Nivel Intermedio: Ejecución intermedia de actividades motivacionales. 60%
+4- Nivel Avanzado: Ejecución avanzada de actividades motivacionales. 80%
+5- Nivel de Optimización continua: Evaluación y acciones de mejora continua establecidas. 100%"""
+"O.E.4 - Mejorar las capacidades del Capital Humano, con los procesos de selección, conocimiento y formación continua para lograr una gestión institucional eficiente.",A.E.4.5 - Implementar el Centro de Entrenamiento para la inducción y reinducción de Magistrados y funcionarios.,Nivel de avance de los programas para la inducción y reinducción de magistrados y funcionarios,4501,Eficacia,Acciones Estratégicas,Evalúa el progreso alcanzado en la implementación del programa para la inducción y reinducción de magistrados y funcionarios.,"(a) Nivel alcanzado en la revisión y actualización del programa 
+(b) Nivel máximo posible",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 50
+2027: 100
+2028: 0
+2029: 0
+2030: 0","* Registros del área encarga de las capacitaciones.
+* Informes del CIEJ
+* Listas de ingreso y actualización de magistrados.","Dirección General de Capital Humano, Centro Internacional de Estudios Judiciales","""Escala de avance
+1- Nivel de Planificación: Diseño y aprobacion. 50%
+2- Nivel de Optimización continua: Implementación, evaluación y ajustes. 100%"""
+"O.E.4 - Mejorar las capacidades del Capital Humano, con los procesos de selección, conocimiento y formación continua para lograr una gestión institucional eficiente.",A.E.4.5 - Implementar el Centro de Entrenamiento para la inducción y reinducción de Magistrados y funcionarios.,Nivel de avance en la implementación del Centro de Entrenamiento de Magistrados,4502,Eficacia,Acciones Estratégicas,Evalúa el progreso alcanzado en la implementación del Centro de Entrenamiento de magistrados.,"(a) Nivel alcanzado en la implementación del Centro de Entrenamiento 
+(b) Nivel máximo posible",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 25
+2027: 50
+2028: 75
+2029: 100
+2030: 0","* Registros del área encarga de las capacitaciones
+* Informes de la Dirección General de Capital Humano
+* Listas de ingreso y actualización de funcionarios y magistrados",Centro Internacional de Estudios Judiciales,"""Escala de avance:
+1- Nivel de Planificación: Centro diseñado y aprobado. 25%
+2- Nivel Inicial: Implementación inicial de actividades. 50%
+3- Nivel Avanzado: Implementación Avanzada de actividades. 75%
+4- Nivel de Optimización continua: Evaluación y acciones de mejora continua establecidas. 100%"""
+"O.E.4 - Mejorar las capacidades del Capital Humano, con los procesos de selección, conocimiento y formación continua para lograr una gestión institucional eficiente.",A.E.4.6 - Fortalecer las capacidades de los Magistrados y funcionarios a través de la formación continua.,Nivel de avance en la implementación del programa de formación continua,4601,Eficacia,Acciones Estratégicas,Evalúa el avance en la implementación del programa de formación continua.,"(a) Nivel alcanzado en la revisión y actualización de Planes de Estudios 
+(b) Nivel máximo posible",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 25
+2027: 50
+2028: 75
+2029: 100
+2030: 0","* Registros de capacitaciones 
+* Informes del CIEJ
+* Calendario/cronograma de Capacitación",Centro Internacional de Estudios Judiciales,"""Escala de avance:
+1- Nivel de Planificación: Programa diseñado y aprobado. 25%
+2- Nivel Inicial: Ejecución inicial. 50%
+3- Nivel Avanzado: Ejecución avanzada de actividades. 75%
+4- Nivel de Optimización continua: Evaluación y acciones de mejora continua establecidas. 100%"""
+"O.E.4 - Mejorar las capacidades del Capital Humano, con los procesos de selección, conocimiento y formación continua para lograr una gestión institucional eficiente.",A.E.4.6 - Fortalecer las capacidades de los Magistrados y funcionarios a través de la formación continua.,Cantidad de Magistrados y funcionarios capacitados anualmente en temas vinculados a su función conforme al nuevo programa de formación continua.,4602,Eficacia,Acciones Estratégicas,"Este indicador refleja el alcance de las acciones de formación continua brindadas a Magistrados y funcionarios de la institución, específicamente en contenidos relacionados con sus responsabilidades.",Número de magistrados y funcionarios capacitados en temas vinculados a su función,Suma de magistrados y funcionarios capacitados en temas vinculados a su función,Número,Anual,Nacional,Ascendente,2028:00:00,"2026: 0
+2027: 1000
+2028: 2000
+2029: 3000
+2030: 5000","* Registros de capacitaciones 
+* Informes de la Dirección General de Capital Humano
+* Plan Anual de Capacitación","Centro Internacional de Estudios Judiciales , Dirección General de Capital Humano",Ninguno
+"O.E.4 - Mejorar las capacidades del Capital Humano, con los procesos de selección, conocimiento y formación continua para lograr una gestión institucional eficiente.","A.E.4.7 - Consolidar el uso de la tecnología en los procesos de selección, capacitación, ascensos y desvinculación del Capital Humano del Poder Judicial.",Nivel de implementación del Sistema de Gestión de Capital Humano,4701,Eficiencia,Acciones Estratégicas,"Evalúa el grado de integración y operación del Sistema de Gestión de Capital Humano en los procesos claves de gestión del personal, incluyendo selección, formación, promoción y desvinculación, asegurando su funcionalidad y uso efectivo en toda la institución.","(a) Nivel de implementación alcanzado según escala definida
+(b) Nivel máximo posible en la escala",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 20
+2027: 40
+2028: 60
+2029: 80
+2030: 100","* Informes de gestión semestrales o anuales
+* Actas y resoluciones administrativas que aprueben sistemas tecnológicos para concursos, capacitaciones, ascensos y desvinculaciones.
+* Reportes técnicos de sistemas
+* Indicadores de uso de plataformas electrónicas","Dirección General de Capital Humano, Dirección General de Tecnología de la Información y las Comunicaciones","""Escala de avance:
+1- Nivel de Planificación: Diagnóstico. 20%
+2- Nivel Inicial: Sistema diseñado. 40%
+3- Nivel Intermedio: Aprobacion. 60%
+4- Nivel Avanzado: Ejecución avanzada. 80%
+5- Nivel de Optimización continua: Evaluación y acciones de mejora continua establecidas. 100%"""
+"O.E.5 - Optimizar la gestión de los recursos, con procesos eficientes para la adquisición y administración de bienes y servicios, para lograr una justicia de calidad.","A.E.5.1 - Fortalecer la Planificación en todos los ámbitos para la determinación de necesidades institucionales y el uso eficiente de los recursos, en el marco de la Cadena Integrada de Suministros Públicos.",Nivel de implementación del mecanismo de Planificación de Necesidades,5101,Eficiencia,Acciones Estratégicas,"Evalúa el avance en la implementación de un mecanismo para el fortalecimiento de la Planificación de Necesidades en las dependencias jurisdiccionales y administrativas, promoviendo la gestión racional y eficiente de los recursos institucionales.","(a) Nivel de implementación alcanzado según escala definida
+(b) Nivel máximo posible en la escala",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 20
+2027: 40
+2028: 60
+2029: 80
+2030: 100","* Informes de planificación institucional.
+* Registros del Sistema de Información de Planificación Operativa Institucional (SIPOI).",Dirección General de Planificación y Desarrollo,"""Escala de avance:
+1- Nivel de Planificación: Diagnóstico, diseño y aprobación. 20%
+2- Nivel Incial: Implementación Inicial. 40%
+3- Nivel Intermedio: Implementación Intermedia. 60%
+4- Nivel Avanzado: Implementación Avanzada. 80%
+5- Nivel de Optimización contínua: Evaluación y ajustes. 100%"""
+"O.E.5 - Optimizar la gestión de los recursos, con procesos eficientes para la adquisición y administración de bienes y servicios, para lograr una justicia de calidad.","A.E.5.1 - Fortalecer la Planificación en todos los ámbitos para la determinación de necesidades institucionales y el uso eficiente de los recursos, en el marco de la Cadena Integrada de Suministros Públicos.",Porcentaje de llamados evaluados en función a las metas programadas del Presupuesto por Resultados,5102,Eficiencia,Acciones Estratégicas,Mide el porcentaje de llamados que fueron evaluados respecto a su contribución al cumplimiento de las metas programadas del Presupuesto por Resultados.,"(a) Número de llamados evaluados
+(b) Número total de llamados que requieren ser evaluados",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2024: 85,"2026: 90
+2027: 90
+2028: 90
+2029: 95
+2030: 95","* Informes de la UOC
+* Actas del Comité de Suministros Públicos","Unidad Operativa de Contrataciones , Dirección General de Planificación y Desarrollo",Ninguno
+"O.E.5 - Optimizar la gestión de los recursos, con procesos eficientes para la adquisición y administración de bienes y servicios, para lograr una justicia de calidad.","A.E.5.2 - Mejorar los procesos de provisión de bienes y servicios, con criterios de eficiencia, orientados a los requerimientos y necesidades institucionales.",Índice de satisfacción con relación a la provisión de bienes y servicios,5201,Calidad,Acciones Estratégicas,Este indicador mide el grado de satisfacción de las dependencias del Poder Judicial en relación con los bienes y servicios provistos para su funcionamiento. Se obtiene a través de encuestas de satisfacción aplicadas periódicamente.,"(a) Puntuación obtenida en la encuesta de satisfacción
+(b) Puntuación máxima posible en la encuesta de satisfacción",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 30
+2027: 60
+2028: 70
+2029: 80
+2030: 90",* Encuestas de satisfacción aplicadas a dependencias judiciales,"Dirección General de Administración y Finanzas , Dirección General de Planificación y Desarrollo, Unidad Operativa de Contrataciones , Dirección de Estadísticas Judiciales",Ninguno
+"O.E.5 - Optimizar la gestión de los recursos, con procesos eficientes para la adquisición y administración de bienes y servicios, para lograr una justicia de calidad.","A.E.5.2 - Mejorar los procesos de provisión de bienes y servicios, con criterios de eficiencia, orientados a los requerimientos y necesidades institucionales.","Índice de mejoras implementadas en los procesos de provisión de bienes y servicos, en base a encuestas de satisfacción",5202,Eficacia,Acciones Estratégicas,Este indicador mide el porcentaje de medidas de mejora implementadas por la institución a partir de los resultados obtenidos en las encuestas de satisfacción sobre la provisión de bienes y servicios. Permite evaluar la capacidad de respuesta institucional frente a las necesidades detectadas y garantizar que los hallazgos de la percepción de los usuarios se traduzcan en acciones concretas.,"(a) Número de medidas de mejora implementadas
+(b) Número de medidas de mejora propuestas",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 0
+2027: 30
+2028: 50
+2029: 60
+2030: 70","* Informes de encuestas de satisfacción
+* Planes de acción derivados de las encuestas","Dirección General de Administración y Finanzas , Dirección General de Planificación y Desarrollo, Unidad Operativa de Contrataciones , Dirección de Estadísticas Judiciales",Ninguno
+"O.E.5 - Optimizar la gestión de los recursos, con procesos eficientes para la adquisición y administración de bienes y servicios, para lograr una justicia de calidad.",A.E.5.3 - Diseñar acciones que garanticen una autarquía presupuestaria.,Nivel de avance para lograr la autarquía y autonomía presupuestaria,5301,Eficacia,Acciones Estratégicas,"Este indicador refleja el grado de avance para lograr la autarquía presupuestaria del Poder Judicial. Evalúa el cumplimiento de las fases, hitos y acciones establecidas para garantizar que la institución disponga de autonomía presupuestaria y financiera, asegurando un manejo más eficiente, independiente y transparente de los recursos.","(a) Niveles cumplidos del proceso
+(b) Niveles totales previstos",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 50
+2027: 100
+2028: 0
+2029: 0
+2030: 0","* Informes de la Dirección General de Administración y Finanzas
+* Documento de diagnóstico
+* Documento de anteproyecto de Ley
+* Documento de aprobación del proyecto de Ley","Dirección General de Administración y Finanzas , Dirección Asuntos Juridicos, Instituto de Investigaciones Jurídicas","""Escala de avance:
+1- Nivel Inicial: Diagnóstico y análisis de la normativa y los antecedentes (situación actual). 50%
+2- Nivel Avanzado: Formulación del borrador de anteproyecto de ley y presentación a los Ministros de la CSJ. 100%"""
+"O.E.5 - Optimizar la gestión de los recursos, con procesos eficientes para la adquisición y administración de bienes y servicios, para lograr una justicia de calidad.",A.E.5.4 - Consolidar la infraestructura edilicia institucional en base a indicadores de gestión y el mantenimiento de todos los edificios.,Cantidad de metros cuadrados construidos según plan de inversiones de obras,5401,Eficacia,Acciones Estratégicas,Mide el grado de avance en la ejecución de obras contempladas en el plan institucional de inversiones.,Cantidad de metros cuadrados construidos,Suma de metros cuadrados construidos,Metros cuadrados,Anual,Nacional,Ascendente,2025: 254.000,"2026: 272.543
+2027: 294.399
+2028: 311.882
+2029: 332.426
+2030: 351.257","* Plan de Inversiones Institucional
+* Informes técnicos del área encargada de Obras y Mantenimiento
+* Reportes de avance físico-financiero","Dirección General de Planificación y Desarrollo, Dirección de Infraestructura Física",Ninguno
+"O.E.5 - Optimizar la gestión de los recursos, con procesos eficientes para la adquisición y administración de bienes y servicios, para lograr una justicia de calidad.",A.E.5.4 - Consolidar la infraestructura edilicia institucional en base a indicadores de gestión y el mantenimiento de todos los edificios.,Nivel de implementación del plan de mantenimiento de sedes judiciales,5402,Eficacia,Acciones Estratégicas,"Evalúa el nivel de cumplimiento en la elaboración de planes de mantenimiento preventivo anual en las circunscripciones judiciales, asegurando la planificación y ejecución de actividades que eviten deterioros mayores.","(a) Nivel de implementación alcanzado según escala definida
+(b) Nivel máximo posible en la escala",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 20
+2027: 40
+2028: 60
+2029: 80
+2030: 100","* Planes de mantenimiento preventivo aprobados
+* Reportes del área de Obras y Mantenimiento
+* Informes anuales de infraestructura edilicia
+* Resolución de aprobación del plan",Dirección de Infraestructura Física,"""Escala de avance
+1- Nivel de Planificación: Diagnóstico, diseño y aprobación. 20%
+2- Nivel Inicial: Ejecución inicial. 40% 
+3- Nivel Intermedio: Ejecución intermedia. 60% 
+4- Nivel Avanzado: Ejecución avanzada. 80% 
+5- Nivel de Optimización continua: Evaluación y ajustes. 100%"""
+"O.E.5 - Optimizar la gestión de los recursos, con procesos eficientes para la adquisición y administración de bienes y servicios, para lograr una justicia de calidad.",A.E.5.4 - Consolidar la infraestructura edilicia institucional en base a indicadores de gestión y el mantenimiento de todos los edificios.,"Porcentaje de ejecución del presupuesto aprobado para infraestructura edilicia, de acuerdo al Plan Presupuestario de Inversiones",5403,Eficiencia,Acciones Estratégicas,"Evalúa el nivel de ejecución del presupuesto asignado a obras de infraestructura edilicia, comparando lo ejecutado con lo planificado para un período determinado.","(a) Presupuesto ejecutado en infraestructura edilicia
+(b) Presupuesto aprobado para infraestructura edilicia",(a) / (b) * 100,Porcentaje,Anual,,,,"2026: 75
+2027: 75
+2028: 80
+2029: 85
+2030: 95","* Proyecto de Presupuesto
+* Informe de ejecución presupuestaria
+* Sistema Integrado de Gestión Administrativa Financiera (SIGAF)","Dirección General de Administración y Finanzas , Dirección General de Planificación y Desarrollo, Dirección de Infraestructura Física",Ninguno
+"O.E.5 - Optimizar la gestión de los recursos, con procesos eficientes para la adquisición y administración de bienes y servicios, para lograr una justicia de calidad.",A.E.5.4 - Consolidar la infraestructura edilicia institucional en base a indicadores de gestión y el mantenimiento de todos los edificios.,Porcentaje de sedes judiciales de Juzgados de Primera Instancia que cuentan con edificios propios,5404,Eficacia,Acciones Estratégicas,Evalúa el porcentaje de sedes judiciales de Juzgados de Primera Instancia que disponen de edificios propios respecto al total de sedes existentes.,"(a) Número de sedes judiciales de Juzgados de Primera Instancia con edificios propios
+(b) Total de sedes judiciales de Juzgados de Primera Instancia",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2025:50:00,"2026: 60
+2027: 70
+2028: 80
+2029: 90
+2030: 100","* Inventario de locales propios y alquilados
+* Informes de la Dirección General de Administración y Finanzas","Dirección General de Planificación y Desarrollo, Dirección de Infraestructura Física",Ninguno
+"O.E.5 - Optimizar la gestión de los recursos, con procesos eficientes para la adquisición y administración de bienes y servicios, para lograr una justicia de calidad.",A.E.5.4 - Consolidar la infraestructura edilicia institucional en base a indicadores de gestión y el mantenimiento de todos los edificios.,Porcentaje de sedes judiciales de Juzgados de Paz que cuentan con edificios propios,5405,Eficacia,Acciones Estratégicas,Evalúa el porcentaje de sedes judiciales de Juzgados de Paz que disponen de edificios propios respecto al total de sedes existentes.,"(a) Número de sedes judiciales de Juzgados de Paz con edificios propios 
+(b) Total de sedes judiciales de Juzgados de Paz",(a) / (b) * 100,Porcentaje,Anual,,Ascendente,2025:40:00,"2026: 50
+2027: 55
+2028: 60
+2029: 65
+2030: 70",* Inventario de locales propios y alquilados,"Dirección de Infraestructura Física, Dirección General de Planificación y Desarrollo",Ninguno
+O.E.6 - Fortalecer la Gestión Registral y Catastral con la implementación del Sistema Nacional Unificado Registral y Catastral y el Registro Unificado Nacional.,"A.E.6.1 - Implementar de manera gradual, la estructura organizacional del Sistema Nacional Unificado Registral y Catastral, y el Registro Unificado Nacional.",Nivel de implementacíon de la estructura organizacional del Registro Unificado Nacional (RUN),6101,Eficacia,Acciones Estratégicas,Evalúa el avance en la implementación de la estructura organizacional del Registro Unificado Nacional (RUN),"(a) Nivel de implementación alcanzado según escala definida
+(b) Nivel máximo posible en la escala",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2025:00:00,"2026: 50
+2027: 100
+2028: 0
+2029: 0
+2030: 0","* Informes de gestión del proyecto RUN
+* Reportes de avance de la Dirección General de Registros Públicos 
+* Plan de Implementación del RUN","Gerencia Superior del Registro Unificado Nacional, Dirección General de Planificación y Desarrollo","""Escala de avance: 
+1- Nivel de Diagnóstico y Planificación: Elaboración y aprobacion de manuales de responsabilidad y funciones. 25%
+2- Nivel de Definición de Puestos: Elaboración y aprobacion de perfiles de puestos. 50%
+3- Nivel de Sistematización operacional: Elaboración de procedimientos operacionales. 75%
+4- Nivel de Control de Riesgos: Elaboración de mapas de riesgos. 100%"""
+O.E.6 - Fortalecer la Gestión Registral y Catastral con la implementación del Sistema Nacional Unificado Registral y Catastral y el Registro Unificado Nacional.,"A.E.6.1 - Implementar de manera gradual, la estructura organizacional del Sistema Nacional Unificado Registral y Catastral, y el Registro Unificado Nacional.",Porcentaje de documentos finalizados por el Registro Unificado Nacional (RUN),6102,Eficiencia,Acciones Estratégicas,Mide la proporción de documentos finalizados por el RUN en relación con el total de documentos ingresados en un periodo determinado.,"(a) Número de documentos finalizados 
+(b) Número de documentos ingresados",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2025:00:00,"2026: 70
+2027: 80
+2028: 90
+2029: 90
+2030: 100","* Base de datos del RUN
+* Informes de gestión y cierre de documentos",Gerencia Superior del Registro Unificado Nacional,Ninguno
+O.E.6 - Fortalecer la Gestión Registral y Catastral con la implementación del Sistema Nacional Unificado Registral y Catastral y el Registro Unificado Nacional.,"A.E.6.1 - Implementar de manera gradual, la estructura organizacional del Sistema Nacional Unificado Registral y Catastral, y el Registro Unificado Nacional.",Tasa de inscripciones de inmuebles finalizadas anualmente por el Registro Unificado Nacional (RUN),6103,Eficacia,Acciones Estratégicas,"Mide la proporción de títulos inscriptos de inmuebles que han sido finalizadas por el RUN en un período determinado, en comparación con el total de inscripciones de inmuebles ingresadas.","(a) Número de títulos inscriptos de inmuebles finalizados por el RUN
+(b) Total de títulos inscriptos de inmuebles ingresados al RUN",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2024:00:00,"2026: 70
+2027: 80
+2028: 90
+2029: 100
+2030: 100","* Informes de gestión y estadísticas del área registral
+* Base de datos del RUN
+* Informes de gestión y cierre de documentos",Gerencia Superior del Registro Unificado Nacional,Ninguno
+O.E.6 - Fortalecer la Gestión Registral y Catastral con la implementación del Sistema Nacional Unificado Registral y Catastral y el Registro Unificado Nacional.,"A.E.6.1 - Implementar de manera gradual, la estructura organizacional del Sistema Nacional Unificado Registral y Catastral, y el Registro Unificado Nacional.",Tasa de inscripciones de automotores finalizadas anualmente por el Registro Unificado Nacional (RUN),6104,Eficacia,Acciones Estratégicas,"Mide la proporción de titulos inscriptos de automotores que han sido finalizadas por el RUN en un período determinado, en comparación con el total de títulos inscriptos de automotores ingresados.","(a) Número de títulos inscriptos de automotores finalizados por el RUN
+(b) Total de títulos inscriptos de automotores ingresados al RUN",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2024:00:00,"2026: 70
+2027: 80
+2028: 90
+2029: 100
+2030: 100","* Informes de gestión y estadísticas del área registral
+* Base de datos del RUN
+* Informes de gestión y cierre de documentos",Gerencia Superior del Registro Unificado Nacional,Ninguno
+O.E.6 - Fortalecer la Gestión Registral y Catastral con la implementación del Sistema Nacional Unificado Registral y Catastral y el Registro Unificado Nacional.,"A.E.6.1 - Implementar de manera gradual, la estructura organizacional del Sistema Nacional Unificado Registral y Catastral, y el Registro Unificado Nacional.",Tasa de inscripciones de marcas y señales finalizadas anualmente por el Registro Unificado Nacional (RUN),6105,Eficacia,Acciones Estratégicas,"Mide la proporción de títulos inscriptos de marcas y señales que han sido finalizadas por el RUN en un periodo determinado, en comparación con el total de títulos inscriptos de marcas y señales ingresados.","(a) Número de títulos inscriptos de marcas y señales finalizados por el RUN
+(b) Total de títulos inscriptos de marcas y señales ingresados al RUN",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2024:00:00,"2026: 70
+2027: 80
+2028: 90
+2029: 100
+2030: 100","* Informes de gestión y estadísticas del área registral
+* Base de datos del RUN
+* Informes de gestión y cierre de documentos",Gerencia Superior del Registro Unificado Nacional,Ninguno
+O.E.6 - Fortalecer la Gestión Registral y Catastral con la implementación del Sistema Nacional Unificado Registral y Catastral y el Registro Unificado Nacional.,"A.E.6.1 - Implementar de manera gradual, la estructura organizacional del Sistema Nacional Unificado Registral y Catastral, y el Registro Unificado Nacional.",Tasa de inscripciones de buques finalizadas anualmente por el Registro Unificado Nacional (RUN),6106,Eficacia,Acciones Estratégicas,"Mide la proporción de títulos inscriptos de buques que han sido finalizados por el RUN en un período determinado, en comparación con el total de títulos inscriptos de buques ingresados.","(a) Número de títulos inscriptos de buques finalizados por el RUN
+(b) Total de títulos inscriptos buques ingresados al RUN",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2025:00:00,"2026: 70
+2027: 80
+2028: 90
+2029: 100
+2030: 100","* Informes de gestión y estadísticas del área registral
+* Base de datos del RUN
+* Informes de gestión y cierre de documentos",Gerencia Superior del Registro Unificado Nacional,Ninguno
+O.E.6 - Fortalecer la Gestión Registral y Catastral con la implementación del Sistema Nacional Unificado Registral y Catastral y el Registro Unificado Nacional.,"A.E.6.1 - Implementar de manera gradual, la estructura organizacional del Sistema Nacional Unificado Registral y Catastral, y el Registro Unificado Nacional.",Porcentaje de funcionarios ingresados por concursos de oposición realizados en el marco de la implementación del Registro Unificado Nacional (RUN),6107,Calidad,Acciones Estratégicas,Mide la relación entre funcionarios que ingresan por concursos de oposición en el marco de la implementación del RUN y la totalidad de funcionarios del RUN.,"(a) Cantidad de funcionarios ingresados por concurso de oposición del RUN
+(b) Cantidad total de funcionarios del RUN",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 10
+2027: 20
+2028: 30
+2029: 40
+2030: 50","* Informes de gestión y estadísticas del área registral
+* Base de datos del RUN
+* Informes de gestión y cierre de documentos","Gerencia Superior del Registro Unificado Nacional, Dirección General de Capital Humano",Ninguno
+O.E.6 - Fortalecer la Gestión Registral y Catastral con la implementación del Sistema Nacional Unificado Registral y Catastral y el Registro Unificado Nacional.,"A.E.6.2 - Diseñar e implementar manuales de organización y funciones para la nueva estructura del Sistema Nacional Unificado Registral y Catastral, y el Registro Unificado Nacional.",Porcentaje de los manuales de responsabilidad y funciones aprobados,6201,Eficacia,Acciones Estratégicas,"Evalúa el porcentaje de los manuales de responsabilidad y funciones aprobados en la estructura del Sistema Nacional Unificado Registral y Catastral y el Registro Unificado Nacional (RUN), en relación a los manuales de responsabilidad y funciones requeridos.","(a) Número de manuales aprobados
+(b) Número total de manuales requeridos",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2025:00:00,"2026: 50
+2027: 100
+2028: 0
+2029: 0
+2030: 0","* Actas y resoluciones de aprobación e implementación
+* Informes de seguimiento y supervisión del proceso","Dirección General de Planificación y Desarrollo, Dirección General de Capital Humano",Ninguno
+O.E.6 - Fortalecer la Gestión Registral y Catastral con la implementación del Sistema Nacional Unificado Registral y Catastral y el Registro Unificado Nacional.,A.E.6.3 - Diseñar e implementar un sistema informático integral de gestión electrónica a través de la digitalización y despapelización de documentos.,Nivel de avance en la implementación del sistema informático de gestión electrónica integral,6301,Eficacia,Acciones Estratégicas,"Evalúa el grado de desarrollo del sistema informático integral de gestión electrónica, considerando las fases de diseño, programación, pruebas, implementación y puesta en operación.","(a) Nivel de implementación alcanzado según escala definida
+(b) Nivel máximo posible en la escala",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 20
+2027: 40
+2028: 60
+2029: 80
+2030: 100","* Informes técnicos de desarrollo del sistema
+* Cronograma de implementación y reportes de avance
+* Actas de validación de hitos alcanzados","Dirección de Tecnología del Registro Unificado Nacional, Gerencia Superior del Registro Unificado Nacional","""Etapas para la implementación del Sistema Informático
+1 - Diseño del sistema. 20%
+2 - Aprobación. 40%
+3 - Implementación inicial. 60%
+4 - Implementación avanzada. 80%
+5- Monitoreo de uso efectivo/ Evaluación y acciones de mejora. 100%"""
+O.E.6 - Fortalecer la Gestión Registral y Catastral con la implementación del Sistema Nacional Unificado Registral y Catastral y el Registro Unificado Nacional.,"A.E.6.4 - Diseñar y ejecutar un plan de adecuación y unificación de la infraestructura edilicia para la integración de la nueva estructura organizacional del Sistema Nacional Unificado Registral y Catastral, y el Registro Unificado Nacional.",Nivel de implementación del plan de adecuación y unificación de la infraestructura edilicia,6401,Eficacia,Acciones Estratégicas,"Mide el progreso logrado en la implementación del plan de adecuación y unificación edilicia, considerando fases de diseño, adecuación, remodelación y habilitación de espacios físicos para la nueva estructura organizacional.","(a) Nivel de implementación alcanzado según escala definida
+(b) Nivel máximo posible en la escala",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 20
+2027: 40
+2028: 60
+2029: 80
+2030: 100","* Reportes de ejecución de obras e infraestructura
+* Informes técnicos del área de Obras y Mantenimiento
+* Actas de verificación de avances físicos y financieros",Gerencia Superior del Registro Unificado Nacional,"""Escala de avance:
+1- Nivel de Planificación: Diagnóstico. 20%
+2- Nivel Inicial: Diseño y aprobación del plan. 40%
+3- Nivel Intermedio: Implemetación Inicial. 60%
+4- Nivel Avanzado: Implemetación avanzada. 80%
+5- Nivel de Optimización Continua: Monitoreo / Evaluación y acciones de mejora. 100%"""
+O.E.6 - Fortalecer la Gestión Registral y Catastral con la implementación del Sistema Nacional Unificado Registral y Catastral y el Registro Unificado Nacional.,"A.E.6.5 - Formular y ejecutar un plan de comunicación específico para la gestión efectiva de la implementación del Sistema Nacional Unificado Registral y Catastral, y el Registro Unificado Nacional.",Nivel de implementación del plan de comunicación del Registro Unificado Nacional (RUN),6501,Eficacia,Acciones Estratégicas,"Permite conocer el progreso en la implementación de estrategias, materiales, campañas y mecanismos de difusión relacionados al plan de comunicación institucional del RUN, asegurando la correcta socialización interna y externa.","(a) Nivel de implementación alcanzado según escala definida
+(b) Nivel máximo posible en la escala",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2026:00:00,"2026: 20
+2027: 40
+2028: 60
+2029: 80
+2030: 100","* Informes de avance del plan de comunicación
+* Informes de ejecución de campañas y actividades de difusión
+* Registros del área de Comunicación",Gerencia Superior del Registro Unificado Nacional,"Escala de avance:
+1- Nivel de Planificación: Diseño y aprobacion. 20% 
+2- Nivel Inicial: Implementacion inicial. 40% 
+3- Nivel Intermedio: Implementacion intermedia. 60% 
+4- Nivel Avanzado: Implementacion Avanzada. 80%
+5- Nivel de Optimización continua: Evaluación y acciones de mejora. 100%"
+O.E.6 - Fortalecer la Gestión Registral y Catastral con la implementación del Sistema Nacional Unificado Registral y Catastral y el Registro Unificado Nacional.,A.E.6.6 - Promover las relaciones interinstitucionales a través de la suscripción de convenios relacionados a la implementación del Sistema Nacional Unificado Registral y Catastral y el Registro Unificado Nacional.,Cantidad de convenios interinstitucionales relacionados al RUN,6601,Eficacia,Acciones Estratégicas,"Este indicador contabiliza los convenios interinstitucionales firmados que respaldan la integración, funcionamiento y desarrollo del Sistema Nacional Unificado Registral y Catastral y el Registro Unificado Nacional.",Convenios interinstitucionales,Suma de convenios interinstitucionales,Número,Anual,Nacional,Ascendente,2026:00:00,"2026: 3
+2027: 3
+2028: 4
+2029: 4
+2030: 5","* Registros de convenios institucionales del área responsable
+* Base de datos de convenios suscritos",Gerencia Superior del Registro Unificado Nacional,Ninguno
+O.E.6 - Fortalecer la Gestión Registral y Catastral con la implementación del Sistema Nacional Unificado Registral y Catastral y el Registro Unificado Nacional.,"A.E.6.7 - Establecer un modelo de gestión administrativa y financiera eficiente y sostenible para el Sistema Nacional Unificado Registral y Catastral, y el Registro Unificado Nacional, y la implementación de la Sub Unidad de Administración y Finanzas.",Nivel de Implementación de la gestión administrativa y financiera,6701,Eficacia,Acciones Estratégicas,"Evalúa el progreso en la adopción y puesta en funcionamiento de la gestión administrativa y financiera, incluyendo los mecanismos, procesos y estructura necesarios para garantizar eficiencia y sostenibilidad.","(a) Nivel alcanzado según la escala 
+(b) Nivel máximo posible",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2025:00:00,"2026: 25
+2027: 50
+2028: 75
+2029: 100
+2030: 0","* Resoluciónes del Consejo de Superintendencia 
+* Informe de seguimiento del funcionamiento de la SubUnidad de Administración y Finanzas
+* Reportes de plan financiero y plan de caja correspondientes al RUN * Informes de modificacioness presupuestarias * Actas de reuniones del SubComité de Suministro Público * Resolución de la aprobación de la creación de la SUB UOC ante la DNCP * Contratos suscritos * Ley de Presupuesto y Decreto Reglamentario","Gerencia Superior del Registro Unificado Nacional, Dirección General de Administración y Finanzas","Escala de avance: 
+1- Nivel de Planificación: SUAF, SubUOC, Comité de Evaluación de Ofertas y Subcomité de Suministro, aprobados. 25%
+2- Nivel Inicial: Fase inicial de Gestión de proceso de elaboración de presupuesto, procesos de contrataciones, ejecuciones contractuales y rendiciones de cuentas. 50%
+3- Nivel Avanzado: Operación sostenida con monitoreo y ajustes en curso. 75%
+4- Nivel de Optimización continua: Evaluación y ajustes. 100%"
+O.E.6 - Fortalecer la Gestión Registral y Catastral con la implementación del Sistema Nacional Unificado Registral y Catastral y el Registro Unificado Nacional.,"A.E.6.7 - Establecer un modelo de gestión administrativa y financiera eficiente y sostenible para el Sistema Nacional Unificado Registral y Catastral, y el Registro Unificado Nacional, y la implementación de la Sub Unidad de Administración y Finanzas.",Porcentaje de ejecución del presupuesto asignado al Registro Unificado Nacional (RUN),6702,Eficiencia,Acciones Estratégicas,"Mide el grado de utilización del presupuesto asignado al RUN dentro del periodo fiscal, como reflejo de una gestión administrativa y financiera eficiente. Evalúa si los recursos han sido ejecutados de acuerdo con lo programado en el marco de la implementación del modelo de gestión y la Sub Unidad de Administración y Finanzas.","(a) Presupuesto ejecutado del RUN
+(b) Presupuesto total aprobado del RUN",(a) / (b) * 100,Porcentaje,Anual,Nacional,Ascendente,2025:00:00,"2026: 90
+2027: 90
+2028: 90
+2029: 95
+2030: 95","* Informes de Ejecución Presupuestaria
+* Proyecto de presupuesto del RUN
+* Reportes de la Unidad de Administración y Finanzas","Gerencia Superior del Registro Unificado Nacional, Dirección General de Administración y Finanzas",Ninguno

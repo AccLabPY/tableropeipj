@@ -3,7 +3,7 @@ import { z } from "zod";
 export const AnioQuery = z.coerce
   .number()
   .int()
-  .min(2026)
+  .min(2025)
   .max(2030)
   .default(2026);
 

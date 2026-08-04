@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { requirePage } from "@/server/auth/guards";
 import { getCtx } from "@/server/db/env";
 import { estadoPEI } from "@/server/services/estado-cache";
+import { ultimasCargas } from "@/server/services/ultimas-cargas.service";
+import { UltimasCargas } from "@/ui/features/ejecutivo/ultimas-cargas";
 import { AnioQuery } from "@/shared/schemas/query";
 import { PageHeader } from "@/ui/components/page-header";
 import { Card, CardBody, CardHeader, Tag } from "@/ui/components/card";
@@ -24,7 +26,10 @@ export default async function EjecutivoPage({
   const actor = await requirePage();
   const ctx = await getCtx(actor);
   const anio = AnioQuery.parse(searchParams.anio);
-  const estado = await estadoPEI(ctx, anio);
+  const [estado, cargas] = await Promise.all([
+    estadoPEI(ctx, anio),
+    ultimasCargas(ctx),
+  ]);
 
   const atencion = estado.indicadores
     .filter((i) => i.capado !== null)
@@ -238,6 +243,9 @@ export default async function EjecutivoPage({
           </table>
         </div>
       </Card>
+
+      {/* Últimas cargas reales */}
+      <UltimasCargas cargas={cargas} />
     </section>
   );
 }

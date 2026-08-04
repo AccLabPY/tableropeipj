@@ -1,5 +1,5 @@
 import type { Ctx } from "@/server/db/env";
-import { resolverUmbral } from "@/domain";
+import { clasificarFormula, parsearVariables, resolverUmbral } from "@/domain";
 import { ROLES_VISION_TOTAL, tieneRol } from "@/server/auth/guards";
 import { cargablesPorActor } from "@/server/repositories/indicador.repo";
 import {
@@ -46,7 +46,10 @@ export async function worklistRegistro(
       aeCodigo: ind.ae?.codigo ?? null,
       oeCodigo: ind.oe.codigo,
     });
+    const tipoCalculo = clasificarFormula(ind.formula, ind.esEscala);
     return {
+      tipoCalculo,
+      variablesDef: parsearVariables(ind.variables, tipoCalculo),
       codigo: ind.codigo,
       nombre: ind.nombre,
       descripcion: ind.descripcion,

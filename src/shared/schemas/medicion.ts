@@ -5,9 +5,18 @@ export const MedicionInputSchema = z
   .object({
     indicadorCodigo: z.coerce.number().int().min(1).max(9999),
     anio: z.coerce.number().int().min(2026).max(2030),
+    /** Variables base de la fórmula: {"a":..,"b":..} · {..,"c":..} · {"valor":..}.
+     *  El backend calcula el valor observado con la fórmula del indicador. */
+    valores: z
+      .record(
+        z.string().regex(/^[a-z]$|^valor$/),
+        z.coerce.number().finite(),
+      )
+      .nullish(),
+    nivelEscala: z.coerce.number().int().min(1).max(10).nullish(),
+    // Compatibilidad con la API v1 previa:
     numerador: z.coerce.number().finite().nullish(),
     denominador: z.coerce.number().finite().nullish(),
-    nivelEscala: z.coerce.number().int().min(1).max(10).nullish(),
     valorObservado: z.coerce.number().finite().nullish(),
     fuente: z.string().max(300).nullish(),
     observaciones: z.string().max(2000).nullish(),
@@ -15,12 +24,13 @@ export const MedicionInputSchema = z
   })
   .refine(
     (d) =>
-      d.valorObservado != null ||
+      (d.valores != null && Object.keys(d.valores).length > 0) ||
       d.nivelEscala != null ||
+      d.valorObservado != null ||
       (d.numerador != null && d.denominador != null),
     {
       message:
-        "Debe informar valor observado, nivel de escala o numerador y denominador.",
+        "Debe informar las variables de la fórmula, el nivel de escala o el valor observado.",
     },
   )
   .refine((d) => d.denominador == null || d.denominador !== 0, {

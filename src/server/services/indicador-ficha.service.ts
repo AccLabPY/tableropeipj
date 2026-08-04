@@ -1,5 +1,10 @@
 import type { Ctx } from "@/server/db/env";
-import { calcularCumplimiento, semaforo as clasificar } from "@/domain";
+import {
+  calcularCumplimiento,
+  clasificarFormula,
+  parsearVariables,
+  semaforo as clasificar,
+} from "@/domain";
 import {
   aprobadaVigente,
   deIndicador,
@@ -55,7 +60,12 @@ async function computarFicha(
   const umbral = { verde: estado.umbralVerde, amarillo: estado.umbralAmarillo };
   const lineaBase = num(ind.lineaBase);
 
-  const trayectoria: TrayectoriaAnioDTO[] = ANIOS_PEI.map((a) => {
+  // 2025 (año de referencia pre-PEI, sin metas) entra a la trayectoria solo
+  // si el indicador tiene mediciones de ese año.
+  const anios: number[] = medicionesTodas.some((m) => m.periodo.anio === 2025)
+    ? [2025, ...ANIOS_PEI]
+    : [...ANIOS_PEI];
+  const trayectoria: TrayectoriaAnioDTO[] = anios.map((a) => {
     const metaAnio = ind.metas.find((m) => m.anio === a);
     const meta = num(metaAnio?.valorMeta as never);
     const delAnio = medicionesTodas.filter((m) => m.periodo.anio === a);
@@ -94,6 +104,11 @@ async function computarFicha(
     comentarios: ind.comentarios,
     aeNombre: ind.ae?.nombre ?? null,
     oeNombre: ind.oe.nombre,
+    tipoCalculo: clasificarFormula(ind.formula, ind.esEscala),
+    variablesDef: parsearVariables(
+      ind.variables,
+      clasificarFormula(ind.formula, ind.esEscala),
+    ),
     trayectoria,
     escala: ind.escala.map((e) => ({
       nivel: e.nivel,

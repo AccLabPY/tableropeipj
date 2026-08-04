@@ -276,23 +276,26 @@ async function main() {
     });
   }
 
-  // ---- Periodos anuales 2026-2030 -----------------------------------------
+  // ---- Periodos anuales 2026-2030 + 2025 (referencia pre-PEI) -------------
   // (numero=null: las claves únicas compuestas con null no admiten upsert →
   //  findFirst + create)
-  for (let i = 0; i < ANIOS_PEI.length; i++) {
-    const anio = ANIOS_PEI[i];
+  const PERIODOS_ANUALES: Array<{ id: number; anio: number }> = [
+    ...ANIOS_PEI.map((anio, i) => ({ id: i + 1, anio })),
+    { id: 6, anio: 2025 },
+  ];
+  for (const p of PERIODOS_ANUALES) {
     const existente = await prisma.periodo.findFirst({
-      where: { anio, tipo: "ANUAL", numero: null },
+      where: { anio: p.anio, tipo: "ANUAL", numero: null },
     });
     if (!existente) {
       await prisma.periodo.create({
         data: {
-          id: i + 1,
-          anio,
+          id: p.id,
+          anio: p.anio,
           tipo: "ANUAL",
-          fechaInicio: new Date(`${anio}-01-01T00:00:00Z`),
-          fechaFin: new Date(`${anio}-12-31T23:59:59Z`),
-          fechaLimiteCarga: new Date(`${anio + 1}-02-28T23:59:59Z`),
+          fechaInicio: new Date(`${p.anio}-01-01T00:00:00Z`),
+          fechaFin: new Date(`${p.anio}-12-31T23:59:59Z`),
+          fechaLimiteCarga: new Date(`${p.anio + 1}-02-28T23:59:59Z`),
         },
       });
     }

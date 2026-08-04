@@ -1,9 +1,14 @@
 import type { Sentido } from "@/domain/types";
+import type { TipoCalculo, VariableDef } from "@/domain/formula";
 import type { UnidadDTO } from "./estado-pei";
 import type { EscalaNivelDTO, MedicionResumenDTO } from "./indicador-ficha";
 
 /** Ítem de la worklist del Registro: todo lo que necesita el formulario. */
 export interface RegistroItemDTO {
+  /** Tipo de cálculo derivado de la fórmula (motor de dominio formula.ts). */
+  tipoCalculo: TipoCalculo;
+  /** Variables base mapeadas con su descripción breve para el formulario. */
+  variablesDef: VariableDef[];
   codigo: number;
   nombre: string;
   descripcion: string | null;

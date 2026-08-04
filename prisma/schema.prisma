@@ -213,6 +213,8 @@ model Medicion {
   numerador         Decimal?  @db.Decimal(18, 4)
   denominador       Decimal?  @db.Decimal(18, 4)
   nivelEscala       Int?
+  /// Variables base capturadas: {"a":45,"b":500} · {"a":..,"b":..,"c":..} · {"valor":..}
+  valoresVariables  Json?
   valorObservado    Decimal?  @db.Decimal(18, 4)
   estado            EstadoWF  @default(BORRADOR)
   version           Int       @default(1) // append-only: correcciones incrementan versión

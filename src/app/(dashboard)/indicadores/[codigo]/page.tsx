@@ -58,14 +58,76 @@ export default async function DetalleIndicadorPage({
   return (
     <section>
       <BackButton />
-      <div className="my-[14px] flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="font-serif text-[21px] leading-tight">
+      <div className="my-[14px] flex flex-wrap items-start justify-between gap-x-8 gap-y-4">
+        <div className="min-w-0 flex-1 basis-[420px]">
+          {/* Jerarquía OE › AE */}
+          <div className="flex flex-wrap items-center gap-[7px]">
+            <span className="rounded-pj-sm bg-navy px-2 py-[3px] text-2xs font-semibold uppercase tracking-[.06em] text-white">
+              {est.oeCodigo}
+            </span>
+            {est.aeCodigo ? (
+              <>
+                <span className="text-[12px] leading-none text-muted-2">›</span>
+                <span className="rounded-pj-sm border border-azul-line bg-azul-soft px-2 py-[3px] text-2xs font-semibold tracking-[.03em] text-azul-d">
+                  {est.aeCodigo}
+                </span>
+              </>
+            ) : (
+              <span className="rounded-pj-sm border border-azul-line bg-azul-soft px-2 py-[3px] text-2xs font-semibold tracking-[.03em] text-azul-d">
+                Indicador de objetivo
+              </span>
+            )}
+            {est.dimension ? (
+              <span className="rounded-pj-sm border border-linea bg-sem-gris-bg px-2 py-[3px] text-2xs text-muted">
+                {est.dimension}
+              </span>
+            ) : null}
+          </div>
+
+          <h1 className="mt-[10px] font-serif text-[21px] leading-tight">
             <span className="text-azul-d">{est.codigo}</span> · {est.nombre}
           </h1>
-          <div className="mt-1 text-[12.5px] text-muted">
-            {est.aeCodigo ? `${est.aeCodigo} — ${ficha.aeNombre}` : "Indicador de nivel OE"} ·{" "}
-            {est.oeCodigo} · {est.dependenciaPrincipal}
+
+          {/* Contexto estructurado */}
+          <div className="mt-3 grid grid-cols-1 gap-x-10 gap-y-[10px] border-l-2 border-azul-line pl-3 sm:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+            {est.aeCodigo && ficha.aeNombre ? (
+              <div className="min-w-0">
+                <div className="text-[10px] uppercase tracking-[.07em] text-muted-2">
+                  Acción estratégica
+                </div>
+                <div className="mt-[3px] max-w-2xl text-[12.5px] leading-relaxed text-muted">
+                  {ficha.aeNombre}
+                </div>
+              </div>
+            ) : (
+              <div className="min-w-0">
+                <div className="text-[10px] uppercase tracking-[.07em] text-muted-2">
+                  Objetivo estratégico
+                </div>
+                <div className="mt-[3px] max-w-2xl text-[12.5px] leading-relaxed text-muted">
+                  {ficha.oeNombre}
+                </div>
+              </div>
+            )}
+            <div className="min-w-0">
+              <div className="text-[10px] uppercase tracking-[.07em] text-muted-2">
+                Dependencia responsable
+              </div>
+              <div className="mt-[3px] text-[12.5px] leading-relaxed text-tinta">
+                {est.dependenciaPrincipal}
+                {(() => {
+                  const n = ficha.responsables.filter(
+                    (r) => r.rol === "CORRESPONSABLE",
+                  ).length;
+                  return n > 0 ? (
+                    <span className="text-muted">
+                      {" "}
+                      +{n} corresponsable{n > 1 ? "s" : ""}
+                    </span>
+                  ) : null;
+                })()}
+              </div>
+            </div>
           </div>
         </div>
         <div className="flex-none text-right">
@@ -183,7 +245,24 @@ export default async function DetalleIndicadorPage({
               {ficha.descripcion ? (
                 <Ficha label="Descripción" valor={ficha.descripcion} ancho />
               ) : null}
-              {ficha.variables ? (
+              {ficha.variablesDef.length > 0 ? (
+                <Ficha
+                  label="Variables de la fórmula"
+                  ancho
+                  valor={
+                    <ul className="space-y-1">
+                      {ficha.variablesDef.map((v) => (
+                        <li key={v.clave} className="flex gap-2">
+                          <span className="tnum flex-none font-serif font-semibold text-azul-d">
+                            {v.clave === "valor" ? "valor" : `(${v.clave})`}
+                          </span>
+                          <span>{v.descripcion}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  }
+                />
+              ) : ficha.variables ? (
                 <Ficha label="Variables" valor={ficha.variables} ancho />
               ) : null}
               {ficha.formula ? (
@@ -332,6 +411,13 @@ export default async function DetalleIndicadorPage({
                       </td>
                       <td className="tnum border-b border-linea-2 px-4 py-2 text-right">
                         {fmtValor(m.valorObservado, est.unidad)}
+                        {m.valoresVariables ? (
+                          <div className="text-[10.5px] font-normal text-muted-2">
+                            {Object.entries(m.valoresVariables)
+                              .map(([k, v]) => `${k}: ${fmtNum(v)}`)
+                              .join(" · ")}
+                          </div>
+                        ) : null}
                       </td>
                       <td className="border-b border-linea-2 px-4 py-2 text-[12px]">
                         {ESTADO_WF_LABEL[m.estado] ?? m.estado}
@@ -368,7 +454,7 @@ function Ficha({
   ancho,
 }: {
   label: string;
-  valor: string;
+  valor: React.ReactNode;
   ancho?: boolean;
 }) {
   return (

@@ -1,4 +1,5 @@
 import type { EstadoWF, Semaforo } from "@/domain/types";
+import type { TipoCalculo, VariableDef } from "@/domain/formula";
 import type { IndicadorEstadoDTO } from "./estado-pei";
 
 /** Fila de la trayectoria quinquenal del detalle de indicador. */
@@ -32,6 +33,8 @@ export interface MedicionResumenDTO {
   numerador: number | null;
   denominador: number | null;
   nivelEscala: number | null;
+  /** Variables base capturadas ({"a":..,"b":..} / {"valor":..}); null en cargas legadas. */
+  valoresVariables: Record<string, number> | null;
   fechaReporte: string;
   fechaCorte: string | null;
   fuente: string | null;
@@ -60,6 +63,8 @@ export interface IndicadorFichaDTO {
   comentarios: string | null;
   aeNombre: string | null;
   oeNombre: string;
+  tipoCalculo: TipoCalculo;
+  variablesDef: VariableDef[];
   trayectoria: TrayectoriaAnioDTO[];
   escala: EscalaNivelDTO[];
   responsables: ResponsableDTO[];

@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { ANIOS_PEI } from "@/shared/constants";
+import { ANIOS_CONSULTA, ANIO_REFERENCIA } from "@/shared/constants";
 
 /** Selector de ejercicio (?anio=) compartido por las vistas. */
 export function AnioSelector({ anio }: { anio: number }) {
@@ -20,9 +20,9 @@ export function AnioSelector({ anio }: { anio: number }) {
         }}
         className="rounded-pj border border-linea bg-superficie px-2 py-[6px] text-[12.5px] text-tinta"
       >
-        {ANIOS_PEI.map((a) => (
+        {ANIOS_CONSULTA.map((a) => (
           <option key={a} value={a}>
-            {a}
+            {a === ANIO_REFERENCIA ? `${a} (ref.)` : a}
           </option>
         ))}
       </select>

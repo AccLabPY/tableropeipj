@@ -2,12 +2,18 @@ import { Prisma, type EstadoWF as EstadoWFDb } from "@prisma/client";
 import type { Ctx } from "@/server/db/env";
 import {
   ESTADOS_EDITABLES,
+  calcularValorObservado,
+  clasificarFormula,
   validarTransicion,
+  variablesRequeridas,
   pctDeNivel,
 } from "@/domain";
 import type { EstadoWF } from "@/domain/types";
 import { ApiError, noEncontrado, sinPermiso } from "@/server/api/api-error";
-import { porCodigo } from "@/server/repositories/indicador.repo";
+import {
+  porCodigo,
+  type IndicadorCompleto,
+} from "@/server/repositories/indicador.repo";
 import { periodoAnual } from "@/server/repositories/periodo.repo";
 import {
   INCLUDE_MEDICION,
@@ -84,19 +90,23 @@ async function medicionOThrow(ctx: Ctx, id: bigint): Promise<MedicionCompleta> {
   return m;
 }
 
-/** Deriva el valor observado según la modalidad de carga del indicador. */
+/**
+ * Deriva el valor observado con el MOTOR DE FÓRMULAS del dominio. El backend
+ * SIEMPRE recalcula a partir de las variables base — nunca confía en un valor
+ * precomputado por el cliente. Prioridad de modalidades:
+ *   nivelEscala → valores {a,b,c/valor} → legacy numerador/denominador →
+ *   legacy valorObservado directo.
+ * Devuelve además las variables normalizadas a persistir.
+ */
 async function derivarValor(
   ctx: Ctx,
-  indicadorId: number,
+  ind: IndicadorCompleto,
   input: MedicionInput,
-): Promise<number> {
+): Promise<{ valor: number; valores: Record<string, number> | null }> {
+  // 1) Escala: el nivel manda.
   if (input.nivelEscala != null) {
-    const escala = await ctx.db.escalaIndicador.findMany({
-      where: { indicadorId },
-      orderBy: { nivel: "asc" },
-    });
     const pct = pctDeNivel(
-      escala.map((e) => ({
+      ind.escala.map((e) => ({
         nivel: e.nivel,
         pctMin: num(e.pctMin)!,
         pctMax: num(e.pctMax)!,
@@ -110,11 +120,57 @@ async function derivarValor(
         "El nivel reportado no existe en la escala del indicador.",
       );
     }
-    return pct;
+    return { valor: pct, valores: null };
   }
-  if (input.valorObservado != null) return input.valorObservado;
+
+  const tipo = clasificarFormula(ind.formula, ind.esEscala);
+
+  // 2) Variables base de la fórmula (modalidad principal).
+  if (input.valores && Object.keys(input.valores).length > 0) {
+    const r = calcularValorObservado(tipo, input.valores);
+    if (r.error === "DENOMINADOR_CERO") {
+      throw new ApiError(
+        422,
+        "DENOMINADOR_CERO",
+        "El denominador de la fórmula no puede ser cero.",
+      );
+    }
+    if (r.error === "VARIABLE_FALTANTE" || r.valor === null) {
+      throw new ApiError(
+        422,
+        "VARIABLE_FALTANTE",
+        `Faltan variables de la fórmula: se requieren ${variablesRequeridas(tipo)
+          .map((v) => `(${v})`)
+          .join(", ")}.`,
+      );
+    }
+    const valores: Record<string, number> = {};
+    for (const clave of variablesRequeridas(tipo)) {
+      valores[clave] = input.valores[clave]!;
+    }
+    return { valor: r.valor, valores };
+  }
+
+  // 3) Compatibilidad con la API previa.
   if (input.numerador != null && input.denominador != null) {
-    return (input.numerador / input.denominador) * 100;
+    const r = calcularValorObservado(
+      tipo === "RAZON" ? "RAZON" : "RAZON_PORCENTAJE",
+      { a: input.numerador, b: input.denominador },
+    );
+    if (r.valor === null) {
+      throw new ApiError(422, "DENOMINADOR_CERO", "El denominador no puede ser cero.");
+    }
+    return {
+      valor: r.valor,
+      valores: { a: input.numerador, b: input.denominador },
+    };
+  }
+  if (input.valorObservado != null) {
+    return {
+      valor: input.valorObservado,
+      valores:
+        tipo === "VALOR_DIRECTO" ? { valor: input.valorObservado } : null,
+    };
   }
   throw new ApiError(422, "VALOR_FALTANTE", "No se pudo derivar el valor observado.");
 }
@@ -136,7 +192,7 @@ export async function guardarBorrador(
   exigirPropiedad(ctx, principal.dependenciaId);
 
   const periodo = await periodoAnual(ctx, input.anio);
-  const valor = await derivarValor(ctx, ind.id, input);
+  const { valor, valores } = await derivarValor(ctx, ind, input);
 
   const existentes = await ctx.db.medicion.findMany({
     where: { indicadorId: ind.id, periodoId: periodo.id },
@@ -146,10 +202,15 @@ export async function guardarBorrador(
   const ultima = existentes[0];
   invalidarEstadoPEI(); // el chip de estado de carga vive en el estado cacheado
 
+  // a↦numerador, b↦denominador cuando la fórmula es una razón de 2 variables
+  // (continuidad con reportes y la ETL futura).
+  const numerador = valores?.a ?? input.numerador ?? null;
+  const denominador = valores?.b ?? input.denominador ?? null;
   const datos = {
-    numerador: input.numerador != null ? D(input.numerador) : null,
-    denominador: input.denominador != null ? D(input.denominador) : null,
+    numerador: numerador != null ? D(numerador) : null,
+    denominador: denominador != null ? D(denominador) : null,
     nivelEscala: input.nivelEscala ?? null,
+    valoresVariables: valores ?? Prisma.JsonNull,
     valorObservado: D(valor),
     fuente: input.fuente ?? null,
     observaciones: input.observaciones ?? null,
@@ -262,6 +323,7 @@ export async function rectificar(
       numerador: m.numerador,
       denominador: m.denominador,
       nivelEscala: m.nivelEscala,
+      valoresVariables: m.valoresVariables ?? Prisma.JsonNull,
       valorObservado: m.valorObservado,
       fuente: m.fuente,
       observaciones: `Rectifica v${m.version}: ${motivo}`,

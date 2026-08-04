@@ -96,6 +96,33 @@ export async function deIndicador(
   });
 }
 
+/** Include mínimo para el widget de últimas cargas. */
+export const INCLUDE_ULTIMA_CARGA = {
+  indicador: { select: { codigo: true, nombre: true, unidad: true } },
+  periodo: { select: { anio: true } },
+  dependencia: { select: { nombre: true } },
+} satisfies Prisma.MedicionInclude;
+
+export type MedicionUltimaCarga = Prisma.MedicionGetPayload<{
+  include: typeof INCLUDE_ULTIMA_CARGA;
+}>;
+
+/**
+ * Últimas mediciones APROBADAS de cualquier período (widget "últimas cargas"
+ * del tablero). Sin scoping: lo aprobado es información pública del tablero.
+ */
+export async function ultimasAprobadas(
+  ctx: Ctx,
+  n = 8,
+): Promise<MedicionUltimaCarga[]> {
+  return ctx.db.medicion.findMany({
+    where: { estado: "APROBADO" },
+    include: INCLUDE_ULTIMA_CARGA,
+    orderBy: [{ fechaReporte: "desc" }, { id: "desc" }],
+    take: n,
+  });
+}
+
 /**
  * De una lista de mediciones de un indicador+período, la APROBADA VIGENTE:
  * mayor versión con estado APROBADO (las RECTIFICADO quedaron superadas).

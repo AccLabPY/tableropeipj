@@ -46,9 +46,12 @@ export function fmtFechaLarga(d: Date): string {
 export function fmtFechaCorta(iso: string | null | undefined): string {
   if (!iso) return "—";
   const d = new Date(iso);
+  // Las fechas de corte/reporte se persisten como instantes UTC (00:00Z):
+  // se renderizan en UTC para no correr el día calendario en huso local.
   return new Intl.DateTimeFormat("es-PY", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
+    timeZone: "UTC",
   }).format(d);
 }

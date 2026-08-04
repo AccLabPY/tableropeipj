@@ -40,3 +40,10 @@ export function rutasPermitidas(roles: RolUsuario[]): string[] {
 
 export const ANIOS_PEI = [2026, 2027, 2028, 2029, 2030] as const;
 export type AnioPEI = (typeof ANIOS_PEI)[number];
+
+/**
+ * Años consultables en los tableros: incluye 2025 (año de cierre pre-PEI,
+ * sin metas — solo valores de referencia/línea base).
+ */
+export const ANIOS_CONSULTA = [2025, ...ANIOS_PEI] as const;
+export const ANIO_REFERENCIA = 2025;

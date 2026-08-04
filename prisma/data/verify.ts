@@ -118,8 +118,10 @@ escalas.length >= 25 && escalas.length <= 33
   ? ok(`${escalas.length} indicadores de escala (~29 esperados)`)
   : fallo(`escala fuera de rango: ${escalas.length}`);
 const basePend = indicadores.filter((i) => i.lineaBase === null);
-basePend.length === 4
-  ? ok("4 con línea base a determinar (5, 3101, 3102, 3103)")
+// 3101/3102/3103 se fijaron con el cierre estadístico 2025 (08/2026);
+// solo el indicador de OE5 sigue a determinar.
+basePend.length === 1 && basePend[0].codigo === 5
+  ? ok("1 con línea base a determinar (5)")
   : fallo(`base pendiente: ${basePend.map((i) => i.codigo).join(", ")}`);
 
 // --- Cruce con metas del prototipo (Formulación Estratégica Integrada) -----

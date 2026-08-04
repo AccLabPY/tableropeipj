@@ -1,0 +1,206 @@
+[
+  {
+    "codigo": 3101,
+    "anio": 2025,
+    "etiqueta": "2025 anual",
+    "fechaCorte": "2025-12-31",
+    "tipoFormula": "RAZON",
+    "valores": { "a": 164910, "b": 154413 },
+    "esperado": 1.068,
+    "fuente": "Medición de la Gestión Jurisdiccional 2025 (Dirección de Estadísticas Judiciales)",
+    "evidencia": {
+      "nombreArchivo": "MEDICION DE LA GESTION JURISDICCIONAL 2025_VF.xlsx",
+      "rutaOUrl": "nas://pei/evidencias/3101/MEDICION DE LA GESTION JURISDICCIONAL 2025_VF.xlsx"
+    },
+    "observaciones": "Casos resueltos (S.D. + A.I. que ponen fin al proceso) / casos ingresados. Agregado nacional por suma de variables de 359 juzgados en 19 circunscripciones (no promedio de tasas locales); validado contra los TOTAL por fuero del archivo fuente.",
+    "confianza": "ALTA",
+    "estadoDestino": "APROBADO"
+  },
+  {
+    "codigo": 3102,
+    "anio": 2025,
+    "etiqueta": "2025 anual",
+    "fechaCorte": "2025-12-31",
+    "tipoFormula": "SUMA_RAZON",
+    "valores": { "a": 894504, "b": 154258, "c": 164814 },
+    "esperado": 6.3633,
+    "fuente": "Medición de la Gestión Jurisdiccional 2025 (Dirección de Estadísticas Judiciales)",
+    "evidencia": {
+      "nombreArchivo": "MEDICION DE LA GESTION JURISDICCIONAL 2025_VF.xlsx",
+      "rutaOUrl": "nas://pei/evidencias/3102/MEDICION DE LA GESTION JURISDICCIONAL 2025_VF.xlsx"
+    },
+    "observaciones": "(Pendientes al inicio 894.504 + ingresados 154.258) / resueltos 164.814. Cobertura 357/359 juzgados (99,44%): Garantías Colonia Independencia (Guairá) y Multifueros Carmelo Peralta (Alto Paraguay) no informan pendientes al inicio; se excluyeron sin imputar cero (complete-case).",
+    "confianza": "ALTA",
+    "estadoDestino": "APROBADO"
+  },
+  {
+    "codigo": 3103,
+    "anio": 2025,
+    "etiqueta": "2025 anual",
+    "fechaCorte": "2025-12-31",
+    "tipoFormula": "RAZON",
+    "valores": { "a": 933912, "b": 164910 },
+    "esperado": 5.6632,
+    "fuente": "Medición de la Gestión Jurisdiccional 2025 (Dirección de Estadísticas Judiciales)",
+    "evidencia": {
+      "nombreArchivo": "MEDICION DE LA GESTION JURISDICCIONAL 2025_VF.xlsx",
+      "rutaOUrl": "nas://pei/evidencias/3103/MEDICION DE LA GESTION JURISDICCIONAL 2025_VF.xlsx"
+    },
+    "observaciones": "Casos pendientes al final del año / casos resueltos en el año. Agregado nacional de 359 juzgados con pendientes finales y resueltos completos.",
+    "confianza": "ALTA",
+    "estadoDestino": "APROBADO"
+  },
+  {
+    "codigo": 3702,
+    "anio": 2025,
+    "etiqueta": "2025 (ene–oct, parcial)",
+    "fechaCorte": "2025-10-31",
+    "tipoFormula": "RAZON_PORCENTAJE",
+    "valores": { "a": 6969, "b": 16167 },
+    "esperado": 43.1063,
+    "fuente": "Memoria Anual 2025 — Dirección de Mediación",
+    "evidencia": {
+      "nombreArchivo": "MEMORIA-ANUAL-2025-VF DIRECCION DE MEDIACION.pdf",
+      "rutaOUrl": "nas://pei/evidencias/3702/MEMORIA-ANUAL-2025-VF DIRECCION DE MEDIACION.pdf"
+    },
+    "observaciones": "6.969 acuerdos logrados / 16.167 casos ingresados a mediación (cifra textual de la memoria, pág. 329, Principales logros). Corte parcial enero–octubre 2025: anualizar al cierre.",
+    "confianza": "ALTA",
+    "estadoDestino": "APROBADO"
+  },
+  {
+    "codigo": 4102,
+    "anio": 2026,
+    "etiqueta": "2026 (1er semestre, parcial)",
+    "fechaCorte": "2026-06-30",
+    "tipoFormula": "VALOR_DIRECTO",
+    "valores": { "valor": 65 },
+    "esperado": 65,
+    "fuente": "Informe de Gestión Primer Semestre 2026 — Dirección General de Capital Humano",
+    "evidencia": {
+      "nombreArchivo": "AE41_Informe de Gestion Primer Semestre 2026.pdf",
+      "rutaOUrl": "nas://pei/evidencias/4102/AE41_Informe de Gestion Primer Semestre 2026.pdf"
+    },
+    "observaciones": "65 personas incorporadas o promovidas por lista de elegibles (ene–jun 2026). Acumulado parcial anual; no confundir con 84 concursos, 108 vacancias ni 14.008 postulaciones.",
+    "confianza": "ALTA",
+    "estadoDestino": "APROBADO"
+  },
+  {
+    "codigo": 6105,
+    "anio": 2025,
+    "etiqueta": "2025 anual",
+    "fechaCorte": "2025-12-31",
+    "tipoFormula": "RAZON_PORCENTAJE",
+    "valores": { "a": 11994, "b": 11578 },
+    "esperado": 103.593,
+    "fuente": "Planilla Registro de Marcas y Señales de Ganado — Dirección General de Registros Especiales (RUN)",
+    "evidencia": {
+      "nombreArchivo": "Accion Estrategica AE.6.1 - Tasa de inscripciones de marcas y señales.xlsx",
+      "rutaOUrl": "nas://pei/evidencias/6105/AE.6.1 - Tasa de inscripciones de marcas y señales.xlsx"
+    },
+    "observaciones": "11.994 títulos expedidos / 11.578 ingresados (2025 anual). El resultado supera 100% por resolución de expedientes ingresados en períodos anteriores (procesamiento de rezago).",
+    "confianza": "ALTA",
+    "estadoDestino": "APROBADO"
+  },
+  {
+    "codigo": 6105,
+    "anio": 2026,
+    "etiqueta": "2026 (ene–jun, parcial)",
+    "fechaCorte": "2026-06-30",
+    "tipoFormula": "RAZON_PORCENTAJE",
+    "valores": { "a": 5611, "b": 6662 },
+    "esperado": 84.224,
+    "fuente": "Planilla Registro de Marcas y Señales de Ganado — Dirección General de Registros Especiales (RUN)",
+    "evidencia": {
+      "nombreArchivo": "Accion Estrategica AE.6.1 - Tasa de inscripciones de marcas y señales.xlsx",
+      "rutaOUrl": "nas://pei/evidencias/6105/AE.6.1 - Tasa de inscripciones de marcas y señales.xlsx"
+    },
+    "observaciones": "5.611 inscripciones finalizadas/expedidas / 6.662 ingresadas (acumulado ene–jun 2026). Corte parcial: no etiquetar como resultado anual definitivo.",
+    "confianza": "ALTA",
+    "estadoDestino": "APROBADO"
+  },
+  {
+    "codigo": 6301,
+    "anio": 2026,
+    "etiqueta": "2026 (estado al 28/07)",
+    "fechaCorte": "2026-07-28",
+    "tipoFormula": "NIVEL_ESCALA",
+    "nivelEscala": 0,
+    "esperado": 0,
+    "fuente": "Declaración responsable de la dependencia (formulario Taller 2, fila 31) — RUN",
+    "evidencia": {
+      "nombreArchivo": "Buena Accion de la Semana_Taller 2 (respuestas).xlsx",
+      "rutaOUrl": "nas://pei/evidencias/6301/Buena Accion de la Semana_Taller 2 (respuestas).xlsx"
+    },
+    "observaciones": "La dependencia declara expresamente que no existen avances acreditables en diseño, programación, pruebas o implementación del sistema informático de gestión electrónica integral: corresponde nivel 0 de 5 (0%).",
+    "confianza": "ALTA",
+    "estadoDestino": "APROBADO"
+  },
+  {
+    "codigo": 6401,
+    "anio": 2026,
+    "etiqueta": "2026 (estado al 28/07)",
+    "fechaCorte": "2026-07-28",
+    "tipoFormula": "NIVEL_ESCALA",
+    "nivelEscala": 0,
+    "esperado": 0,
+    "fuente": "Declaración responsable de la dependencia (formulario Taller 2, fila 32) — RUN",
+    "evidencia": {
+      "nombreArchivo": "Buena Accion de la Semana_Taller 2 (respuestas).xlsx",
+      "rutaOUrl": "nas://pei/evidencias/6401/Buena Accion de la Semana_Taller 2 (respuestas).xlsx"
+    },
+    "observaciones": "La dependencia declara que aún no se diseñó ni implementó el plan integral de adecuación y unificación de la infraestructura edilicia: corresponde nivel 0 de 5 (0%).",
+    "confianza": "ALTA",
+    "estadoDestino": "APROBADO"
+  },
+  {
+    "codigo": 4101,
+    "anio": 2026,
+    "etiqueta": "2026 (1er semestre, propuesto)",
+    "fechaCorte": "2026-06-30",
+    "tipoFormula": "NIVEL_ESCALA",
+    "nivelEscala": 1,
+    "esperado": 50,
+    "fuente": "Informe de Gestión Primer Semestre 2026 — Dirección General de Capital Humano",
+    "evidencia": {
+      "nombreArchivo": "AE41_Informe de Gestion Primer Semestre 2026.pdf",
+      "rutaOUrl": "nas://pei/evidencias/4101/AE41_Informe de Gestion Primer Semestre 2026.pdf"
+    },
+    "observaciones": "CARGA CONDICIONADA — el informe acredita revisión normativa en curso y elaboración de propuesta (nivel 1 de 2 propuesto = 50%), pero la escala exige revisar la mayoría de normas y proponer ajustes. Requiere certificación de Capital Humano/DGPD antes de aprobar.",
+    "confianza": "CONDICIONADA",
+    "estadoDestino": "BORRADOR"
+  },
+  {
+    "codigo": 5401,
+    "anio": 2026,
+    "etiqueta": "2026 (ene–abr, incremental)",
+    "fechaCorte": "2026-04-30",
+    "tipoFormula": "VALOR_DIRECTO",
+    "valores": { "valor": 185.4 },
+    "esperado": 185.4,
+    "fuente": "Reporte MEF de monitoreo de obras (REPORTE 2 — Indicadores 5401-5403)",
+    "evidencia": {
+      "nombreArchivo": "REPORTE 2 - INDICADORES 5401-5403.pdf",
+      "rutaOUrl": "nas://pei/evidencias/5401/REPORTE 2 - INDICADORES 5401-5403.pdf"
+    },
+    "observaciones": "CARGA CONDICIONADA — producción incremental ene–abr 2026: Juzgado J. A. Saldívar 110,42 m² + ampliación Yby Yaú 74,98 m² = 185,40 m². El resto de las obras del reporte no informa m² (Palacio CDE culminado 2024; Saltos del Guairá y otras sin avance o sin certificado). Definir semántica antes de aprobar: si la línea base 254.000 m² es stock acumulado, el stock provisional sería 254.185,40 m².",
+    "confianza": "CONDICIONADA",
+    "estadoDestino": "BORRADOR"
+  },
+  {
+    "codigo": 5402,
+    "anio": 2026,
+    "etiqueta": "2026 (ene–abr)",
+    "fechaCorte": "2026-04-30",
+    "tipoFormula": "NIVEL_ESCALA",
+    "nivelEscala": 0,
+    "esperado": 0,
+    "fuente": "Reporte MEF de mantenimiento (REPORTE 1 — Indicador 5402)",
+    "evidencia": {
+      "nombreArchivo": "REPORTE 1 - INDICADORES 5402.pdf",
+      "rutaOUrl": "nas://pei/evidencias/5402/REPORTE 1 - INDICADORES 5402.pdf"
+    },
+    "observaciones": "CARGA CONDICIONADA — el reporte registra 'Sin ejecución' para las actividades de mantenimiento (nivel 0 = 0%). Confirmar si existe diagnóstico/diseño aprobado que habilite el nivel 1 (20%) antes de aprobar.",
+    "confianza": "CONDICIONADA",
+    "estadoDestino": "BORRADOR"
+  }
+]
