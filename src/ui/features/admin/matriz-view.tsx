@@ -7,6 +7,8 @@ import {
   type ResultadoAdmin,
 } from "@/server/services/admin-actions";
 import { Card, CardHeader, Tag } from "@/ui/components/card";
+import { Spinner } from "@/ui/components/spinner";
+import { ModalResultado } from "@/ui/components/modal-resultado";
 import { ANIOS_PEI } from "@/shared/constants";
 import { cn, fmtNum } from "@/lib/utils";
 
@@ -296,27 +298,15 @@ export function MatrizView({ items }: { items: MatrizItemDTO[] }) {
                 <button
                   type="button"
                   onClick={guardar}
-                  className="tap w-full flex-none rounded-pj border border-azul-d bg-azul px-4 py-[9px] text-[12.5px] font-semibold text-white hover:bg-azul-d disabled:opacity-50 xs:w-auto"
+                  className="tap inline-flex w-full flex-none items-center justify-center gap-2 rounded-pj border border-azul-d bg-azul px-4 py-[9px] text-[12.5px] font-semibold text-white hover:bg-azul-d disabled:opacity-50 xs:w-auto"
                 >
+                  {pendiente ? <Spinner /> : null}
                   {pendiente ? "Guardando…" : "Guardar cambios"}
                 </button>
                 <span className="text-[11.5px] text-muted">
                   Base actual: {item.lineaBase === null ? "a determinar" : fmtNum(item.lineaBase)} · Los cambios recalculan el tablero.
                 </span>
               </div>
-              {toast ? (
-                <p
-                  role="status"
-                  className={cn(
-                    "rounded-pj px-3 py-2 text-[12.5px] font-semibold",
-                    toast.ok
-                      ? "bg-sem-verde-bg text-[#1f6a49]"
-                      : "bg-sem-rojo-bg text-[#8f2f2f]",
-                  )}
-                >
-                  {toast.mensaje}
-                </p>
-              ) : null}
             </fieldset>
           ) : (
             <p className="py-8 text-center text-muted">
@@ -325,6 +315,13 @@ export function MatrizView({ items }: { items: MatrizItemDTO[] }) {
           )}
         </div>
       </Card>
+
+      <ModalResultado
+        abierto={toast !== null}
+        tipo={toast?.ok ? "exito" : "error"}
+        mensaje={toast?.mensaje}
+        alCerrar={() => setToast(null)}
+      />
     </div>
   );
 }

@@ -10,6 +10,8 @@ import {
   ClipboardEdit,
   ShieldCheck,
   Settings,
+  Printer,
+  BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -29,6 +31,7 @@ const NAV: Group[] = [
       { href: "/acciones", label: "Acciones estratégicas", icon: Network },
       { href: "/indicadores", label: "Indicadores", icon: ListOrdered },
       { href: "/gobernanza", label: "Gobernanza", icon: ShieldCheck },
+      { href: "/reportes", label: "Reportes", icon: Printer },
     ],
   },
   {
@@ -40,6 +43,12 @@ const NAV: Group[] = [
   {
     title: "Configuración",
     items: [{ href: "/admin", label: "Administración", icon: Settings }],
+  },
+  {
+    title: "Ayuda",
+    items: [
+      { href: "/documentacion", label: "Documentación", icon: BookOpen },
+    ],
   },
 ];
 

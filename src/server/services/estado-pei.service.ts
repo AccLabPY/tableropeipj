@@ -191,10 +191,11 @@ function estadoDeIndicador(
   const umbral = resolverUmbral(umbrales, ctxUmbral);
   const sem: Semaforo = clasificar(r.capado, umbral);
 
-  const principal =
-    ind.responsables.find((x) => x.rol === "PRINCIPAL")?.dependencia.nombre ??
-    ind.responsables[0]?.dependencia.nombre ??
-    "—";
+  const respPrincipal =
+    ind.responsables.find((x) => x.rol === "PRINCIPAL") ??
+    ind.responsables[0] ??
+    null;
+  const principal = respPrincipal?.dependencia.nombre ?? "—";
 
   return {
     codigo: ind.codigo,
@@ -222,6 +223,7 @@ function estadoDeIndicador(
     umbralAmarillo: umbral.amarillo,
     umbralOrigen: origenUmbral(umbrales, ctxUmbral),
     dependenciaPrincipal: principal,
+    dependenciaPrincipalId: respPrincipal?.dependenciaId ?? null,
     dependenciaIds: ind.responsables.map((x) => x.dependenciaId),
   };
 }

@@ -23,6 +23,8 @@ const RUTAS_CONSULTA = [
   "/acciones",
   "/indicadores",
   "/gobernanza",
+  "/reportes",
+  "/documentacion",
 ];
 
 /** Navegación permitida por rol (el scoping de datos es aparte, en repos). */

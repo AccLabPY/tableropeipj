@@ -45,6 +45,8 @@ export interface IndicadorEstadoDTO {
   umbralAmarillo: number;
   umbralOrigen: "INDICADOR" | "AE" | "OE" | "GLOBAL";
   dependenciaPrincipal: string;
+  /** Id de la dependencia principal (null si el indicador no tiene responsables). */
+  dependenciaPrincipalId: number | null;
   dependenciaIds: number[];
 }
 

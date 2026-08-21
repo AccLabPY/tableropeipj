@@ -21,6 +21,8 @@ import {
 export interface ResultadoAccion {
   ok: boolean;
   mensaje: string;
+  /** Id de la medición afectada (BigInt→string); hoy lo setea guardarBorradorAction. */
+  medicionId?: string;
 }
 
 function mensajeDeError(e: unknown): string {
@@ -39,11 +41,12 @@ export async function guardarBorradorAction(
     const actor = await requireApi("DEPENDENCIA_CARGA", "ADMIN");
     const ctx = await getCtx(actor);
     const datos = MedicionInputSchema.parse(input);
-    await guardarBorrador(ctx, datos);
+    const m = await guardarBorrador(ctx, datos);
     revalidatePath("/registro");
     return {
       ok: true,
       mensaje: "Borrador guardado. Aún no visible en el tablero.",
+      medicionId: String(m.id),
     };
   } catch (e) {
     return { ok: false, mensaje: mensajeDeError(e) };

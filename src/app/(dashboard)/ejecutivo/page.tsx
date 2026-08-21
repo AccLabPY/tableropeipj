@@ -12,6 +12,7 @@ import { DataTable } from "@/ui/components/data-table";
 import { SemPill } from "@/ui/components/sem-pill";
 import { ProgressBar } from "@/ui/components/progress";
 import { AnioSelector } from "@/ui/components/anio-selector";
+import { LinkExportar } from "@/ui/features/reportes/link-exportar";
 import { LazyDonutSemaforo } from "@/ui/charts/lazy";
 import { SEM_COLORS } from "@/ui/theme/tokens";
 import { fmtPct, fmtValor } from "@/lib/utils";
@@ -42,7 +43,12 @@ export default async function EjecutivoPage({
       <PageHeader
         title="Tablero ejecutivo"
         subtitle={`Cumplimiento de metas · ejercicio ${anio} · 6 objetivos · ${estado.indicadores.length} indicadores`}
-        right={<AnioSelector anio={anio} />}
+        right={
+          <div className="flex flex-wrap items-center gap-2">
+            <LinkExportar href={`/reportes/ejecutivo?anio=${anio}`} />
+            <AnioSelector anio={anio} />
+          </div>
+        }
       />
 
       {/* KPIs */}

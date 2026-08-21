@@ -10,6 +10,8 @@ import {
 import type { UmbralRow } from "@/server/repositories/umbral.repo";
 import { Card, CardBody, CardHeader } from "@/ui/components/card";
 import { DataTable } from "@/ui/components/data-table";
+import { Spinner } from "@/ui/components/spinner";
+import { ModalResultado } from "@/ui/components/modal-resultado";
 import { SEM_COLORS } from "@/ui/theme/tokens";
 import { cn } from "@/lib/utils";
 
@@ -269,8 +271,9 @@ export function EscalasView({
               type="button"
               disabled={pendiente}
               onClick={guardar}
-              className="tap w-full rounded-pj border border-azul-d bg-azul px-4 py-[9px] text-[12.5px] font-semibold text-white hover:bg-azul-d disabled:opacity-50 xs:w-auto"
+              className="tap inline-flex w-full items-center justify-center gap-2 rounded-pj border border-azul-d bg-azul px-4 py-[9px] text-[12.5px] font-semibold text-white hover:bg-azul-d disabled:opacity-50 xs:w-auto"
             >
+              {pendiente ? <Spinner /> : null}
               {pendiente ? "Guardando…" : "Guardar escala"}
             </button>
             {scope !== "GLOBAL" && propia ? (
@@ -284,19 +287,12 @@ export function EscalasView({
               </button>
             ) : null}
           </div>
-          {toast ? (
-            <p
-              role="status"
-              className={cn(
-                "mt-3 rounded-pj px-3 py-2 text-[12.5px] font-semibold",
-                toast.ok
-                  ? "bg-sem-verde-bg text-[#1f6a49]"
-                  : "bg-sem-rojo-bg text-[#8f2f2f]",
-              )}
-            >
-              {toast.mensaje}
-            </p>
-          ) : null}
+          <ModalResultado
+            abierto={toast !== null}
+            tipo={toast?.ok ? "exito" : "error"}
+            mensaje={toast?.mensaje}
+            alCerrar={() => setToast(null)}
+          />
         </CardBody>
       </Card>
 

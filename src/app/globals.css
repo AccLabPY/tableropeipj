@@ -57,6 +57,29 @@ body {
   outline-offset: 1px;
 }
 
+/* Reportes imprimibles (Exportar PDF = imprimir → Guardar como PDF) */
+@media print {
+  @page {
+    margin: 1.4cm;
+  }
+  body {
+    background: #fff !important;
+    font-size: 12px;
+  }
+  * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  thead {
+    display: table-header-group;
+  }
+  tr,
+  img,
+  svg {
+    break-inside: avoid;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

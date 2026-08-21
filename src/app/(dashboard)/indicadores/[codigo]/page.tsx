@@ -9,6 +9,7 @@ import { Card, CardBody, CardHeader, Tag } from "@/ui/components/card";
 import { DataTable } from "@/ui/components/data-table";
 import { SemPill } from "@/ui/components/sem-pill";
 import { BackButton } from "@/ui/components/back-button";
+import { LinkExportar } from "@/ui/features/reportes/link-exportar";
 import { LazySerieIndicador } from "@/ui/charts/lazy";
 import { SEM_COLORS } from "@/ui/theme/tokens";
 import { fmtFechaCorta, fmtNum, fmtPct, fmtValor } from "@/lib/utils";
@@ -58,7 +59,21 @@ export default async function DetalleIndicadorPage({
 
   return (
     <section>
-      <BackButton />
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <BackButton />
+        <div className="flex flex-wrap items-center gap-2">
+          <LinkExportar
+            href={`/reportes/indicador/${est.codigo}?anio=${anio}`}
+            etiqueta="Exportar ficha PDF"
+          />
+          <a
+            href={`/api/v1/reportes/indicador/${est.codigo}?anio=${anio}`}
+            className="inline-flex items-center gap-[6px] whitespace-nowrap rounded-pj border border-linea bg-superficie px-3 py-[6px] text-[11.5px] font-semibold text-tinta hover:bg-[#F7F9FB]"
+          >
+            Exportar Excel
+          </a>
+        </div>
+      </div>
       <div className="my-[14px] flex flex-wrap items-start justify-between gap-x-8 gap-y-4">
         <div className="min-w-0 flex-1 basis-full sm:basis-[420px]">
           {/* Jerarquía OE › AE */}

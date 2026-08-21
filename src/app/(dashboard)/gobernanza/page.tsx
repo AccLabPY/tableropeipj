@@ -8,22 +8,17 @@ import { PageHeader } from "@/ui/components/page-header";
 import { Card, CardBody, CardHeader, Tag } from "@/ui/components/card";
 import { DataTable } from "@/ui/components/data-table";
 import { AnioSelector } from "@/ui/components/anio-selector";
+import { LinkExportar } from "@/ui/features/reportes/link-exportar";
 import { fmtPct } from "@/lib/utils";
 import type { EstadoWF } from "@/domain/types";
+import { WF_CHIP } from "@/ui/features/shared/chip-workflow";
+import {
+  CoberturaDependencias,
+  type FilaDependencia,
+} from "@/ui/features/gobernanza/cobertura-dependencias";
 
 export const metadata: Metadata = { title: "Gobernanza" };
 export const dynamic = "force-dynamic";
-
-const WF_LABEL: Record<EstadoWF | "SIN_CARGA", { label: string; cls: string }> = {
-  SIN_CARGA: { label: "Sin carga", cls: "bg-sem-gris-bg text-muted" },
-  BORRADOR: { label: "Borrador", cls: "bg-sem-ambar-bg text-[#8a6412]" },
-  ENVIADO: { label: "Enviado", cls: "bg-azul-soft text-azul-d" },
-  EN_REVISION: { label: "En revisión", cls: "bg-azul-soft text-azul-d" },
-  OBSERVADO: { label: "Observado", cls: "bg-sem-ambar-bg text-[#8a6412]" },
-  APROBADO: { label: "Aprobado", cls: "bg-sem-verde-bg text-[#1f6a49]" },
-  RECHAZADO: { label: "Rechazado", cls: "bg-sem-rojo-bg text-[#8f2f2f]" },
-  RECTIFICADO: { label: "Rectificado", cls: "bg-sem-gris-bg text-muted" },
-};
 
 export default async function GobernanzaPage({
   searchParams,
@@ -46,18 +41,33 @@ export default async function GobernanzaPage({
     pipeline.set(k, (pipeline.get(k) ?? 0) + 1);
   }
 
-  // Cobertura por dependencia principal
-  const porDep = new Map<string, { esperadas: number; aprobadas: number }>();
+  // Cobertura por dependencia principal + sus indicadores (drill-down)
+  const porDep = new Map<string, FilaDependencia>();
   for (const i of reportables) {
-    const d = porDep.get(i.dependenciaPrincipal) ?? { esperadas: 0, aprobadas: 0 };
+    const d =
+      porDep.get(i.dependenciaPrincipal) ??
+      ({
+        dependencia: i.dependenciaPrincipal,
+        dependenciaId: i.dependenciaPrincipalId,
+        esperadas: 0,
+        aprobadas: 0,
+        indicadores: [],
+      } satisfies FilaDependencia);
     d.esperadas++;
     if (i.valor !== null) d.aprobadas++;
+    d.indicadores.push({
+      codigo: i.codigo,
+      nombre: i.nombre,
+      estadoMedicion: i.estadoMedicion,
+      semaforo: i.semaforo,
+      capado: i.capado,
+    });
     porDep.set(i.dependenciaPrincipal, d);
   }
-  const depsOrdenadas = [...porDep.entries()].sort(
+  const depsOrdenadas = [...porDep.values()].sort(
     (a, b) =>
-      a[1].aprobadas / a[1].esperadas - b[1].aprobadas / b[1].esperadas ||
-      b[1].esperadas - a[1].esperadas,
+      a.aprobadas / a.esperadas - b.aprobadas / b.esperadas ||
+      b.esperadas - a.esperadas,
   );
 
   const diagnostico = estado.indicadores.filter((i) => i.requiereDiagnostico);
@@ -79,7 +89,12 @@ export default async function GobernanzaPage({
       <PageHeader
         title="Gobernanza del dato"
         subtitle={`Cobertura, flujo de validación y calidad · ejercicio ${anio} · ${reportables.length} indicadores reportables`}
-        right={<AnioSelector anio={anio} />}
+        right={
+          <div className="flex flex-wrap items-center gap-2">
+            <LinkExportar href={`/reportes/gobernanza?anio=${anio}`} />
+            <AnioSelector anio={anio} />
+          </div>
+        }
       />
 
       {/* Pipeline */}
@@ -93,7 +108,7 @@ export default async function GobernanzaPage({
             {ordenPipeline.map((k) => {
               const n = pipeline.get(k) ?? 0;
               if (n === 0 && k === "RECTIFICADO") return null;
-              const w = WF_LABEL[k];
+              const w = WF_CHIP[k];
               return (
                 <div
                   key={k}
@@ -119,48 +134,14 @@ export default async function GobernanzaPage({
       </Card>
 
       <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-2">
-        {/* Cobertura por dependencia */}
+        {/* Cobertura por dependencia (con drill-down a sus indicadores) */}
         <Card>
           <CardHeader
             title="Cobertura de reporte por dependencia"
-            meta="aprobadas / esperadas · peor cobertura primero"
+            meta="toque una dependencia para ver sus indicadores"
           />
           <CardBody className="p-0">
-            <DataTable
-              celdaClassName="px-4 py-2"
-              columnas={[
-                {
-                  key: "dep",
-                  header: "Dependencia (principal)",
-                  movil: "titulo",
-                  tdClassName: "text-[12.5px]",
-                  cell: ([dep]) => dep,
-                },
-                {
-                  key: "razon",
-                  header: "Aprob./Esper.",
-                  align: "right",
-                  tnum: true,
-                  cell: ([, d]) => `${d.aprobadas}/${d.esperadas}`,
-                },
-                {
-                  key: "cobertura",
-                  header: "Cobertura",
-                  align: "right",
-                  tnum: true,
-                  movil: "insignia",
-                  tdClassName: "font-semibold",
-                  cell: ([, d]) => (
-                    <span className="tnum font-semibold">
-                      {fmtPct(d.aprobadas / d.esperadas)}
-                    </span>
-                  ),
-                },
-              ]}
-              filas={depsOrdenadas}
-              keyFila={([dep]) => dep}
-              vacio="Sin dependencias con indicadores reportables."
-            />
+            <CoberturaDependencias filas={depsOrdenadas} anio={anio} />
           </CardBody>
         </Card>
 

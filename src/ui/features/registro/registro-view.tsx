@@ -21,17 +21,15 @@ import {
 } from "@/server/services/registro-actions";
 import { Card, CardHeader } from "@/ui/components/card";
 import { SemPill } from "@/ui/components/sem-pill";
+import { Spinner } from "@/ui/components/spinner";
+import { ModalResultado } from "@/ui/components/modal-resultado";
+import { WF_CHIP } from "@/ui/features/shared/chip-workflow";
 import { cn, fmtBytes, fmtFechaCorta, fmtNum, fmtPct, fmtValor } from "@/lib/utils";
 
-const CHIP: Record<EstadoWF | "PENDIENTE", { label: string; cls: string }> = {
-  PENDIENTE: { label: "Pendiente", cls: "bg-sem-gris-bg text-muted" },
-  BORRADOR: { label: "Borrador", cls: "bg-sem-ambar-bg text-[#8a6412]" },
-  ENVIADO: { label: "Enviado", cls: "bg-azul-soft text-azul-d" },
-  EN_REVISION: { label: "En revisión", cls: "bg-azul-soft text-azul-d" },
-  OBSERVADO: { label: "Observado", cls: "bg-sem-ambar-bg text-[#8a6412]" },
-  APROBADO: { label: "Validado", cls: "bg-sem-verde-bg text-[#1f6a49]" },
-  RECHAZADO: { label: "Rechazado", cls: "bg-sem-rojo-bg text-[#8f2f2f]" },
-  RECTIFICADO: { label: "Rectificado", cls: "bg-sem-gris-bg text-muted" },
+// Chips de estado WF compartidos; en Registro "APROBADO" se muestra "Validado".
+const CHIP: typeof WF_CHIP = {
+  ...WF_CHIP,
+  APROBADO: { ...WF_CHIP.APROBADO, label: "Validado" },
 };
 
 const EDITABLES: (EstadoWF | "PENDIENTE")[] = ["PENDIENTE", "BORRADOR", "OBSERVADO"];
@@ -76,6 +74,7 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
   const item = data.items.find((i) => i.codigo === selCodigo);
   const [form, setForm] = useState<FormState>(() => formDesdeItem(item));
   const [toast, setToast] = useState<ResultadoAccion | null>(null);
+  const [validacion, setValidacion] = useState<string[] | null>(null);
   const [comentario, setComentario] = useState("");
   const [pendiente, startTransition] = useTransition();
 
@@ -152,6 +151,98 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
 
   const ejecutar = (fn: () => Promise<ResultadoAccion>) =>
     startTransition(async () => setToast(await fn()));
+
+  /**
+   * Validación de formulario del lado cliente (además de la del servidor):
+   * devuelve la lista de problemas a mostrar en el popup de validación.
+   */
+  const validarFormulario = (paraEnvio: boolean): string[] => {
+    if (!item) return ["Seleccione un indicador de la lista."];
+    const problemas: string[] = [];
+    if (modoEscala) {
+      if (form.nivel === "") {
+        problemas.push(
+          "Seleccione el nivel alcanzado en la escala del indicador.",
+        );
+      }
+    } else {
+      for (const def of item.variablesDef) {
+        if (valoresNumericos[def.clave] === null) {
+          problemas.push(
+            def.clave === "valor"
+              ? "Complete el valor observado del período."
+              : `Complete la variable (${def.clave}) — ${
+                  def.descripcion.length > 60
+                    ? `${def.descripcion.slice(0, 60)}…`
+                    : def.descripcion
+                }`,
+          );
+        }
+      }
+      if (derivado.error === "DENOMINADOR_CERO") {
+        problemas.push("El denominador de la fórmula no puede ser cero.");
+      }
+    }
+    if (paraEnvio && !form.fuente.trim()) {
+      problemas.push(
+        "Indique la fuente / medio de verificación (obligatoria al enviar a validación).",
+      );
+    }
+    return problemas;
+  };
+
+  /** Valida y, si está todo bien, ejecuta; si no, abre el popup de validación. */
+  const validarYEjecutar = (
+    paraEnvio: boolean,
+    fn: () => Promise<ResultadoAccion>,
+  ) => {
+    const problemas = validarFormulario(paraEnvio);
+    if (problemas.length > 0) {
+      setValidacion(problemas);
+      return;
+    }
+    ejecutar(fn);
+  };
+
+  /** Como `ejecutar`, pero devuelve el resultado (para encadenar en la UI). */
+  const ejecutarYDevolver = (
+    fn: () => Promise<ResultadoAccion>,
+  ): Promise<ResultadoAccion> =>
+    new Promise((resolve) => {
+      startTransition(async () => {
+        const r = await fn();
+        setToast(r);
+        resolve(r);
+      });
+    });
+
+  /**
+   * Adjuntar evidencia. Si aún no existe la medición, guarda el borrador
+   * automáticamente y sube el archivo en un solo paso (pedido DGPD).
+   */
+  const adjuntarEvidencia = async (
+    formData: FormData,
+  ): Promise<ResultadoAccion> => {
+    if (item?.medicion) return subirEvidenciaAction(item.medicion.id, formData);
+    const payload = inputPayload();
+    if (!payload || valorDerivado === null) {
+      return {
+        ok: false,
+        mensaje:
+          "Complete el valor del avance antes de adjuntar: la evidencia se asocia al borrador.",
+      };
+    }
+    const guardado = await guardarBorradorAction(payload);
+    if (!guardado.ok || !guardado.medicionId) return guardado;
+    const subida = await subirEvidenciaAction(guardado.medicionId, formData);
+    if (!subida.ok) {
+      return {
+        ok: false,
+        mensaje: `El borrador se guardó, pero la evidencia no pudo subirse: ${subida.mensaje}`,
+      };
+    }
+    return { ok: true, mensaje: "Borrador guardado y evidencia adjuntada." };
+  };
 
   return (
     <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
@@ -366,30 +457,29 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
                   <div className="mb-2 text-2xs font-semibold uppercase tracking-[.06em] text-muted">
                     Evidencias respaldatorias
                   </div>
-                  {item.medicion ? (
+                  <ListaEvidencias
+                    evidencias={item.medicion?.evidencias ?? []}
+                    puedeEliminar={editable}
+                    onEliminar={(id) =>
+                      ejecutar(() => eliminarEvidenciaAction(id))
+                    }
+                  />
+                  {item.medicion || editable ? (
                     <>
-                      <ListaEvidencias
-                        evidencias={item.medicion.evidencias}
-                        puedeEliminar={editable}
-                        onEliminar={(id) =>
-                          ejecutar(() => eliminarEvidenciaAction(id))
-                        }
-                      />
                       <SubidorEvidencia
                         disabled={pendiente}
                         onSubir={(formData) =>
-                          ejecutar(() =>
-                            subirEvidenciaAction(item.medicion!.id, formData),
-                          )
+                          ejecutarYDevolver(() => adjuntarEvidencia(formData))
                         }
                       />
+                      {!item.medicion ? (
+                        <p className="mt-2 text-[10.5px] text-muted-2">
+                          Al adjuntar, el borrador se guarda automáticamente
+                          con los valores cargados arriba.
+                        </p>
+                      ) : null}
                     </>
-                  ) : (
-                    <p className="text-[11.5px] text-muted">
-                      Guarde un borrador primero para poder adjuntar
-                      evidencias.
-                    </p>
-                  )}
+                  ) : null}
                 </div>
               ) : null}
 
@@ -444,22 +534,28 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
                 <div className="mt-[18px] flex flex-col gap-[10px] border-t border-linea-2 pt-4 xs:flex-row xs:flex-wrap">
                   <button
                     type="button"
-                    disabled={pendiente || valorDerivado === null}
+                    disabled={pendiente}
                     onClick={() =>
-                      ejecutar(() => enviarMedicionAction(inputPayload()))
+                      validarYEjecutar(true, () =>
+                        enviarMedicionAction(inputPayload()),
+                      )
                     }
-                    className="tap w-full rounded-pj border border-azul-d bg-azul px-4 py-[9px] text-[12.5px] font-semibold text-white hover:bg-azul-d disabled:opacity-50 xs:w-auto"
+                    className="tap inline-flex w-full items-center justify-center gap-2 rounded-pj border border-azul-d bg-azul px-4 py-[9px] text-[12.5px] font-semibold text-white hover:bg-azul-d disabled:opacity-50 xs:w-auto"
                   >
+                    {pendiente ? <Spinner /> : null}
                     {pendiente ? "Procesando…" : "Enviar a validación"}
                   </button>
                   <button
                     type="button"
-                    disabled={pendiente || valorDerivado === null}
+                    disabled={pendiente}
                     onClick={() =>
-                      ejecutar(() => guardarBorradorAction(inputPayload()))
+                      validarYEjecutar(false, () =>
+                        guardarBorradorAction(inputPayload()),
+                      )
                     }
-                    className="tap w-full rounded-pj border border-linea bg-superficie px-4 py-[9px] text-[12.5px] font-semibold hover:bg-[#F7F9FB] disabled:opacity-50 xs:w-auto"
+                    className="tap inline-flex w-full items-center justify-center gap-2 rounded-pj border border-linea bg-superficie px-4 py-[9px] text-[12.5px] font-semibold hover:bg-[#F7F9FB] disabled:opacity-50 xs:w-auto"
                   >
+                    {pendiente ? <Spinner className="text-muted" /> : null}
                     Guardar borrador
                   </button>
                 </div>
@@ -531,47 +627,45 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
                     <BotonValidar
                       texto="Observar"
                       cls="border-[#a6791b] bg-sem-ambar text-white hover:opacity-90"
-                      disabled={pendiente || comentario.trim().length < 5}
-                      onClick={() =>
+                      disabled={pendiente}
+                      onClick={() => {
+                        if (comentario.trim().length < 5) {
+                          setValidacion([
+                            "El comentario de la validación es obligatorio al observar (mínimo 5 caracteres): indique qué debe corregir la dependencia.",
+                          ]);
+                          return;
+                        }
                         ejecutar(() =>
                           validarMedicionAction(item.medicion!.id, {
                             resultado: "OBSERVADO",
                             comentario,
                           }),
-                        )
-                      }
+                        );
+                      }}
                     />
                     <BotonValidar
                       texto="Rechazar"
                       cls="border-[#8f2f2f] bg-sem-rojo text-white hover:opacity-90"
-                      disabled={pendiente || comentario.trim().length < 5}
-                      onClick={() =>
+                      disabled={pendiente}
+                      onClick={() => {
+                        if (comentario.trim().length < 5) {
+                          setValidacion([
+                            "El comentario de la validación es obligatorio al rechazar (mínimo 5 caracteres): fundamente el motivo del rechazo.",
+                          ]);
+                          return;
+                        }
                         ejecutar(() =>
                           validarMedicionAction(item.medicion!.id, {
                             resultado: "RECHAZADO",
                             comentario,
                           }),
-                        )
-                      }
+                        );
+                      }}
                     />
                   </div>
                 </div>
               ) : null}
 
-              {/* Toast */}
-              {toast ? (
-                <p
-                  role="status"
-                  className={cn(
-                    "mt-4 rounded-pj px-3 py-2 text-[12.5px] font-semibold",
-                    toast.ok
-                      ? "bg-sem-verde-bg text-[#1f6a49]"
-                      : "bg-sem-rojo-bg text-[#8f2f2f]",
-                  )}
-                >
-                  {toast.mensaje}
-                </p>
-              ) : null}
             </>
           ) : (
             <p className="py-8 text-center text-muted">
@@ -580,6 +674,21 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
           )}
         </div>
       </Card>
+
+      {/* Popups de resultado y de validación */}
+      <ModalResultado
+        abierto={toast !== null}
+        tipo={toast?.ok ? "exito" : "error"}
+        mensaje={toast?.mensaje}
+        alCerrar={() => setToast(null)}
+      />
+      <ModalResultado
+        abierto={validacion !== null}
+        tipo="validacion"
+        mensaje="Antes de continuar, corrija lo siguiente:"
+        detalles={validacion ?? undefined}
+        alCerrar={() => setValidacion(null)}
+      />
     </div>
   );
 }
@@ -776,14 +885,14 @@ function ListaEvidencias({
   );
 }
 
-/** Selector de archivo + botón "Adjuntar" (input no controlado, se limpia
- *  con el ref tras cada carga exitosa o fallida). */
+/** Selector de archivo + botón "Adjuntar". La selección se limpia SOLO
+ *  cuando la subida tuvo éxito (un fallo no obliga a re-seleccionar). */
 function SubidorEvidencia({
   disabled,
   onSubir,
 }: {
   disabled: boolean;
-  onSubir: (formData: FormData) => void;
+  onSubir: (formData: FormData) => Promise<ResultadoAccion>;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   return (
@@ -798,13 +907,13 @@ function SubidorEvidencia({
       <button
         type="button"
         disabled={disabled}
-        onClick={() => {
+        onClick={async () => {
           const archivo = inputRef.current?.files?.[0];
           if (!archivo) return;
           const formData = new FormData();
           formData.set("archivo", archivo);
-          onSubir(formData);
-          if (inputRef.current) inputRef.current.value = "";
+          const r = await onSubir(formData);
+          if (r.ok && inputRef.current) inputRef.current.value = "";
         }}
         className="tap rounded-pj border border-linea bg-superficie px-3 py-[6px] text-[11.5px] font-semibold hover:bg-[#F7F9FB] disabled:opacity-50"
       >
@@ -834,10 +943,11 @@ function BotonValidar({
       disabled={disabled}
       onClick={onClick}
       className={cn(
-        "rounded-pj border px-4 py-[8px] text-[12.5px] font-semibold disabled:opacity-50",
+        "inline-flex items-center gap-2 rounded-pj border px-4 py-[8px] text-[12.5px] font-semibold disabled:opacity-50",
         cls,
       )}
     >
+      {disabled ? <Spinner /> : null}
       {texto}
     </button>
   );

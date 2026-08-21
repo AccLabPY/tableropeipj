@@ -11,6 +11,8 @@ import { ROLES, ROL_LABEL } from "@/shared/constants";
 import type { RolUsuario } from "@/domain/types";
 import { Card, CardHeader, Tag } from "@/ui/components/card";
 import { DataTable } from "@/ui/components/data-table";
+import { Spinner } from "@/ui/components/spinner";
+import { ModalResultado } from "@/ui/components/modal-resultado";
 import { cn } from "@/lib/utils";
 
 export interface UsuarioAdminDTO {
@@ -300,8 +302,9 @@ export function UsuariosView({
             <button
               type="button"
               onClick={guardar}
-              className="rounded-pj border border-azul-d bg-azul px-4 py-[9px] text-[12.5px] font-semibold text-white hover:bg-azul-d disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-pj border border-azul-d bg-azul px-4 py-[9px] text-[12.5px] font-semibold text-white hover:bg-azul-d disabled:opacity-50"
             >
+              {pendiente ? <Spinner /> : null}
               {pendiente
                 ? "Guardando…"
                 : form.id === null
@@ -309,21 +312,15 @@ export function UsuariosView({
                   : "Guardar cambios"}
             </button>
           </div>
-          {toast ? (
-            <p
-              role="status"
-              className={cn(
-                "rounded-pj px-3 py-2 text-[12.5px] font-semibold",
-                toast.ok
-                  ? "bg-sem-verde-bg text-[#1f6a49]"
-                  : "bg-sem-rojo-bg text-[#8f2f2f]",
-              )}
-            >
-              {toast.mensaje}
-            </p>
-          ) : null}
         </fieldset>
       </Card>
+
+      <ModalResultado
+        abierto={toast !== null}
+        tipo={toast?.ok ? "exito" : "error"}
+        mensaje={toast?.mensaje}
+        alCerrar={() => setToast(null)}
+      />
     </div>
   );
 }

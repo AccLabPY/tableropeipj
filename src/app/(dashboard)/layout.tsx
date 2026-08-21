@@ -30,7 +30,9 @@ export default async function DashboardLayout({
         <div className="hidden lg:block">
           <Sidebar allowedHrefs={rutas} />
         </div>
-        <main className="safe-b min-w-0 px-3 pb-16 pt-4 xs:px-4 sm:px-[26px] sm:pb-20 sm:pt-[22px]">
+        {/* Altura mínima estable: el contenido corto no "encoge" la página
+            (el footer nunca sube del pliegue); solo crece hacia abajo. */}
+        <main className="safe-b min-h-[calc(100svh-64px)] min-w-0 px-3 pb-16 pt-4 xs:px-4 sm:px-[26px] sm:pb-20 sm:pt-[22px]">
           {children}
         </main>
       </div>
