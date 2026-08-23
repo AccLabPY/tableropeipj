@@ -34,7 +34,9 @@ const ROLES = [
 export default function PrimerosPasosPage() {
   return (
     <section className="mx-auto max-w-3xl">
-      <BackButton />
+      <div className="mb-4">
+        <BackButton />
+      </div>
       <PageHeader
         title="Primeros pasos"
         subtitle="Cómo entrar, qué ve cada rol y cómo moverse por la plataforma"

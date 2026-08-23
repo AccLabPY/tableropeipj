@@ -28,6 +28,25 @@ export const metadata: Metadata = {
   },
   description:
     "Plataforma de Seguimiento del Plan Estratégico Institucional 2026–2030 de la Corte Suprema de Justicia del Paraguay",
+  // Favicons institucionales del Poder Judicial (public/favicon/, tomados de pj.gov.py)
+  icons: {
+    icon: [
+      { url: "/favicon/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      { url: "/favicon/android-icon-192x192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [57, 60, 72, 76, 114, 120, 144, 152, 180].map((n) => ({
+      url: `/favicon/apple-icon-${n}x${n}.png`,
+      sizes: `${n}x${n}`,
+      type: "image/png",
+    })),
+  },
+  manifest: "/favicon/manifest.json",
+  other: {
+    "msapplication-TileColor": "#5194CF",
+    "msapplication-TileImage": "/favicon/ms-icon-144x144.png",
+  },
 };
 
 export default async function RootLayout({

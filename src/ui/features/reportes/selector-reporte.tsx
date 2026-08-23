@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { ExternalLink, FileSpreadsheet } from "lucide-react";
+import { Combobox } from "@/ui/components/combobox";
 
 /**
- * Select + acciones para reportes parametrizados: abre el PDF imprimible
+ * Combobox con buscador + acciones para reportes parametrizados: abre el PDF imprimible
  * (`${base}/${valor}?anio=`) y, si hay `baseExcel`, descarga el .xlsx
  * (`${baseExcel}/${valor}?anio=`).
  */
@@ -15,7 +16,7 @@ export function SelectorReporte({
   anio,
   placeholder,
 }: {
-  opciones: { valor: string | number; etiqueta: string }[];
+  opciones: { valor: string | number; etiqueta: string; grupo?: string }[];
   base: string;
   baseExcel?: string;
   anio: number;
@@ -32,18 +33,13 @@ export function SelectorReporte({
     }`;
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <select
-        value={valor}
-        onChange={(e) => setValor(e.target.value)}
-        className="min-w-0 flex-1 basis-[220px] rounded-pj border border-linea bg-superficie px-2 py-[7px] text-[12px] text-tinta"
-      >
-        <option value="">{placeholder}</option>
-        {opciones.map((o) => (
-          <option key={o.valor} value={String(o.valor)}>
-            {o.etiqueta}
-          </option>
-        ))}
-      </select>
+      <Combobox
+        opciones={opciones.map((o) => ({ ...o, valor: String(o.valor) }))}
+        valor={valor}
+        onChange={setValor}
+        placeholder={placeholder}
+        className="flex-1 basis-[220px]"
+      />
       <a
         href={
           valor

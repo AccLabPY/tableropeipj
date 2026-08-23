@@ -38,7 +38,9 @@ function InputDemo({ label, valor, ancho }: { label: string; valor: string; anch
 export default function GuiaDeCargaPage() {
   return (
     <section className="mx-auto max-w-3xl">
-      <BackButton />
+      <div className="mb-4">
+        <BackButton />
+      </div>
       <PageHeader
         title="Guía de carga de avances"
         subtitle="Para las dependencias responsables: del valor observado a la validación de la DGPD"

@@ -68,61 +68,66 @@ export default async function ReporteIndicadorPage({
       </div>
 
       <h2 className={SECCION_REPORTE}>Bloque técnico</h2>
-      <table className="w-full border-collapse">
-        <tbody>
-          {(
+      {/* Rejilla compacta de dos columnas: los campos largos ocupan el ancho completo
+          para que el gráfico de avance entre en la primera página. */}
+      <dl className="grid grid-cols-2 gap-x-6 gap-y-0 rounded-pj-sm border border-linea px-3 print:break-inside-avoid">
+        {(
+          [
+            ["Objetivo estratégico", `${est.oeCodigo} — ${ficha.oeNombre}`, true],
+            est.aeCodigo
+              ? ["Acción estratégica", `${est.aeCodigo} — ${ficha.aeNombre}`, true]
+              : null,
+            ["Descripción", ficha.descripcion ?? "—", true],
+            ["Fórmula", ficha.formula ?? "—", false],
+            ["Variables", ficha.variables ?? "—", false],
             [
-              ["Objetivo estratégico", `${est.oeCodigo} — ${ficha.oeNombre}`],
-              est.aeCodigo
-                ? ["Acción estratégica", `${est.aeCodigo} — ${ficha.aeNombre}`]
-                : null,
-              ["Descripción", ficha.descripcion ?? "—"],
-              ["Fórmula", ficha.formula ?? "—"],
-              ["Variables", ficha.variables ?? "—"],
-              [
-                "Unidad · Sentido · Dimensión",
-                `${est.unidad} · ${est.sentido === "ASC" ? "Ascendente" : "Descendente"} · ${est.dimension ?? "—"}`,
-              ],
-              [
-                "Línea base",
-                est.basePendiente
-                  ? "a determinar"
-                  : `${fmtNum(est.lineaBase)}${sufijo} (${ficha.anioLineaBase ?? "—"})`,
-              ],
-              [
-                `Meta ${anio}`,
-                est.metaConcluida
-                  ? "concluido (ciclo de vida)"
-                  : `${fmtNum(est.meta)}${sufijo}`,
-              ],
-              ["Frecuencia · Cobertura", `${ficha.frecuencia} · ${ficha.cobertura}`],
-              ["Fuentes de información", ficha.fuenteInfo ?? "—"],
-              [
-                "Responsables",
-                ficha.responsables
-                  .map(
-                    (r) =>
-                      `${r.nombre} (${r.rol === "PRINCIPAL" ? "Principal" : r.rol === "CORRESPONSABLE" ? "Corresponsable" : "Fuente"})`,
-                  )
-                  .join(" · ") || "—",
-              ],
-            ] as ([string, string] | null)[]
-          )
-            .filter((f): f is [string, string] => f !== null)
-            .map(([k, v]) => (
-              <tr key={k}>
-                <td
-                  className={`${TD_REPORTE} w-[190px] text-[10px] font-semibold uppercase tracking-[.05em] text-muted`}
-                >
-                  {k}
-                </td>
-                <td className={TD_REPORTE}>{v}</td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+              "Unidad · Sentido · Dimensión",
+              `${est.unidad} · ${est.sentido === "ASC" ? "Ascendente" : "Descendente"} · ${est.dimension ?? "—"}`,
+              false,
+            ],
+            ["Frecuencia · Cobertura", `${ficha.frecuencia} · ${ficha.cobertura}`, false],
+            [
+              "Línea base",
+              est.basePendiente
+                ? "a determinar"
+                : `${fmtNum(est.lineaBase)}${sufijo} (${ficha.anioLineaBase ?? "—"})`,
+              false,
+            ],
+            [
+              `Meta ${anio}`,
+              est.metaConcluida
+                ? "concluido (ciclo de vida)"
+                : `${fmtNum(est.meta)}${sufijo}`,
+              false,
+            ],
+            ["Fuentes de información", ficha.fuenteInfo ?? "—", true],
+            [
+              "Responsables",
+              ficha.responsables
+                .map(
+                  (r) =>
+                    `${r.nombre} (${r.rol === "PRINCIPAL" ? "Principal" : r.rol === "CORRESPONSABLE" ? "Corresponsable" : "Fuente"})`,
+                )
+                .join(" · ") || "—",
+              true,
+            ],
+          ] as ([string, string, boolean] | null)[]
+        )
+          .filter((f): f is [string, string, boolean] => f !== null)
+          .map(([k, v, ancho]) => (
+            <div
+              key={k}
+              className={`border-b border-linea-2 py-[5px] last:border-b-0 ${ancho ? "col-span-2" : ""}`}
+            >
+              <dt className="text-[9px] font-semibold uppercase tracking-[.05em] text-muted">
+                {k}
+              </dt>
+              <dd className="text-[11px] leading-snug">{v}</dd>
+            </div>
+          ))}
+      </dl>
 
-      <h2 className={SECCION_REPORTE}>Avance en el tiempo</h2>
+      <h2 className={`${SECCION_REPORTE} print:break-after-avoid`}>Avance en el tiempo</h2>
       <div className="print:break-inside-avoid">
         <LazySerieIndicador
           trayectoria={ficha.trayectoria}
@@ -132,7 +137,9 @@ export default async function ReporteIndicadorPage({
         />
       </div>
 
-      <h2 className={SECCION_REPORTE}>Mediciones registradas</h2>
+      <h2 className={`${SECCION_REPORTE} print:break-before-page print:mt-0`}>
+        Mediciones registradas
+      </h2>
       <table className="w-full border-collapse">
         <thead>
           <tr>

@@ -10,7 +10,9 @@ export const metadata: Metadata = { title: "Glosario · Documentación" };
 export default function GlosarioPage() {
   return (
     <section className="mx-auto max-w-3xl">
-      <BackButton />
+      <div className="mb-4">
+        <BackButton />
+      </div>
       <PageHeader
         title="Glosario metodológico"
         subtitle="Los conceptos del seguimiento del PEI 2026–2030, tal como los aplica la plataforma"

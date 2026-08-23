@@ -29,7 +29,8 @@ export default async function ReportesPage({
   const aes = estado.objetivos.flatMap((o) =>
     o.acciones.map((a) => ({
       valor: a.codigo,
-      etiqueta: `${a.codigo} — ${a.nombre.length > 60 ? `${a.nombre.slice(0, 60)}…` : a.nombre}`,
+      etiqueta: `${a.codigo} — ${a.nombre}`,
+      grupo: `${o.codigo} · ${o.nombre}`,
     })),
   );
   const depsUnicas = new Map<number, string>();
@@ -43,7 +44,8 @@ export default async function ReportesPage({
     .sort((a, b) => a.etiqueta.localeCompare(b.etiqueta, "es"));
   const indicadores = estado.indicadores.map((i) => ({
     valor: i.codigo,
-    etiqueta: `${i.codigo} — ${i.nombre.length > 70 ? `${i.nombre.slice(0, 70)}…` : i.nombre}`,
+    etiqueta: `${i.codigo} — ${i.nombre}`,
+    grupo: i.aeCodigo ? `${i.oeCodigo} · ${i.aeCodigo}` : `${i.oeCodigo} · Nivel OE`,
   }));
 
   return (

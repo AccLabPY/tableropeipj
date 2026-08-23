@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Link from "next/link";
+import { ClipboardEdit } from "lucide-react";
 import { requirePage } from "@/server/auth/guards";
 import { getCtx } from "@/server/db/env";
 import { fichaIndicador } from "@/server/services/indicador-ficha.service";
@@ -49,6 +51,9 @@ export default async function DetalleIndicadorPage({
     throw e;
   }
   const est = ficha.estado;
+  const puedeCargar = actor.roles.some((r) =>
+    ["DEPENDENCIA_CARGA", "DGPD_VALIDADOR", "ADMIN"].includes(r),
+  );
   const unidadSufijo = est.unidad === "PORCENTAJE" ? "%" : "";
   const brecha =
     est.valor === null || est.meta === null || est.basePendiente
@@ -72,6 +77,15 @@ export default async function DetalleIndicadorPage({
           >
             Exportar Excel
           </a>
+          {puedeCargar ? (
+            <Link
+              href={`/registro?anio=${anio}&indicador=${est.codigo}`}
+              className="inline-flex items-center gap-[6px] whitespace-nowrap rounded-pj border border-azul-d bg-azul px-3 py-[6px] text-[11.5px] font-semibold text-white shadow-sm hover:bg-azul-d agentes:rounded-chip agentes:border-transparent agentes:bg-accion agentes:hover:brightness-105"
+            >
+              <ClipboardEdit className="h-3.5 w-3.5" />
+              Reportar avance
+            </Link>
+          ) : null}
         </div>
       </div>
       <div className="my-[14px] flex flex-wrap items-start justify-between gap-x-8 gap-y-4">
@@ -488,6 +502,19 @@ export default async function DetalleIndicadorPage({
                   header: "Reporte",
                   tdClassName: "text-[12px] text-muted",
                   cell: (m) => fmtFechaCorta(m.fechaReporte),
+                },
+                {
+                  key: "detalle",
+                  header: "",
+                  tdClassName: "text-[12px]",
+                  cell: (m) => (
+                    <Link
+                      href={`/registro/carga/${m.id}`}
+                      className="whitespace-nowrap font-semibold text-azul hover:underline"
+                    >
+                      Ver carga
+                    </Link>
+                  ),
                 },
               ]}
               filas={ficha.mediciones}

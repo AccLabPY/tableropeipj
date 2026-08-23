@@ -25,6 +25,10 @@ import { tieneRol } from "@/server/auth/guards";
 import type { MedicionInput, ValidarInput, EvidenciaInput } from "@/shared/schemas/medicion";
 import { num } from "./mappers";
 import { invalidarEstadoPEI } from "./estado-cache";
+import {
+  notificarCriticoSiCorresponde,
+  notificarTransicion,
+} from "./notificaciones.service";
 
 const D = (n: number) => new Prisma.Decimal(n);
 
@@ -34,6 +38,21 @@ const D = (n: number) => new Prisma.Decimal(n);
  * - Una medición APROBADA nunca se sobrescribe: rectificar crea versión nueva.
  * - Las transiciones se validan con la máquina de estados del dominio.
  */
+
+/** Emite notificaciones tras una transición. Nunca rompe el caso de uso. */
+async function notificarSeguro(
+  ctx: Ctx,
+  m: MedicionCompleta,
+  hacia: EstadoWF,
+  comentario?: string | null,
+): Promise<void> {
+  try {
+    await notificarTransicion(ctx, m, hacia, comentario);
+    if (hacia === "APROBADO") await notificarCriticoSiCorresponde(ctx, m);
+  } catch (e) {
+    console.error("[notificaciones] fallo al emitir:", e);
+  }
+}
 
 function transicionar(
   ctx: Ctx,
@@ -263,6 +282,7 @@ export async function enviar(ctx: Ctx, id: bigint): Promise<MedicionCompleta> {
   const desde = m.estado as EstadoWF;
   exigirTransicion(ctx, desde, "ENVIADO");
   await transicionar(ctx, m.id, desde, "ENVIADO");
+  await notificarSeguro(ctx, m, "ENVIADO");
   return medicionOThrow(ctx, id);
 }
 
@@ -275,6 +295,7 @@ export async function tomarEnRevision(
   const desde = m.estado as EstadoWF;
   exigirTransicion(ctx, desde, "EN_REVISION");
   await transicionar(ctx, m.id, desde, "EN_REVISION");
+  await notificarSeguro(ctx, m, "EN_REVISION");
   return medicionOThrow(ctx, id);
 }
 
@@ -296,6 +317,7 @@ export async function validar(
       comentario: input.comentario ?? null,
     },
   });
+  await notificarSeguro(ctx, m, input.resultado, input.comentario);
   return medicionOThrow(ctx, id);
 }
 
@@ -340,6 +362,7 @@ export async function rectificar(
       comentario: `Versión de rectificación de v${m.version}.`,
     },
   });
+  await notificarSeguro(ctx, m, "RECTIFICADO", motivo);
   return medicionOThrow(ctx, nueva.id);
 }
 

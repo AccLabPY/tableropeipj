@@ -20,10 +20,13 @@ export function ThemeSwitch({
   tema,
   sobreOscuro = true,
   compacto = false,
+  sutil = false,
 }: {
   tema: Tema;
   sobreOscuro?: boolean;
   compacto?: boolean;
+  /** Versión discreta en texto ("Interfaz: Agentes PEI · Clásico") para el login. */
+  sutil?: boolean;
 }) {
   const router = useRouter();
   const [pendiente, startTransition] = useTransition();
@@ -42,6 +45,40 @@ export function ThemeSwitch({
   useEffect(() => {
     if (!pendiente && destino && destino === tema) setDestino(null);
   }, [pendiente, destino, tema]);
+
+  if (sutil) {
+    return (
+      <>
+        <div
+          role="group"
+          aria-label="Tema visual"
+          className={cn(
+            "inline-flex items-center gap-[6px] text-[11px] text-muted-2",
+            pendiente && "opacity-70",
+          )}
+        >
+          <span>Interfaz:</span>
+          {TEMAS.map((t, i) => (
+            <span key={t} className="inline-flex items-center gap-[6px]">
+              {i > 0 ? <span aria-hidden="true">·</span> : null}
+              <button
+                type="button"
+                onClick={() => cambiar(t)}
+                aria-pressed={t === tema}
+                className={cn(
+                  "rounded-pj-sm px-1 underline-offset-2 hover:text-azul hover:underline",
+                  t === tema && "font-semibold text-tinta no-underline",
+                )}
+              >
+                {TEMA_LABEL[t]}
+              </button>
+            </span>
+          ))}
+        </div>
+        {destino ? <OverlayCambio destino={destino} /> : null}
+      </>
+    );
+  }
 
   return (
     <>

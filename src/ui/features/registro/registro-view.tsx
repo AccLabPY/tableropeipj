@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useRef, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { Clock, X } from "lucide-react";
 import {
   calcularCumplimiento,
   calcularValorObservado,
@@ -20,6 +21,7 @@ import {
   type ResultadoAccion,
 } from "@/server/services/registro-actions";
 import { Card, CardHeader } from "@/ui/components/card";
+import { BuscadorLista, coincide } from "@/ui/components/buscador-lista";
 import { SemPill } from "@/ui/components/sem-pill";
 import { Spinner } from "@/ui/components/spinner";
 import { ModalResultado } from "@/ui/components/modal-resultado";
@@ -67,13 +69,37 @@ function formDesdeItem(it: RegistroItemDTO | undefined): FormState {
   };
 }
 
-export function RegistroView({ data }: { data: RegistroDTO }) {
+export function RegistroView({
+  data,
+  indicadorInicial = null,
+}: {
+  data: RegistroDTO;
+  /** Código llegado por ?indicador= (acceso directo desde la ficha). */
+  indicadorInicial?: number | null;
+}) {
+  const inicialEnLista =
+    indicadorInicial !== null && data.items.some((i) => i.codigo === indicadorInicial);
   const [selCodigo, setSelCodigo] = useState<number | null>(
-    data.items[0]?.codigo ?? null,
+    inicialEnLista ? indicadorInicial : (data.items[0]?.codigo ?? null),
   );
+  const listaRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!inicialEnLista) return;
+    listaRef.current
+      ?.querySelector<HTMLElement>(`[data-codigo="${indicadorInicial}"]`)
+      ?.scrollIntoView({ block: "center" });
+  }, [inicialEnLista, indicadorInicial]);
   const item = data.items.find((i) => i.codigo === selCodigo);
   const [form, setForm] = useState<FormState>(() => formDesdeItem(item));
   const [toast, setToast] = useState<ResultadoAccion | null>(null);
+  const [busqueda, setBusqueda] = useState("");
+  const itemsFiltrados = useMemo(
+    () =>
+      data.items.filter((i) =>
+        coincide(`${i.codigo} ${i.nombre} ${i.aeCodigo ?? ""}`, busqueda),
+      ),
+    [data.items, busqueda],
+  );
   const [validacion, setValidacion] = useState<string[] | null>(null);
   const [comentario, setComentario] = useState("");
   const [pendiente, startTransition] = useTransition();
@@ -252,13 +278,31 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
           title="Indicadores a cargo"
           meta={`${data.items.length} del período`}
         />
-        <div className="scroll-pj max-h-[300px] overflow-y-auto md:max-h-[640px]">
-          {data.items.map((i) => {
+        <BuscadorLista
+          valor={busqueda}
+          onChange={setBusqueda}
+          placeholder="Buscar indicador (código o nombre)…"
+          resultados={itemsFiltrados.length}
+        />
+        <div ref={listaRef} className="scroll-pj max-h-[300px] overflow-y-auto md:max-h-[640px]">
+          {indicadorInicial !== null && !inicialEnLista ? (
+            <p className="border-b border-sem-ambar-border bg-sem-ambar-bg px-4 py-2 text-[11.5px] text-sem-ambar-fg">
+              El indicador {indicadorInicial} no está en su lista de carga (no
+              pertenece a su dependencia o no aplica al período).
+            </p>
+          ) : null}
+          {itemsFiltrados.length === 0 && data.items.length > 0 ? (
+            <p className="px-4 py-6 text-center text-[12px] text-muted">
+              Sin indicadores que coincidan con “{busqueda}”.
+            </p>
+          ) : null}
+          {itemsFiltrados.map((i) => {
             const chip = CHIP[i.medicion?.estado ?? "PENDIENTE"];
             return (
               <button
                 key={i.codigo}
                 type="button"
+                data-codigo={i.codigo}
                 onClick={() => seleccionar(i.codigo)}
                 className={cn(
                   "block w-full border-b border-linea-2 px-[14px] py-[11px] text-left hover:bg-hover",
@@ -503,8 +547,18 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
                 <SemPill sem={enVivo?.sem ?? "GRIS"} grande />
               </div>
 
-              {/* Stepper */}
+              {/* Stepper + acceso al expediente individual de la carga */}
               <Stepper estado={estadoWF} />
+              {item.medicion ? (
+                <div className="mt-3">
+                  <a
+                    href={`/registro/carga/${item.medicion.id}`}
+                    className="inline-flex items-center gap-[5px] text-[12px] font-semibold text-azul hover:underline"
+                  >
+                    Ver detalle de la carga (historial y resoluciones) →
+                  </a>
+                </div>
+              ) : null}
 
               {/* Mensajes de validación previa */}
               {item.medicion?.validaciones?.length ? (
@@ -745,11 +799,14 @@ function CampoVariable({
   return (
     <label
       className={cn(
-        "text-2xs uppercase tracking-[.06em] text-muted",
+        // Columna flexible a altura completa: la etiqueta (de 1 o 2 líneas)
+        // crece y el input queda anclado abajo, de modo que los campos de la
+        // misma fila siempre quedan alineados entre sí.
+        "flex h-full flex-col text-2xs uppercase tracking-[.06em] text-muted",
         esDirecta && "sm:col-span-2",
       )}
     >
-      <span className="flex items-baseline gap-[6px]">
+      <span className="flex flex-1 items-baseline gap-[6px]">
         <span className="tnum font-serif text-[13px] font-semibold normal-case text-azul-d">
           {esDirecta ? "Valor" : `(${clave})`}
         </span>
@@ -766,47 +823,70 @@ function CampoVariable({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="0"
-        className="mt-1 block w-full rounded-pj border border-linea bg-superficie px-[9px] py-2 text-[13px] normal-case tracking-normal text-tinta"
+        className="mt-1 block w-full flex-none rounded-pj border border-linea bg-superficie px-[9px] py-2 text-[13px] normal-case tracking-normal text-tinta"
       />
     </label>
   );
 }
 
 function Stepper({ estado }: { estado: EstadoWF | "PENDIENTE" }) {
+  // fase = primer paso aún no cumplido (los anteriores se pintan con check).
+  // Aprobado/rectificado = circuito completo → los 3 pasos en verde.
+  // El paso 3 tiene variantes propias: ✕ rojo (rechazado) y ⏱ ámbar (en revisión).
   const fase =
-    estado === "APROBADO" || estado === "RECTIFICADO"
-      ? 3
+    estado === "APROBADO" || estado === "RECTIFICADO" || estado === "RECHAZADO"
+      ? 4
       : ["ENVIADO", "EN_REVISION"].includes(estado)
-        ? 2
-        : 1;
+        ? 3
+        : estado === "PENDIENTE"
+          ? 1
+          : 2;
+  const rechazado = estado === "RECHAZADO";
+  const enRevision = estado === "EN_REVISION";
   const pasos = ["Borrador", "Enviado", "Validado por DGPD"];
   return (
     <div className="mt-4 flex flex-col gap-2 xs:flex-row xs:items-center xs:gap-0">
       {pasos.map((p, ix) => {
         const n = ix + 1;
-        const done = fase > n;
-        const now = fase === n;
+        const esUltimo = n === pasos.length;
+        // Variantes del paso final
+        const rojo = esUltimo && rechazado;
+        const ambar = esUltimo && enRevision;
+        const done = fase > n && !rojo;
+        const now = fase === n && !ambar;
         return (
           <div key={p} className="flex items-center xs:flex-1 xs:last:flex-none">
             <div
               className={cn(
                 "flex items-center gap-2 text-[12px]",
-                done && "text-sem-verde",
-                now && "font-semibold text-azul-d",
-                !done && !now && "text-muted-2",
+                rojo && "font-semibold text-sem-rojo",
+                ambar && "font-semibold text-sem-ambar-fg",
+                !rojo && !ambar && done && "text-sem-verde",
+                !rojo && !ambar && now && "font-semibold text-azul-d",
+                !rojo && !ambar && !done && !now && "text-muted-2",
               )}
             >
               <span
                 className={cn(
                   "grid h-[22px] w-[22px] place-items-center rounded-full border-[1.5px] bg-superficie text-[11px]",
-                  done && "border-sem-verde bg-sem-verde text-white",
-                  now && "border-azul text-azul",
-                  !done && !now && "border-linea",
+                  rojo && "border-sem-rojo bg-sem-rojo text-white",
+                  ambar && "border-sem-ambar text-sem-ambar-fg",
+                  !rojo && !ambar && done && "border-sem-verde bg-sem-verde text-white",
+                  !rojo && !ambar && now && "border-azul text-azul",
+                  !rojo && !ambar && !done && !now && "border-linea",
                 )}
               >
-                {done ? "✓" : n}
+                {rojo ? (
+                  <X className="h-[13px] w-[13px]" strokeWidth={2.5} />
+                ) : ambar ? (
+                  <Clock className="h-[13px] w-[13px]" strokeWidth={2.2} />
+                ) : done ? (
+                  "✓"
+                ) : (
+                  n
+                )}
               </span>
-              {p}
+              {rojo ? "Rechazado por DGPD" : ambar ? "En revisión de DGPD" : p}
             </div>
             {ix < pasos.length - 1 ? (
               <span className="mx-[10px] hidden h-[1.5px] min-w-[24px] flex-1 bg-linea xs:block" />

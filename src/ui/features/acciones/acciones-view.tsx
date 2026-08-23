@@ -6,6 +6,7 @@ import type { AEEstadoDTO, EstadoPeiDTO } from "@/shared/dtos/estado-pei";
 import { SemPill } from "@/ui/components/sem-pill";
 import { Card, CardHeader, Tag } from "@/ui/components/card";
 import { DataTable } from "@/ui/components/data-table";
+import { BuscadorLista, coincide } from "@/ui/components/buscador-lista";
 import { SEM_COLORS } from "@/ui/theme/tokens";
 import { cn, fmtPct } from "@/lib/utils";
 
@@ -16,6 +17,20 @@ export function AccionesView({ estado }: { estado: EstadoPeiDTO }) {
     [estado],
   );
   const [sel, setSel] = useState<string>(todasAE[0]?.codigo ?? "");
+  const [busqueda, setBusqueda] = useState("");
+  const objetivosFiltrados = useMemo(
+    () =>
+      estado.objetivos
+        .map((oe) => ({
+          ...oe,
+          acciones: oe.acciones.filter((a) =>
+            coincide(`${a.codigo} ${a.nombre} ${oe.codigo} ${oe.nombre}`, busqueda),
+          ),
+        }))
+        .filter((oe) => oe.acciones.length > 0),
+    [estado, busqueda],
+  );
+  const nCoincidencias = objetivosFiltrados.reduce((n, oe) => n + oe.acciones.length, 0);
   const ae: AEEstadoDTO | undefined = todasAE.find((a) => a.codigo === sel);
   const oeDe = (codigo: string) =>
     estado.objetivos.find((o) => o.acciones.some((a) => a.codigo === codigo));
@@ -33,8 +48,19 @@ export function AccionesView({ estado }: { estado: EstadoPeiDTO }) {
           title="Acciones por objetivo"
           meta={`${todasAE.length} acciones`}
         />
+        <BuscadorLista
+          valor={busqueda}
+          onChange={setBusqueda}
+          placeholder="Buscar acción (código o nombre)…"
+          resultados={nCoincidencias}
+        />
         <div className="scroll-pj max-h-[320px] overflow-y-auto md:max-h-[660px]">
-          {estado.objetivos.map((oe) => (
+          {objetivosFiltrados.length === 0 ? (
+            <p className="px-4 py-6 text-center text-[12px] text-muted">
+              Sin acciones que coincidan con “{busqueda}”.
+            </p>
+          ) : null}
+          {objetivosFiltrados.map((oe) => (
             <div key={oe.codigo}>
               <div className="sticky top-0 border-b border-linea-2 bg-zebra px-[14px] pb-[5px] pt-2 text-[10px] uppercase tracking-[.08em] text-muted-2">
                 {oe.codigo} · {oe.nombre.slice(0, 52)}…

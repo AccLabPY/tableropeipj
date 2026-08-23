@@ -14,7 +14,9 @@ export const metadata: Metadata = {
 export default function GuiaDelValidadorPage() {
   return (
     <section className="mx-auto max-w-3xl">
-      <BackButton />
+      <div className="mb-4">
+        <BackButton />
+      </div>
       <PageHeader
         title="Guía del validador (DGPD)"
         subtitle="Revisión, evidencias y resolución: el control de calidad del dato oficial"

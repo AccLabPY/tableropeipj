@@ -121,6 +121,28 @@ plataforma cachea agresivamente en memoria (`src/server/services/cache.ts`):
 > Para juzgar la velocidad usar `npm run build && npm start`: `npm run dev`
 > compila cada ruta en el primer acceso y siempre se siente más lento.
 
+## Notificaciones (campanita)
+
+Bandeja in-app por usuario (tabla `Notificacion`, en ambas bases de datos):
+
+- **Generación**: cada transición de la máquina de estados emite
+  notificaciones (`notificaciones.service.ts`, enganchado en
+  `medicion.service.ts`): las cargas **enviadas** notifican a DGPD/Admin; las
+  **resoluciones** (aprobada/observada/rechazada/rectificada/en revisión)
+  notifican a los usuarios de la dependencia dueña. Al **aprobar**, si el
+  indicador queda en semáforo ROJO se emite además `INDICADOR_CRITICO` a
+  validadores + dependencia. El emisor nunca se auto-notifica; un fallo de
+  notificación jamás rompe la transición (fire-and-forget).
+- **Campanita** (`src/ui/layout/campanita.tsx`): badge de no leídas con
+  polling de 60 s contra `GET /api/v1/notificaciones`; el click marca leída
+  (`POST /api/v1/notificaciones/leer`) y navega al destino.
+- **Detalle de carga** (`/registro/carga/[id]`): expediente individual de una
+  medición — valores, evidencias descargables, resoluciones de la DGPD y
+  timeline completo del historial. DGPD/Admin ven cualquiera; una dependencia
+  solo las suyas (scoping de `medicion.repo`).
+- **Seed de demo**: `node scripts/seed-notificaciones.mjs` siembra la bandeja
+  en la BD de prueba desde el historial real (idempotente).
+
 ## Temas visuales (Agentes PEI · Clásico)
 
 La plataforma tiene dos temas conmutables por usuario desde el AppBar (y

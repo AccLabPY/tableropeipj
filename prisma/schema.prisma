@@ -414,3 +414,33 @@ model UmbralCriticidad {
 
   @@unique([scope, entidad])
 }
+
+// ----------------------------- Notificaciones -------------------------------
+enum TipoNotif {
+  CARGA_ENVIADA
+  CARGA_EN_REVISION
+  CARGA_APROBADA
+  CARGA_OBSERVADA
+  CARGA_RECHAZADA
+  CARGA_RECTIFICADA
+  INDICADOR_CRITICO
+}
+
+model Notificacion {
+  // Bandeja in-app por usuario. usuarioId es FK suelta al padrón de control
+  // (patrón HistorialEstado.usuarioId); medicionId/indicadorId apuntan a la
+  // entidad origen para navegación y trazabilidad.
+  id          BigInt    @id @default(autoincrement())
+  usuarioId   Int
+  tipo        TipoNotif
+  medicionId  BigInt?
+  indicadorId Int?
+  titulo      String
+  cuerpo      String?   @db.Text
+  url         String
+  leidaEn     DateTime?
+  creadaEn    DateTime  @default(now())
+
+  @@index([usuarioId, leidaEn])
+  @@index([usuarioId, creadaEn])
+}

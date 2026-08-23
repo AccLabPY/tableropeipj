@@ -5,6 +5,7 @@ import { TestModeBanner } from "@/ui/layout/test-mode-banner";
 import { UserMenu } from "@/ui/layout/user-menu";
 import { Footer } from "@/ui/layout/footer";
 import { ThemeSwitch } from "@/ui/layout/theme-switch";
+import { Campanita } from "@/ui/layout/campanita";
 import { AppBarAgentes } from "@/ui/layout/agentes/app-bar-agentes";
 import { FooterAgentes } from "@/ui/layout/agentes/footer-agentes";
 import { TemaProvider } from "@/ui/tema/tema-provider";
@@ -31,6 +32,7 @@ export default async function DashboardLayout({
   const barra = (
     <>
       <ThemeSwitch tema={tema} />
+      <Campanita />
       <UserMenu nombre={actor.nombre} roles={actor.roles} />
     </>
   );
