@@ -65,7 +65,7 @@ export default function PrimerosPasosPage() {
             <div className="overflow-x-auto">
               <table className="w-full border-collapse text-[12.5px]">
                 <thead>
-                  <tr className="bg-[#FAFBFC] text-left text-2xs uppercase tracking-[.06em] text-muted">
+                  <tr className="bg-zebra text-left text-2xs uppercase tracking-[.06em] text-muted">
                     <th className="border-b border-linea px-3 py-2">Rol</th>
                     <th className="border-b border-linea px-3 py-2">
                       Qué ve y qué puede hacer

@@ -9,7 +9,7 @@ export function BackButton() {
     <button
       type="button"
       onClick={() => router.back()}
-      className="tap inline-flex items-center gap-[7px] rounded-pj border border-linea bg-superficie px-[13px] py-[7px] text-[12.5px] font-semibold hover:border-azul-line hover:bg-[#F7F9FB]"
+      className="tap inline-flex items-center gap-[7px] rounded-pj border border-linea bg-superficie px-[13px] py-[7px] text-[12.5px] font-semibold hover:border-azul-line hover:bg-hover"
     >
       ‹ Volver
     </button>

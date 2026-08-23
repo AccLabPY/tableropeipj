@@ -24,13 +24,13 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col gap-5 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
-          <p className="max-w-md text-[11.5px] leading-relaxed text-[#B8CADA]">
+          <p className="max-w-md text-[11.5px] leading-relaxed text-on-marca">
             Plataforma de Seguimiento del Plan Estratégico Institucional
             2026–2030, desarrollada con el apoyo técnico del Programa de las
             Naciones Unidas para el Desarrollo.
           </p>
           <div className="flex flex-none items-center gap-4">
-            <span className="text-[11px] uppercase leading-tight tracking-[.12em] text-[#B8CADA]">
+            <span className="text-[11px] uppercase leading-tight tracking-[.12em] text-on-marca">
               Con el
               <br />
               apoyo de
@@ -47,7 +47,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-pj flex-wrap items-center justify-between gap-2 px-3 py-3 text-[10px] text-[#8FA6BC] xs:px-4 sm:px-[26px]">
+        <div className="mx-auto flex max-w-pj flex-wrap items-center justify-between gap-2 px-3 py-3 text-[10px] text-on-marca-2 xs:px-4 sm:px-[26px]">
           <span>
             © {new Date().getFullYear()} Corte Suprema de Justicia del
             Paraguay.

@@ -121,6 +121,41 @@ plataforma cachea agresivamente en memoria (`src/server/services/cache.ts`):
 > Para juzgar la velocidad usar `npm run build && npm start`: `npm run dev`
 > compila cada ruta en el primer acceso y siempre se siente más lento.
 
+## Temas visuales (Agentes PEI · Clásico)
+
+La plataforma tiene dos temas conmutables por usuario desde el AppBar (y
+anónimamente desde el login):
+
+- **Agentes PEI** (por defecto): identidad del programa — Poppins, gradiente
+  azul→magenta, naranja de acción, fondo crema, radios amplios, movimiento
+  sutil (framer-motion, respeta `prefers-reduced-motion`).
+- **Clásico**: institucional CSJ — navy, Georgia, radios 4 px.
+
+Cómo funciona:
+
+- **Tokens CSS**: `src/app/globals.css` define `:root`/`[data-theme="clasico"]`
+  y `[data-theme="agentes"]` como tripletas RGB (`--c-*`), radios (`--r*`),
+  sombras, fuentes (`--font-display/--font-body`) y gradientes
+  (`--grad-marca/--grad-accion`). `tailwind.config.ts` los expone como
+  `bg-azul/40`, `rounded-pj`, `font-serif`, `bg-marca`, etc.
+  `src/ui/theme/tokens.ts` exporta `rgb(var(--c-x))` para Recharts y estilos
+  inline.
+- **Regla: nunca un hex literal en componentes.** Un color nuevo se agrega como
+  token en ambos bloques de `globals.css` + entrada en `tailwind.config.ts`.
+- **Variantes** `agentes:` y `clasico:` (plugin en `tailwind.config.ts`) para
+  diferencias puntuales (p. ej. `agentes:rounded-chip`, hero del
+  `PageHeader`). Diferencias estructurales (AppBar, Sidebar, Footer, login)
+  viven en `src/ui/layout/agentes/` y se eligen en el layout por `tema`.
+- **Resolución** (`src/server/tema/tema.ts`): cookie `pei-tema` → JWT
+  (`Usuario.tema`, cargado al login) → `"agentes"`. El `<html data-theme>` se
+  decide en el servidor (sin FOUC ni mismatch). Cambiar tema =
+  `setTemaAction` (BD de control + cookie 1 año + revalidate).
+- **Reportes imprimibles siempre en Clásico**: `(print)/reportes/layout.tsx`
+  envuelve en `<div data-theme="clasico">` — los PDFs son documentos
+  oficiales CSJ.
+- Componentes con contexto cliente: `TemaProvider`/`useTema()`,
+  `MotionProvider`, `Aparecer`, `Contador`, `BlobsFondo`, `LogoAgentes`.
+
 ## Deploy
 
 Preparado para **Render + TiDB** (no ejecutado): `render.yaml` +

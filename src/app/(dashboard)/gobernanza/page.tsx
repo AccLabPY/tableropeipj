@@ -115,7 +115,7 @@ export default async function GobernanzaPage({
                   className="min-w-[100px] flex-1 rounded-pj border border-linea px-[13px] py-[11px] xs:min-w-[120px]"
                 >
                   <span
-                    className={`inline-block rounded-[10px] px-2 py-[2px] text-[10.5px] font-semibold ${w.cls}`}
+                    className={`inline-block rounded-chip px-2 py-[2px] text-[10.5px] font-semibold ${w.cls}`}
                   >
                     {w.label}
                   </span>
@@ -125,7 +125,7 @@ export default async function GobernanzaPage({
             })}
           </div>
           <p className="mt-3 text-[11.5px] text-muted">
-            Solo las mediciones <b className="text-[#1f6a49]">Aprobadas</b>{" "}
+            Solo las mediciones <b className="text-sem-verde-fg">Aprobadas</b>{" "}
             alimentan los tableros oficiales. Cobertura del período:{" "}
             <b>{fmtPct(estado.cobertura.fraccion)}</b> (
             {estado.cobertura.aprobadas}/{estado.cobertura.esperadas}).

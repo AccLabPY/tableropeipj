@@ -25,7 +25,7 @@ export function MembreteReporte({
           />
           <div className="min-w-0 leading-tight">
             <div className="font-serif text-[15px]">{titulo}</div>
-            <div className="mt-[2px] text-[10px] uppercase tracking-[.14em] text-[#B8CADA]">
+            <div className="mt-[2px] text-[10px] uppercase tracking-[.14em] text-on-marca">
               Plan Estratégico Institucional 2026–2030 · Poder Judicial del
               Paraguay
             </div>

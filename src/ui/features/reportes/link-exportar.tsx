@@ -13,7 +13,7 @@ export function LinkExportar({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex items-center gap-[6px] whitespace-nowrap rounded-pj border border-linea bg-superficie px-3 py-[6px] text-[11.5px] font-semibold text-tinta hover:bg-[#F7F9FB]"
+      className="inline-flex items-center gap-[6px] whitespace-nowrap rounded-pj border border-linea bg-superficie px-3 py-[6px] text-[11.5px] font-semibold text-tinta hover:bg-hover"
     >
       <FileText className="h-3.5 w-3.5 text-azul-d" />
       {etiqueta}

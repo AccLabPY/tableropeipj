@@ -261,9 +261,9 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
                 type="button"
                 onClick={() => seleccionar(i.codigo)}
                 className={cn(
-                  "block w-full border-b border-linea-2 px-[14px] py-[11px] text-left hover:bg-[#F7F9FB]",
+                  "block w-full border-b border-linea-2 px-[14px] py-[11px] text-left hover:bg-hover",
                   i.codigo === selCodigo &&
-                    "bg-azul-soft shadow-[inset_3px_0_0_#1E6FA8]",
+                    "bg-azul-soft shadow-[inset_3px_0_0_rgb(var(--c-azul))]",
                 )}
               >
                 <span className="flex items-center justify-between gap-2">
@@ -271,7 +271,7 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
                     {i.codigo}
                   </span>
                   <span
-                    className={`rounded-[10px] px-[7px] py-[1px] text-[10px] font-semibold ${chip.cls}`}
+                    className={`rounded-chip px-[7px] py-[1px] text-[10px] font-semibold ${chip.cls}`}
                   >
                     {chip.label}
                   </span>
@@ -421,8 +421,8 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
                         className={cn(
                           "mt-1 block w-full rounded-pj border px-[9px] py-2 text-[12.5px] font-semibold normal-case tracking-normal",
                           derivado.error === "DENOMINADOR_CERO"
-                            ? "border-[#E7C4C4] bg-sem-rojo-bg text-sem-rojo"
-                            : "border-linea bg-[#F7F9FB] text-tinta",
+                            ? "border-sem-rojo-border bg-sem-rojo-bg text-sem-rojo"
+                            : "border-linea bg-hover text-tinta",
                         )}
                       />
                     </label>
@@ -453,7 +453,7 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
 
               {/* Evidencias respaldatorias */}
               {data.puedeCargar ? (
-                <div className="mt-4 rounded-pj border border-linea bg-[#FAFBFC] p-4">
+                <div className="mt-4 rounded-pj border border-linea bg-zebra p-4">
                   <div className="mb-2 text-2xs font-semibold uppercase tracking-[.06em] text-muted">
                     Evidencias respaldatorias
                   </div>
@@ -484,7 +484,7 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
               ) : null}
 
               {/* Cumplimiento en vivo */}
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-pj border border-linea bg-[#FAFBFC] px-4 py-[14px]">
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-pj border border-linea bg-zebra px-4 py-[14px]">
                 <div className="text-[12px] text-muted">
                   Cumplimiento estimado del período
                   <b className="block font-serif text-titulo text-tinta">
@@ -515,11 +515,11 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
                       className={cn(
                         "rounded-pj-sm px-3 py-2 text-[12px]",
                         v.resultado === "APROBADO" &&
-                          "bg-sem-verde-bg text-[#1f6a49]",
+                          "bg-sem-verde-bg text-sem-verde-fg",
                         v.resultado === "OBSERVADO" &&
-                          "bg-sem-ambar-bg text-[#8a6412]",
+                          "bg-sem-ambar-bg text-sem-ambar-fg",
                         v.resultado === "RECHAZADO" &&
-                          "bg-sem-rojo-bg text-[#8f2f2f]",
+                          "bg-sem-rojo-bg text-sem-rojo-fg",
                       )}
                     >
                       <b>{v.resultado}</b>
@@ -553,7 +553,7 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
                         guardarBorradorAction(inputPayload()),
                       )
                     }
-                    className="tap inline-flex w-full items-center justify-center gap-2 rounded-pj border border-linea bg-superficie px-4 py-[9px] text-[12.5px] font-semibold hover:bg-[#F7F9FB] disabled:opacity-50 xs:w-auto"
+                    className="tap inline-flex w-full items-center justify-center gap-2 rounded-pj border border-linea bg-superficie px-4 py-[9px] text-[12.5px] font-semibold hover:bg-hover disabled:opacity-50 xs:w-auto"
                   >
                     {pendiente ? <Spinner className="text-muted" /> : null}
                     Guardar borrador
@@ -613,7 +613,7 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
                   <div className="flex flex-wrap gap-[10px]">
                     <BotonValidar
                       texto="Aprobar"
-                      cls="border-[#256e4c] bg-sem-verde text-white hover:opacity-90"
+                      cls="border-sem-verde-fg bg-sem-verde text-white hover:opacity-90"
                       disabled={pendiente}
                       onClick={() =>
                         ejecutar(() =>
@@ -626,7 +626,7 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
                     />
                     <BotonValidar
                       texto="Observar"
-                      cls="border-[#a6791b] bg-sem-ambar text-white hover:opacity-90"
+                      cls="border-sem-ambar-fg bg-sem-ambar text-white hover:opacity-90"
                       disabled={pendiente}
                       onClick={() => {
                         if (comentario.trim().length < 5) {
@@ -645,7 +645,7 @@ export function RegistroView({ data }: { data: RegistroDTO }) {
                     />
                     <BotonValidar
                       texto="Rechazar"
-                      cls="border-[#8f2f2f] bg-sem-rojo text-white hover:opacity-90"
+                      cls="border-sem-rojo-fg bg-sem-rojo text-white hover:opacity-90"
                       disabled={pendiente}
                       onClick={() => {
                         if (comentario.trim().length < 5) {
@@ -855,7 +855,7 @@ function ListaEvidencias({
                 href={`/api/v1/evidencias/${e.id}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-pj-sm border border-azul-line bg-azul-soft px-[9px] py-[4px] text-[11px] font-semibold text-azul-d hover:bg-[#DCEAF4]"
+                className="rounded-pj-sm border border-azul-line bg-azul-soft px-[9px] py-[4px] text-[11px] font-semibold text-azul-d hover:bg-azul-soft-hover"
               >
                 Descargar
               </a>
@@ -915,7 +915,7 @@ function SubidorEvidencia({
           const r = await onSubir(formData);
           if (r.ok && inputRef.current) inputRef.current.value = "";
         }}
-        className="tap rounded-pj border border-linea bg-superficie px-3 py-[6px] text-[11.5px] font-semibold hover:bg-[#F7F9FB] disabled:opacity-50"
+        className="tap rounded-pj border border-linea bg-superficie px-3 py-[6px] text-[11.5px] font-semibold hover:bg-hover disabled:opacity-50"
       >
         Adjuntar
       </button>

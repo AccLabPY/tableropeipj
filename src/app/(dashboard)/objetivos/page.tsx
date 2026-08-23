@@ -85,7 +85,7 @@ export default async function ObjetivosPage({
                     key={ae.codigo}
                     className="mb-[10px] overflow-hidden rounded-pj border border-linea-2 last:mb-0"
                   >
-                    <div className="flex flex-wrap items-center gap-x-[10px] gap-y-[6px] border-b border-linea-2 bg-[#F7F9FB] px-[11px] py-2">
+                    <div className="flex flex-wrap items-center gap-x-[10px] gap-y-[6px] border-b border-linea-2 bg-hover px-[11px] py-2">
                       <span className="flex-none font-serif text-[12px] font-semibold text-azul-d">
                         {ae.codigo}
                       </span>

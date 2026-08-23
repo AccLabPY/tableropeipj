@@ -8,12 +8,12 @@ const ESTILOS = {
     label: "Información",
   },
   advertencia: {
-    cls: "border-[#E9D9AE] bg-sem-ambar-bg text-[#8a6412]",
+    cls: "border-sem-ambar-border bg-sem-ambar-bg text-sem-ambar-fg",
     Icono: TriangleAlert,
     label: "Atención",
   },
   tip: {
-    cls: "border-[#BFDCCB] bg-sem-verde-bg text-[#1f6a49]",
+    cls: "border-sem-verde-border bg-sem-verde-bg text-sem-verde-fg",
     Icono: Lightbulb,
     label: "Consejo",
   },

@@ -188,7 +188,7 @@ function TarjetaReporte({
           className={`grid h-10 w-10 flex-none place-items-center rounded-pj ${
             tipo === "pdf"
               ? "bg-azul-soft text-azul-d"
-              : "bg-sem-verde-bg text-[#1f6a49]"
+              : "bg-sem-verde-bg text-sem-verde-fg"
           }`}
         >
           <Icono className="h-5 w-5" />

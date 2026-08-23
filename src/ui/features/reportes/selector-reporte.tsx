@@ -27,7 +27,7 @@ export function SelectorReporte({
       activo
         ? primario
           ? "border-azul-d bg-azul text-white hover:bg-azul-d"
-          : "border-linea bg-superficie text-tinta hover:bg-[#F7F9FB]"
+          : "border-linea bg-superficie text-tinta hover:bg-hover"
         : "pointer-events-none border-linea bg-superficie text-muted-2"
     }`;
   return (
@@ -68,7 +68,7 @@ export function SelectorReporte({
           aria-disabled={!valor}
           className={cls(!!valor, false)}
         >
-          <FileSpreadsheet className="h-3.5 w-3.5 text-[#1f6a49]" />
+          <FileSpreadsheet className="h-3.5 w-3.5 text-sem-verde-fg" />
           Excel
         </a>
       ) : null}

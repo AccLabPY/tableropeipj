@@ -9,7 +9,7 @@ function BotonEntrar() {
     <button
       type="submit"
       disabled={pending}
-      className="tap w-full rounded-pj border border-azul-d bg-azul px-4 py-[10px] text-[13px] font-semibold text-white hover:bg-azul-d disabled:opacity-60"
+      className="tap w-full rounded-pj border border-azul-d bg-azul px-4 py-[10px] text-[13px] font-semibold text-white hover:bg-azul-d disabled:opacity-60 agentes:rounded-chip agentes:border-transparent agentes:bg-accion agentes:py-[12px] agentes:text-[14px] agentes:shadow-card agentes:hover:brightness-105"
     >
       {pending ? "Verificando…" : "Iniciar sesión"}
     </button>
@@ -56,7 +56,7 @@ export function LoginForm() {
       {estado.error ? (
         <p
           role="alert"
-          className="rounded-pj-sm border border-[#E7C4C4] bg-sem-rojo-bg px-3 py-2 text-[12px] text-sem-rojo"
+          className="rounded-pj-sm border border-sem-rojo-border bg-sem-rojo-bg px-3 py-2 text-[12px] text-sem-rojo"
         >
           {estado.error}
         </p>

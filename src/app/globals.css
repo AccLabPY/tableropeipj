@@ -2,11 +2,139 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =========================================================================
+   DESIGN TOKENS — dos temas conmutables por usuario.
+   - `:root` / [data-theme="clasico"]  → tema Clásico institucional (CSJ)
+   - [data-theme="agentes"]            → tema Agentes PEI (PNUD)
+   Los colores son tripletas RGB (sin rgb()) para que Tailwind pueda aplicar
+   modificadores de opacidad: `bg-navy/45` → rgb(var(--c-navy) / .45).
+   Los selectores NO están anclados a <html>: un <div data-theme="clasico">
+   (reportes imprimibles) sobreescribe el tema del documento en su subárbol.
+   REGLA: ningún hex literal en componentes — siempre tokens.
+   ========================================================================= */
+:root,
+[data-theme="clasico"] {
+  /* Marca / barras */
+  --c-navy: 20 57 91;
+  --c-navy-2: 15 44 70;
+  --c-azul: 30 111 168;
+  --c-azul-d: 23 90 138;
+  --c-azul-soft: 234 242 248;
+  --c-azul-soft-hover: 220 234 244;
+  --c-azul-line: 207 224 236;
+  --c-marca-2: 30 111 168; /* en clásico, el "segundo color" es el azul */
+  --c-marca-3: 20 57 91; /* CTA: navy */
+  --c-marca-3-d: 15 44 70;
+  --c-on-marca: 184 202 218; /* texto secundario sobre barras navy */
+  --c-on-marca-2: 143 166 188;
+
+  /* Superficies y texto */
+  --c-fondo: 243 245 247;
+  --c-superficie: 255 255 255;
+  --c-linea: 226 231 236;
+  --c-linea-2: 237 240 243;
+  --c-tinta: 38 48 58;
+  --c-muted: 106 117 129;
+  --c-muted-2: 138 148 160;
+  --c-hover: 247 249 251;
+  --c-zebra: 250 251 252;
+  --c-scroll: 203 213 223;
+  --c-meta-serie: 154 166 177;
+
+  /* Semáforo (independiente de la marca) */
+  --c-sem-verde: 46 139 96;
+  --c-sem-verde-bg: 231 243 236;
+  --c-sem-verde-fg: 31 106 73;
+  --c-sem-verde-border: 191 220 203;
+  --c-sem-ambar: 192 138 30;
+  --c-sem-ambar-bg: 250 242 223;
+  --c-sem-ambar-fg: 138 100 18;
+  --c-sem-ambar-border: 234 217 174;
+  --c-sem-rojo: 178 59 59;
+  --c-sem-rojo-bg: 247 231 231;
+  --c-sem-rojo-fg: 143 47 47;
+  --c-sem-rojo-border: 231 196 196;
+  --c-sem-gris: 147 160 172;
+  --c-sem-gris-bg: 238 241 244;
+  --c-purpura: 107 63 160;
+  --c-purpura-bg: 239 231 245;
+  --c-purpura-border: 221 203 236;
+
+  /* Forma, profundidad, tipografía, gradientes */
+  --r: 4px;
+  --r-sm: 3px;
+  --r-chip: 10px;
+  --shadow-card: 0 1px 2px rgba(20, 57, 91, 0.06), 0 1px 3px rgba(20, 57, 91, 0.05);
+  --shadow-toast: 0 6px 20px rgba(20, 57, 91, 0.28);
+  --font-display: Georgia, "Times New Roman", serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  --grad-marca: linear-gradient(180deg, rgb(20 57 91), rgb(20 57 91));
+  --grad-accion: linear-gradient(180deg, rgb(20 57 91), rgb(20 57 91));
+  --grad-hero: linear-gradient(180deg, rgb(20 57 91), rgb(20 57 91));
+}
+
+[data-theme="agentes"] {
+  --c-navy: 11 104 177; /* #0b68b1 */
+  --c-navy-2: 0 90 150;
+  --c-azul: 0 124 194; /* #007cc2 */
+  --c-azul-d: 0 102 160;
+  --c-azul-soft: 226 242 250;
+  --c-azul-soft-hover: 199 232 238;
+  --c-azul-line: 199 232 238; /* #C7E8EE */
+  --c-marca-2: 191 48 133; /* #bf3085 magenta */
+  --c-marca-3: 242 111 27; /* #f26f1b naranja (CTA) */
+  --c-marca-3-d: 214 92 15;
+  --c-on-marca: 230 241 250;
+  --c-on-marca-2: 199 232 238;
+
+  --c-fondo: 244 242 225; /* #F4F2E1 crema */
+  --c-superficie: 255 255 255;
+  --c-linea: 212 224 212; /* #D4E0D4 */
+  --c-linea-2: 232 238 232;
+  --c-tinta: 27 42 64;
+  --c-muted: 94 102 122;
+  --c-muted-2: 124 131 150;
+  --c-hover: 250 249 242;
+  --c-zebra: 252 251 247;
+  --c-scroll: 212 224 212;
+  --c-meta-serie: 172 177 195;
+
+  --c-sem-verde: 22 140 92;
+  --c-sem-verde-bg: 226 244 234;
+  --c-sem-verde-fg: 17 102 68;
+  --c-sem-verde-border: 176 218 194;
+  --c-sem-ambar: 181 136 0; /* amarillento: no se confunde con el naranja de marca */
+  --c-sem-ambar-bg: 252 245 214;
+  --c-sem-ambar-fg: 122 88 0;
+  --c-sem-ambar-border: 235 214 150;
+  --c-sem-rojo: 200 48 48;
+  --c-sem-rojo-bg: 250 228 228;
+  --c-sem-rojo-fg: 150 34 34;
+  --c-sem-rojo-border: 236 186 186;
+  --c-sem-gris: 172 177 195; /* #ACB1C3 */
+  --c-sem-gris-bg: 239 240 244;
+  --c-purpura: 197 75 146; /* #C54B92 */
+  --c-purpura-bg: 250 232 242;
+  --c-purpura-border: 236 190 218;
+
+  --r: 14px;
+  --r-sm: 8px;
+  --r-chip: 999px;
+  --shadow-card: 0 2px 8px rgba(0, 124, 194, 0.08), 0 1px 2px rgba(0, 124, 194, 0.06);
+  --shadow-toast: 0 8px 24px rgba(11, 104, 177, 0.28);
+  --font-display: var(--font-poppins), "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-body: var(--font-poppins), "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --grad-marca: linear-gradient(135deg, #007cc2 0%, #0b68b1 55%, #bf3085 100%);
+  --grad-accion: linear-gradient(135deg, #f26f1b 0%, #c54b92 100%);
+  /* Hero de páginas: naranja PEI dominante, remate magenta (contrasta con la barra azul) */
+  --grad-hero: linear-gradient(120deg, #f26f1b 0%, #e8581c 55%, #c54b92 100%);
+}
+
 html {
   -webkit-text-size-adjust: 100%;
 }
 
-/* Estética institucional sobria (§10): gris/blanco con azul como único acento */
 body {
   @apply bg-fondo text-tinta font-sans antialiased;
   font-size: 14px;
@@ -47,13 +175,13 @@ body {
   height: 8px;
 }
 .scroll-pj::-webkit-scrollbar-thumb {
-  background: #cbd5df;
+  background: rgb(var(--c-scroll));
   border-radius: 4px;
 }
 
 /* Foco visible accesible (AA) */
 :focus-visible {
-  outline: 2px solid #1e6fa8;
+  outline: 2px solid rgb(var(--c-azul));
   outline-offset: 1px;
 }
 

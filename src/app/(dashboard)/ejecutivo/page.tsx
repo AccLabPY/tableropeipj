@@ -13,6 +13,7 @@ import { SemPill } from "@/ui/components/sem-pill";
 import { ProgressBar } from "@/ui/components/progress";
 import { AnioSelector } from "@/ui/components/anio-selector";
 import { LinkExportar } from "@/ui/features/reportes/link-exportar";
+import { KpiCifra } from "@/ui/components/kpi-cifra";
 import { LazyDonutSemaforo } from "@/ui/charts/lazy";
 import { SEM_COLORS } from "@/ui/theme/tokens";
 import { fmtPct, fmtValor } from "@/lib/utils";
@@ -53,12 +54,12 @@ export default async function EjecutivoPage({
 
       {/* KPIs */}
       <div className="mb-4 grid grid-cols-1 gap-3 xs:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-5">
-        <Card className="p-4">
+        <Card className="p-4 agentes:border-t-4 agentes:border-t-azul">
           <div className="text-2xs uppercase tracking-[.08em] text-muted">
             Índice de cumplimiento {anio}
           </div>
-          <div className="tnum mt-2 font-serif text-kpi">
-            {fmtPct(estado.indicePEI)}
+          <div className="tnum mt-2 font-serif text-kpi agentes:font-bold agentes:text-azul-d">
+            <KpiCifra valor={estado.indicePEI} formato="pct" />
           </div>
           <div className="mt-2 text-[11px] text-muted">
             Promedio ponderado de los 6 OE
@@ -74,7 +75,11 @@ export default async function EjecutivoPage({
             ["ROJO", "Críticos", "bajo el umbral"],
           ] as const
         ).map(([sem, label, foot]) => (
-          <Card key={sem} className="p-4">
+          <Card
+            key={sem}
+            className="p-4 agentes:border-t-4 agentes:border-t-[color:var(--kpi-c)]"
+            style={{ "--kpi-c": SEM_COLORS[sem] } as React.CSSProperties}
+          >
             <div className="flex items-center gap-[6px] text-2xs uppercase tracking-[.08em] text-muted">
               <span
                 className="h-2 w-2 rounded-full"
@@ -82,18 +87,18 @@ export default async function EjecutivoPage({
               />
               {label}
             </div>
-            <div className="tnum mt-2 font-serif text-kpi">
-              {estado.distribucion[sem]}
+            <div className="tnum mt-2 font-serif text-kpi agentes:font-bold">
+              <KpiCifra valor={estado.distribucion[sem]} />
             </div>
             <div className="mt-2 text-[11px] text-muted">{foot}</div>
           </Card>
         ))}
-        <Card className="p-4">
+        <Card className="p-4 agentes:border-t-4 agentes:border-t-marca-2">
           <div className="text-2xs uppercase tracking-[.08em] text-muted">
             Cobertura de reporte
           </div>
-          <div className="tnum mt-2 font-serif text-kpi">
-            {fmtPct(estado.cobertura.fraccion)}
+          <div className="tnum mt-2 font-serif text-kpi agentes:font-bold agentes:text-marca-2">
+            <KpiCifra valor={estado.cobertura.fraccion} formato="pct" />
           </div>
           <div className="mt-2 text-[11px] text-muted">
             {estado.cobertura.aprobadas} de {estado.cobertura.esperadas}{" "}
@@ -101,7 +106,7 @@ export default async function EjecutivoPage({
           </div>
           <div className="mt-2 h-[5px] overflow-hidden rounded bg-linea">
             <div
-              className="h-full bg-navy"
+              className="h-full bg-navy agentes:bg-accion"
               style={{
                 width: `${Math.round(estado.cobertura.fraccion * 100)}%`,
               }}

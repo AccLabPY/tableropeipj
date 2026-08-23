@@ -48,7 +48,7 @@ export function AppBar({
             <div className="truncate font-serif text-[13.5px] tracking-wide sm:text-[15px]">
               Poder Judicial del Paraguay
             </div>
-            <div className="truncate text-[9.5px] uppercase tracking-[.16em] text-[#B8CADA] sm:text-[10.5px]">
+            <div className="truncate text-[9.5px] uppercase tracking-[.16em] text-on-marca sm:text-[10.5px]">
               Corte Suprema de Justicia
             </div>
           </div>
@@ -56,9 +56,6 @@ export function AppBar({
         <span className="flex-1" />
         <span className="hidden xl:inline">
           <Clock />
-        </span>
-        <span className="hidden whitespace-nowrap rounded-pj-sm border border-white/[.18] bg-white/10 px-[10px] py-1 text-[11px] tracking-wider md:inline">
-          PEI 2026–2030
         </span>
         {children}
       </div>

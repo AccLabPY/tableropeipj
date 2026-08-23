@@ -29,7 +29,7 @@ export function GlosarioItem({
       <dd className="mt-[6px] space-y-2 text-[13px] leading-relaxed text-tinta">
         {children}
         {ejemplo ? (
-          <div className="mt-2 rounded-pj-sm border border-linea bg-[#FAFBFC] px-3 py-2 text-[12px] text-muted">
+          <div className="mt-2 rounded-pj-sm border border-linea bg-zebra px-3 py-2 text-[12px] text-muted">
             <span className="font-semibold uppercase tracking-[.06em] text-muted-2">
               Ejemplo ·{" "}
             </span>

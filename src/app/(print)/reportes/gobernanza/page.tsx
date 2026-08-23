@@ -87,7 +87,7 @@ export default async function ReporteGobernanzaPage({
               className="min-w-[92px] rounded-pj border border-linea px-3 py-2 print:break-inside-avoid"
             >
               <span
-                className={`inline-block rounded-[10px] px-2 py-[2px] text-[10px] font-semibold ${w.cls}`}
+                className={`inline-block rounded-chip px-2 py-[2px] text-[10px] font-semibold ${w.cls}`}
               >
                 {w.label}
               </span>

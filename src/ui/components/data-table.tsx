@@ -82,7 +82,7 @@ export function DataTable<T>({
         <table className={cn("w-full border-collapse", minAncho)}>
           {sinCabecera ? null : (
             <thead>
-              <tr className="bg-[#FAFBFC] text-left text-2xs uppercase tracking-[.06em] text-muted">
+              <tr className="bg-zebra text-left text-2xs uppercase tracking-[.06em] text-muted">
                 {columnas.map((c) => (
                   <th
                     key={c.key}
@@ -102,7 +102,7 @@ export function DataTable<T>({
           )}
           <tbody>
             {filas.map((fila) => (
-              <tr key={keyFila(fila)} className="hover:bg-[#F8FAFB]">
+              <tr key={keyFila(fila)} className="hover:bg-zebra">
                 {columnas.map((c) => (
                   <td
                     key={c.key}

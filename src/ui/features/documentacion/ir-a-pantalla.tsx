@@ -12,7 +12,7 @@ export function IrAPantalla({
   return (
     <Link
       href={href}
-      className="inline-flex items-center gap-[6px] rounded-pj border border-azul-line bg-azul-soft px-3 py-[6px] text-[12px] font-semibold text-azul-d hover:bg-[#DCEAF4] print:hidden"
+      className="inline-flex items-center gap-[6px] rounded-pj border border-azul-line bg-azul-soft px-3 py-[6px] text-[12px] font-semibold text-azul-d hover:bg-azul-soft-hover print:hidden"
     >
       {children}
       <ArrowRight className="h-3.5 w-3.5" />

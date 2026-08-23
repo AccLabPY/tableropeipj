@@ -168,10 +168,10 @@ export function UsuariosView({
               cell: (u) => (
                 <span
                   className={cn(
-                    "whitespace-nowrap rounded-[10px] px-2 py-[2px] text-[10.5px] font-semibold",
+                    "whitespace-nowrap rounded-chip px-2 py-[2px] text-[10.5px] font-semibold",
                     u.activo
-                      ? "bg-sem-verde-bg text-[#1f6a49]"
-                      : "bg-sem-rojo-bg text-[#8f2f2f]",
+                      ? "bg-sem-verde-bg text-sem-verde-fg"
+                      : "bg-sem-rojo-bg text-sem-rojo-fg",
                   )}
                 >
                   {u.activo ? "Activo" : "Inactivo"}

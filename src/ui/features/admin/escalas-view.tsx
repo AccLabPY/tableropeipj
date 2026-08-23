@@ -132,7 +132,7 @@ export function EscalasView({
                   "rounded-pj border px-[13px] py-[7px] text-[12.5px] font-semibold",
                   scope === s
                     ? "border-azul-line bg-azul-soft text-azul-d"
-                    : "border-linea bg-superficie text-muted hover:bg-[#F7F9FB]",
+                    : "border-linea bg-superficie text-muted hover:bg-hover",
                 )}
               >
                 {s === "GLOBAL"
@@ -217,7 +217,7 @@ export function EscalasView({
           </div>
 
           {/* Preview de banda */}
-          <div className="mb-1 mt-2 flex h-[26px] overflow-hidden rounded-[5px] border border-linea">
+          <div className="mb-1 mt-2 flex h-[26px] overflow-hidden rounded-pj-sm border border-linea">
             <div
               className="grid place-items-center overflow-hidden text-[11px] font-semibold text-white"
               style={{ width: `${amarilloOk}%`, background: SEM_COLORS.ROJO }}
@@ -281,7 +281,7 @@ export function EscalasView({
                 type="button"
                 disabled={pendiente}
                 onClick={() => eliminar(scope, entidad)}
-                className="tap w-full rounded-pj border border-linea bg-superficie px-4 py-[9px] text-[12.5px] font-semibold hover:bg-[#F7F9FB] disabled:opacity-50 xs:w-auto"
+                className="tap w-full rounded-pj border border-linea bg-superficie px-4 py-[9px] text-[12.5px] font-semibold hover:bg-hover disabled:opacity-50 xs:w-auto"
               >
                 Restablecer a heredado
               </button>
@@ -337,7 +337,7 @@ export function EscalasView({
                 key: "rojo",
                 header: "Rojo",
                 cell: (u) => (
-                  <span className="whitespace-nowrap rounded-pj-sm bg-sem-rojo-bg px-2 py-[2px] text-[11px] font-semibold text-[#8f2f2f]">
+                  <span className="whitespace-nowrap rounded-pj-sm bg-sem-rojo-bg px-2 py-[2px] text-[11px] font-semibold text-sem-rojo-fg">
                     &lt; {u.amarillo}%
                   </span>
                 ),

@@ -5,6 +5,7 @@ import { z } from "zod";
 import { authConfig } from "./auth.config";
 import { prismaControl } from "@/server/db/client";
 import type { RolUsuario } from "@/domain/types";
+import { esTema, TEMA_DEFAULT } from "@/shared/tema";
 
 const CredencialesSchema = z.object({
   email: z.string().email(),
@@ -42,6 +43,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           email: usuario.email,
           roles: usuario.roles.map((r) => r.rol as RolUsuario),
           dependenciaIds: usuario.dependencias.map((d) => d.dependenciaId),
+          tema: esTema(usuario.tema) ? usuario.tema : TEMA_DEFAULT,
         };
       },
     }),
@@ -52,6 +54,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (user) {
         token.roles = user.roles;
         token.dependenciaIds = user.dependenciaIds;
+        token.tema = user.tema;
       }
       return token;
     },
@@ -59,6 +62,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (token.sub) session.user.id = token.sub;
       session.user.roles = (token.roles as RolUsuario[]) ?? [];
       session.user.dependenciaIds = (token.dependenciaIds as number[]) ?? [];
+      session.user.tema = esTema(token.tema) ? token.tema : TEMA_DEFAULT;
       return session;
     },
   },

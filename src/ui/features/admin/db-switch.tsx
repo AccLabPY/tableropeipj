@@ -39,7 +39,7 @@ export function DbSwitch({ actual }: { actual: "prod" | "test" }) {
               "flex-1 rounded-pj border px-4 py-3 text-left",
               actual === env
                 ? "border-azul bg-azul-soft"
-                : "border-linea bg-superficie hover:bg-[#F7F9FB]",
+                : "border-linea bg-superficie hover:bg-hover",
             )}
           >
             <span className="flex flex-wrap items-center gap-2 text-[13px] font-semibold">
@@ -51,7 +51,7 @@ export function DbSwitch({ actual }: { actual: "prod" | "test" }) {
               />
               {label}
               {actual === env ? (
-                <span className="rounded-[10px] bg-azul px-2 text-[10px] text-white">
+                <span className="rounded-chip bg-azul px-2 text-[10px] text-white">
                   activo
                 </span>
               ) : null}
@@ -61,7 +61,7 @@ export function DbSwitch({ actual }: { actual: "prod" | "test" }) {
         ))}
       </div>
       {confirmando ? (
-        <div className="rounded-pj border border-[#EAD9AE] bg-sem-ambar-bg p-3 text-[12.5px]">
+        <div className="rounded-pj border border-sem-ambar-border bg-sem-ambar-bg p-3 text-[12.5px]">
           <p className="mb-2">
             ¿Cambiar su sesión al entorno{" "}
             <b>{confirmando === "prod" ? "PRODUCCIÓN" : "PRUEBA"}</b>? Solo

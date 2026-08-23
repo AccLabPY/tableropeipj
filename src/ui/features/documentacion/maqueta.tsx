@@ -16,11 +16,11 @@ export function Maqueta({
 }) {
   return (
     <div className="overflow-hidden rounded-pj border border-linea shadow-card print:break-inside-avoid">
-      <div className="flex items-center gap-2 border-b border-linea bg-[#F0F3F6] px-3 py-[7px]">
+      <div className="flex items-center gap-2 border-b border-linea bg-zebra px-3 py-[7px]">
         <span className="flex gap-[5px]" aria-hidden="true">
-          <span className="h-[9px] w-[9px] rounded-full bg-[#D3DAE1]" />
-          <span className="h-[9px] w-[9px] rounded-full bg-[#D3DAE1]" />
-          <span className="h-[9px] w-[9px] rounded-full bg-[#D3DAE1]" />
+          <span className="h-[9px] w-[9px] rounded-full bg-linea" />
+          <span className="h-[9px] w-[9px] rounded-full bg-linea" />
+          <span className="h-[9px] w-[9px] rounded-full bg-linea" />
         </span>
         {titulo ? (
           <span className="text-[10.5px] uppercase tracking-[.08em] text-muted-2">

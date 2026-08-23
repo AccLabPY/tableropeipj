@@ -68,7 +68,7 @@ export default async function DetalleIndicadorPage({
           />
           <a
             href={`/api/v1/reportes/indicador/${est.codigo}?anio=${anio}`}
-            className="inline-flex items-center gap-[6px] whitespace-nowrap rounded-pj border border-linea bg-superficie px-3 py-[6px] text-[11.5px] font-semibold text-tinta hover:bg-[#F7F9FB]"
+            className="inline-flex items-center gap-[6px] whitespace-nowrap rounded-pj border border-linea bg-superficie px-3 py-[6px] text-[11.5px] font-semibold text-tinta hover:bg-hover"
           >
             Exportar Excel
           </a>
@@ -216,7 +216,7 @@ export default async function DetalleIndicadorPage({
           />
           <CardBody className="flex flex-1 flex-col">
             {est.basePendiente ? (
-              <p className="mb-3 rounded-pj-sm border border-[#EAD9AE] bg-sem-ambar-bg px-3 py-2 text-[12px] text-sem-ambar">
+              <p className="mb-3 rounded-pj-sm border border-sem-ambar-border bg-sem-ambar-bg px-3 py-2 text-[12px] text-sem-ambar">
                 Línea base pendiente ({ficha.comentarios ?? "a determinar al cierre de 2025"}):
                 el cumplimiento no se computa hasta definirla.
               </p>
@@ -423,7 +423,7 @@ export default async function DetalleIndicadorPage({
               </p>
             ) : null}
             {est.requiereDiagnostico ? (
-              <p className="mt-3 rounded-pj-sm border border-[#DDCBEC] bg-[#EFE7F5] px-3 py-2 text-[12px] text-[#6b3fa0]">
+              <p className="mt-3 rounded-pj-sm border border-purpura-border bg-purpura-bg px-3 py-2 text-[12px] text-purpura">
                 Este indicador requiere un diagnóstico o investigación previa
                 antes de poder medirse.
               </p>

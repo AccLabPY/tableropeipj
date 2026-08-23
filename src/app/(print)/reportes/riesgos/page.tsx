@@ -16,9 +16,9 @@ export const dynamic = "force-dynamic";
 /** Color según el nivel 1-5 (probabilidad/impacto). */
 function celdaNivel(n: number | null) {
   if (n === null) return { texto: "—", cls: "text-muted" };
-  if (n >= 4) return { texto: String(n), cls: "bg-sem-rojo-bg text-[#8f2f2f] font-semibold" };
-  if (n === 3) return { texto: String(n), cls: "bg-sem-ambar-bg text-[#8a6412] font-semibold" };
-  return { texto: String(n), cls: "bg-sem-verde-bg text-[#1f6a49] font-semibold" };
+  if (n >= 4) return { texto: String(n), cls: "bg-sem-rojo-bg text-sem-rojo-fg font-semibold" };
+  if (n === 3) return { texto: String(n), cls: "bg-sem-ambar-bg text-sem-ambar-fg font-semibold" };
+  return { texto: String(n), cls: "bg-sem-verde-bg text-sem-verde-fg font-semibold" };
 }
 
 export default async function ReporteRiesgosPage() {

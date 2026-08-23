@@ -40,6 +40,6 @@ export function Clock() {
     return () => clearInterval(id);
   }, []);
   return (
-    <span className="text-[11.5px] tracking-wide text-[#C7D6E4]">{t}</span>
+    <span className="text-[11.5px] tracking-wide text-azul-line">{t}</span>
   );
 }

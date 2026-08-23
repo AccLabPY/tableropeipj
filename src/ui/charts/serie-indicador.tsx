@@ -46,7 +46,7 @@ export function SerieIndicador({
       margin={{ top: 10, right: 16, bottom: 0, left: 0 }}
       {...dim}
     >
-      <CartesianGrid stroke="#EDF0F3" vertical={false} />
+      <CartesianGrid stroke={COLORS.linea2} vertical={false} />
       <XAxis dataKey="label" tick={{ fontSize: 11 }} tickLine={false} />
       <YAxis
         tick={{ fontSize: 11 }}

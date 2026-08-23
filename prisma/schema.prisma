@@ -291,6 +291,8 @@ model Usuario {
   email        String               @unique
   passwordHash String
   activo       Boolean              @default(true)
+  /// Tema visual preferido: "agentes" (Agentes PEI, default) | "clasico".
+  tema         String               @default("agentes")
   roles        UsuarioRol[]
   dependencias UsuarioDependencia[]
 }

@@ -1,10 +1,16 @@
 import type { Config } from "tailwindcss";
 import defaultTheme from "tailwindcss/defaultTheme";
+import plugin from "tailwindcss/plugin";
 
 /**
- * Design system institucional del Poder Judicial (§10 del prompt maestro).
- * Tokens portados 1:1 del prototipo HTML de referencia (tablero_pei.html).
+ * Design system con DOS temas (ver tokens en src/app/globals.css):
+ *  - Clásico institucional (CSJ): navy, serif, sobrio.
+ *  - Agentes PEI (PNUD): Poppins, azul/magenta/naranja, crema, pills.
+ * Todos los colores/radios/sombras/fuentes apuntan a variables CSS; el tema
+ * se decide en el servidor con <html data-theme="…">.
  */
+const c = (v: string) => `rgb(var(--c-${v}) / <alpha-value>)`;
+
 const config: Config = {
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
@@ -17,48 +23,64 @@ const config: Config = {
         pj: "1440px",
       },
       colors: {
-        navy: { DEFAULT: "#14395B", 2: "#0F2C46" },
+        navy: { DEFAULT: c("navy"), 2: c("navy-2") },
         azul: {
-          DEFAULT: "#1E6FA8",
-          d: "#175A8A",
-          soft: "#EAF2F8",
-          line: "#CFE0EC",
+          DEFAULT: c("azul"),
+          d: c("azul-d"),
+          soft: c("azul-soft"),
+          "soft-hover": c("azul-soft-hover"),
+          line: c("azul-line"),
         },
-        fondo: "#F3F5F7",
-        superficie: "#FFFFFF",
-        linea: { DEFAULT: "#E2E7EC", 2: "#EDF0F3" },
-        tinta: "#26303A",
-        muted: { DEFAULT: "#6A7581", 2: "#8A94A0" },
+        marca: { 2: c("marca-2"), 3: c("marca-3"), "3-d": c("marca-3-d") },
+        "on-marca": { DEFAULT: c("on-marca"), 2: c("on-marca-2") },
+        fondo: c("fondo"),
+        superficie: c("superficie"),
+        linea: { DEFAULT: c("linea"), 2: c("linea-2") },
+        tinta: c("tinta"),
+        muted: { DEFAULT: c("muted"), 2: c("muted-2") },
+        hover: c("hover"),
+        zebra: c("zebra"),
+        "meta-serie": c("meta-serie"),
         sem: {
-          verde: "#2E8B60",
-          "verde-bg": "#E7F3EC",
-          ambar: "#C08A1E",
-          "ambar-bg": "#FAF2DF",
-          rojo: "#B23B3B",
-          "rojo-bg": "#F7E7E7",
-          gris: "#93A0AC",
-          "gris-bg": "#EEF1F4",
+          verde: c("sem-verde"),
+          "verde-bg": c("sem-verde-bg"),
+          "verde-fg": c("sem-verde-fg"),
+          "verde-border": c("sem-verde-border"),
+          ambar: c("sem-ambar"),
+          "ambar-bg": c("sem-ambar-bg"),
+          "ambar-fg": c("sem-ambar-fg"),
+          "ambar-border": c("sem-ambar-border"),
+          rojo: c("sem-rojo"),
+          "rojo-bg": c("sem-rojo-bg"),
+          "rojo-fg": c("sem-rojo-fg"),
+          "rojo-border": c("sem-rojo-border"),
+          gris: c("sem-gris"),
+          "gris-bg": c("sem-gris-bg"),
+        },
+        purpura: {
+          DEFAULT: c("purpura"),
+          bg: c("purpura-bg"),
+          border: c("purpura-border"),
         },
       },
       fontFamily: {
-        serif: ["Georgia", "Times New Roman", "serif"],
-        sans: [
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "Roboto",
-          "Helvetica",
-          "Arial",
-          "sans-serif",
-        ],
+        // `font-serif` = tipografía de títulos (display); `font-sans` = cuerpo.
+        serif: ["var(--font-display)"],
+        sans: ["var(--font-body)"],
       },
       boxShadow: {
-        card: "0 1px 2px rgba(20,57,91,.06), 0 1px 3px rgba(20,57,91,.05)",
-        toast: "0 6px 20px rgba(20,57,91,.28)",
+        card: "var(--shadow-card)",
+        toast: "var(--shadow-toast)",
       },
       borderRadius: {
-        pj: "4px",
-        "pj-sm": "3px",
+        pj: "var(--r)",
+        "pj-sm": "var(--r-sm)",
+        chip: "var(--r-chip)",
+      },
+      backgroundImage: {
+        marca: "var(--grad-marca)",
+        accion: "var(--grad-accion)",
+        hero: "var(--grad-hero)",
       },
       fontSize: {
         "2xs": ["10.5px", "1.3"],
@@ -69,6 +91,17 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    // Variantes por tema para estilos estructurales opt-in:
+    //   agentes:bg-marca  → solo bajo [data-theme="agentes"]
+    //   clasico:…         → solo en el tema clásico
+    plugin(({ addVariant }) => {
+      addVariant("agentes", '[data-theme="agentes"] &');
+      addVariant(
+        "clasico",
+        ':root:not([data-theme="agentes"]) &, [data-theme="clasico"] &',
+      );
+    }),
+  ],
 };
 export default config;

@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 function ChipDemo({ cls, children }: { cls: string; children: string }) {
   return (
     <span
-      className={`rounded-[10px] px-[7px] py-[1px] text-[10px] font-semibold ${cls}`}
+      className={`rounded-chip px-[7px] py-[1px] text-[10px] font-semibold ${cls}`}
     >
       {children}
     </span>
@@ -61,7 +61,7 @@ export default function GuiaDeCargaPage() {
                 </li>
                 <li className="flex items-center justify-between rounded-pj-sm border border-linea px-3 py-2">
                   <span className="text-[12px]">4202 · Funcionarios evaluados anualmente</span>
-                  <ChipDemo cls="bg-sem-ambar-bg text-[#8a6412]">Borrador</ChipDemo>
+                  <ChipDemo cls="bg-sem-ambar-bg text-sem-ambar-fg">Borrador</ChipDemo>
                 </li>
                 <li className="flex items-center justify-between rounded-pj-sm border border-linea px-3 py-2">
                   <span className="text-[12px]">4401 · Índice de satisfacción del clima laboral</span>
@@ -108,7 +108,7 @@ export default function GuiaDeCargaPage() {
                   <input
                     disabled
                     value="18,87 %"
-                    className="mt-1 block w-full rounded-pj border border-linea bg-[#F7F9FB] px-[9px] py-2 text-[12.5px] font-semibold normal-case tracking-normal text-tinta"
+                    className="mt-1 block w-full rounded-pj border border-linea bg-hover px-[9px] py-2 text-[12.5px] font-semibold normal-case tracking-normal text-tinta"
                   />
                 </label>
               </div>

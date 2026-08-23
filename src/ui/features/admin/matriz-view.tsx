@@ -131,8 +131,8 @@ export function MatrizView({ items }: { items: MatrizItemDTO[] }) {
               type="button"
               onClick={() => seleccionar(i.codigo)}
               className={cn(
-                "block w-full border-b border-linea-2 px-[14px] py-[9px] text-left hover:bg-[#F7F9FB]",
-                i.codigo === sel && "bg-azul-soft shadow-[inset_3px_0_0_#1E6FA8]",
+                "block w-full border-b border-linea-2 px-[14px] py-[9px] text-left hover:bg-hover",
+                i.codigo === sel && "bg-azul-soft shadow-[inset_3px_0_0_rgb(var(--c-azul))]",
               )}
             >
               <span className="flex items-center justify-between">

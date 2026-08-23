@@ -36,7 +36,7 @@ export function AccionesView({ estado }: { estado: EstadoPeiDTO }) {
         <div className="scroll-pj max-h-[320px] overflow-y-auto md:max-h-[660px]">
           {estado.objetivos.map((oe) => (
             <div key={oe.codigo}>
-              <div className="sticky top-0 border-b border-linea-2 bg-[#FAFBFC] px-[14px] pb-[5px] pt-2 text-[10px] uppercase tracking-[.08em] text-muted-2">
+              <div className="sticky top-0 border-b border-linea-2 bg-zebra px-[14px] pb-[5px] pt-2 text-[10px] uppercase tracking-[.08em] text-muted-2">
                 {oe.codigo} · {oe.nombre.slice(0, 52)}…
               </div>
               {oe.acciones.map((a) => (
@@ -45,9 +45,9 @@ export function AccionesView({ estado }: { estado: EstadoPeiDTO }) {
                   type="button"
                   onClick={() => setSel(a.codigo)}
                   className={cn(
-                    "block w-full border-b border-linea-2 px-[14px] py-[10px] text-left hover:bg-[#F7F9FB]",
+                    "block w-full border-b border-linea-2 px-[14px] py-[10px] text-left hover:bg-hover",
                     a.codigo === sel &&
-                      "bg-azul-soft shadow-[inset_3px_0_0_#1E6FA8]",
+                      "bg-azul-soft shadow-[inset_3px_0_0_rgb(var(--c-azul))]",
                   )}
                 >
                   <span className="flex items-center justify-between gap-2">
@@ -161,7 +161,7 @@ export function AccionesView({ estado }: { estado: EstadoPeiDTO }) {
                       <>
                         {i.nombre}{" "}
                         {i.requiereDiagnostico ? (
-                          <span className="ml-1 inline-flex items-center gap-1 whitespace-nowrap rounded-[10px] border border-[#DDCBEC] bg-[#EFE7F5] px-[7px] text-[10px] font-semibold text-[#6b3fa0]">
+                          <span className="ml-1 inline-flex items-center gap-1 whitespace-nowrap rounded-chip border border-purpura-border bg-purpura-bg px-[7px] text-[10px] font-semibold text-purpura">
                             requiere diagnóstico
                           </span>
                         ) : null}

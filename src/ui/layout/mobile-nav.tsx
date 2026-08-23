@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { NavLinks } from "./sidebar";
+import { cn } from "@/lib/utils";
 
 const FOCUSABLES =
   'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
@@ -13,7 +14,14 @@ const FOCUSABLES =
  * misma navegación de la sidebar. Se cierra al navegar, con Escape o tocando
  * el fondo. Visible solo bajo lg (la sidebar fija cubre escritorio).
  */
-export function MobileNav({ allowedHrefs }: { allowedHrefs?: string[] }) {
+export function MobileNav({
+  allowedHrefs,
+  variante = "clasico",
+}: {
+  allowedHrefs?: string[];
+  variante?: "clasico" | "agentes";
+}) {
+  const agentes = variante === "agentes";
   const [abierto, setAbierto] = useState(false);
   const pathname = usePathname();
   const panel = useRef<HTMLDivElement>(null);
@@ -85,10 +93,17 @@ export function MobileNav({ allowedHrefs }: { allowedHrefs?: string[] }) {
             ref={panel}
             className="absolute inset-y-0 left-0 flex w-[280px] max-w-[85vw] flex-col bg-superficie shadow-toast"
           >
-            <div className="flex items-center justify-between border-b border-linea bg-navy px-4 py-3 text-white">
+            <div
+              className={cn(
+                "flex items-center justify-between border-b border-linea px-4 py-3 text-white",
+                agentes ? "bg-marca" : "bg-navy",
+              )}
+            >
               <div className="leading-tight">
-                <div className="font-serif text-[14px]">Poder Judicial</div>
-                <div className="text-[9.5px] uppercase tracking-[.14em] text-[#B8CADA]">
+                <div className={cn("font-serif text-[14px]", agentes && "font-bold")}>
+                  {agentes ? "Agentes PEI" : "Poder Judicial"}
+                </div>
+                <div className="text-[9.5px] uppercase tracking-[.14em] text-on-marca">
                   PEI 2026–2030
                 </div>
               </div>
@@ -105,6 +120,7 @@ export function MobileNav({ allowedHrefs }: { allowedHrefs?: string[] }) {
               <NavLinks
                 allowedHrefs={allowedHrefs}
                 onNavigate={() => setAbierto(false)}
+                variante={variante}
               />
             </div>
           </div>

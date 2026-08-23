@@ -63,7 +63,7 @@ export function CoberturaDependencias({
               type="button"
               onClick={() => alternar(f.dependencia)}
               aria-expanded={abierta}
-              className="tap flex w-full items-center gap-3 px-4 py-[10px] text-left hover:bg-[#F7F9FB]"
+              className="tap flex w-full items-center gap-3 px-4 py-[10px] text-left hover:bg-hover"
             >
               <ChevronDown
                 className={cn(
@@ -81,7 +81,7 @@ export function CoberturaDependencias({
             </button>
 
             {abierta ? (
-              <div className="border-t border-linea-2 bg-[#FAFBFC] px-4 py-2">
+              <div className="border-t border-linea-2 bg-zebra px-4 py-2">
                 {f.dependenciaId !== null ? (
                   <div className="flex flex-wrap items-center gap-3 border-b border-linea-2 pb-2 pt-1 text-[11px]">
                     <span className="uppercase tracking-[.06em] text-muted-2">
@@ -97,7 +97,7 @@ export function CoberturaDependencias({
                     </a>
                     <a
                       href={`/api/v1/reportes/dependencia/${f.dependenciaId}?anio=${anio}`}
-                      className="font-semibold text-[#1f6a49] hover:underline"
+                      className="font-semibold text-sem-verde-fg hover:underline"
                     >
                       Planilla Excel
                     </a>

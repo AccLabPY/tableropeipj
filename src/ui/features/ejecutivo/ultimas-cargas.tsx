@@ -24,7 +24,7 @@ export function UltimasCargas({ cargas }: { cargas: UltimaCargaDTO[] }) {
             <li key={c.id}>
               <Link
                 href={`/indicadores/${c.codigo}?anio=${c.periodoAnio}`}
-                className="flex flex-wrap items-baseline gap-x-3 gap-y-1 px-4 py-[10px] hover:bg-[#F8FAFB]"
+                className="flex flex-wrap items-baseline gap-x-3 gap-y-1 px-4 py-[10px] hover:bg-zebra"
               >
                 <span className="font-serif text-[13.5px] font-semibold text-azul-d">
                   {c.codigo}

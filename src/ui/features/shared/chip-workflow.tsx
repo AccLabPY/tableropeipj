@@ -7,12 +7,12 @@ export const WF_CHIP: Record<
 > = {
   SIN_CARGA: { label: "Sin carga", cls: "bg-sem-gris-bg text-muted" },
   PENDIENTE: { label: "Pendiente", cls: "bg-sem-gris-bg text-muted" },
-  BORRADOR: { label: "Borrador", cls: "bg-sem-ambar-bg text-[#8a6412]" },
+  BORRADOR: { label: "Borrador", cls: "bg-sem-ambar-bg text-sem-ambar-fg" },
   ENVIADO: { label: "Enviado", cls: "bg-azul-soft text-azul-d" },
   EN_REVISION: { label: "En revisión", cls: "bg-azul-soft text-azul-d" },
-  OBSERVADO: { label: "Observado", cls: "bg-sem-ambar-bg text-[#8a6412]" },
-  APROBADO: { label: "Aprobado", cls: "bg-sem-verde-bg text-[#1f6a49]" },
-  RECHAZADO: { label: "Rechazado", cls: "bg-sem-rojo-bg text-[#8f2f2f]" },
+  OBSERVADO: { label: "Observado", cls: "bg-sem-ambar-bg text-sem-ambar-fg" },
+  APROBADO: { label: "Aprobado", cls: "bg-sem-verde-bg text-sem-verde-fg" },
+  RECHAZADO: { label: "Rechazado", cls: "bg-sem-rojo-bg text-sem-rojo-fg" },
   RECTIFICADO: { label: "Rectificado", cls: "bg-sem-gris-bg text-muted" },
 };
 
@@ -25,7 +25,7 @@ export function ChipWorkflow({
   const c = WF_CHIP[estado];
   return (
     <span
-      className={`inline-block whitespace-nowrap rounded-[10px] px-[7px] py-[1px] text-[10px] font-semibold ${c.cls}`}
+      className={`inline-block whitespace-nowrap rounded-chip px-[7px] py-[1px] text-[10px] font-semibold ${c.cls}`}
     >
       {c.label}
     </span>

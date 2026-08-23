@@ -3,9 +3,9 @@ import { SEMAFORO_LABEL } from "@/domain/semaforo";
 import type { Semaforo } from "@/domain/types";
 
 const CLASES: Record<Semaforo, string> = {
-  VERDE: "bg-sem-verde-bg text-[#1f6a49]",
-  AMARILLO: "bg-sem-ambar-bg text-[#8a6412]",
-  ROJO: "bg-sem-rojo-bg text-[#8f2f2f]",
+  VERDE: "bg-sem-verde-bg text-sem-verde-fg",
+  AMARILLO: "bg-sem-ambar-bg text-sem-ambar-fg",
+  ROJO: "bg-sem-rojo-bg text-sem-rojo-fg",
   GRIS: "bg-sem-gris-bg text-muted",
 };
 const PUNTOS: Record<Semaforo, string> = {
@@ -28,7 +28,7 @@ export function SemPill({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-[6px] whitespace-nowrap rounded-pj-sm font-semibold",
+        "inline-flex items-center gap-[6px] whitespace-nowrap rounded-pj-sm font-semibold agentes:rounded-chip",
         grande ? "px-3 py-[6px] text-[14px]" : "px-2 py-[3px] text-[11.5px]",
         CLASES[sem],
       )}

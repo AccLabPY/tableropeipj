@@ -1,7 +1,7 @@
 "use client";
 
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
-import { SEM_COLORS } from "@/ui/theme/tokens";
+import { COLORS, SEM_COLORS } from "@/ui/theme/tokens";
 import { SEMAFORO_LABEL } from "@/domain/semaforo";
 import type { Semaforo } from "@/domain/types";
 
@@ -31,7 +31,7 @@ export function DonutSemaforo({
       innerRadius="64%"
       outerRadius="95%"
       strokeWidth={2}
-      stroke="#fff"
+      stroke={COLORS.superficie}
       isAnimationActive={!fijo}
     >
       {data.map((d) => (

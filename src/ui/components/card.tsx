@@ -3,9 +3,11 @@ import { cn } from "@/lib/utils";
 export function Card({
   children,
   className,
+  style,
 }: {
   children: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
 }) {
   return (
     <div
@@ -13,6 +15,7 @@ export function Card({
         "rounded-pj border border-linea bg-superficie shadow-card",
         className,
       )}
+      style={style}
     >
       {children}
     </div>
@@ -49,7 +52,7 @@ export function CardBody({
 /** Tag/chip neutro (ej. "OE3"). */
 export function Tag({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-block rounded-pj-sm border border-linea bg-sem-gris-bg px-[7px] py-[2px] text-2xs text-muted">
+    <span className="inline-block rounded-pj-sm agentes:rounded-chip border border-linea bg-sem-gris-bg px-[7px] py-[2px] text-2xs text-muted">
       {children}
     </span>
   );

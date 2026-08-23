@@ -16,7 +16,7 @@ export function UserMenu({
         <div className="max-w-[180px] truncate text-[12px] font-semibold text-white">
           {nombre}
         </div>
-        <div className="max-w-[180px] truncate text-[10px] text-[#B8CADA]">
+        <div className="max-w-[180px] truncate text-[10px] text-on-marca">
           {roles.map((r) => ROL_LABEL[r]).join(" · ")}
         </div>
       </div>

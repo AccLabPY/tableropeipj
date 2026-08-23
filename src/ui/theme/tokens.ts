@@ -1,39 +1,45 @@
 /**
- * Tokens de color del design system institucional (§10).
- * Única fuente para colores usados fuera de Tailwind (Recharts, SVG inline).
+ * Tokens de color para uso FUERA de Tailwind (Recharts, SVG inline,
+ * `style={{}}`). Son referencias a las variables CSS del tema activo
+ * (src/app/globals.css), por lo que heredan el tema automáticamente —
+ * Recharts y los estilos inline aceptan `rgb(var(--x))` como valor.
  */
+const v = (nombre: string) => `rgb(var(--c-${nombre}))`;
+
 export const COLORS = {
-  navy: "#14395B",
-  navy2: "#0F2C46",
-  azul: "#1E6FA8",
-  azulD: "#175A8A",
-  azulSoft: "#EAF2F8",
-  azulLine: "#CFE0EC",
-  fondo: "#F3F5F7",
-  superficie: "#FFFFFF",
-  linea: "#E2E7EC",
-  linea2: "#EDF0F3",
-  tinta: "#26303A",
-  muted: "#6A7581",
-  muted2: "#8A94A0",
+  navy: v("navy"),
+  navy2: v("navy-2"),
+  azul: v("azul"),
+  azulD: v("azul-d"),
+  azulSoft: v("azul-soft"),
+  azulLine: v("azul-line"),
+  marca2: v("marca-2"),
+  marca3: v("marca-3"),
+  fondo: v("fondo"),
+  superficie: v("superficie"),
+  linea: v("linea"),
+  linea2: v("linea-2"),
+  tinta: v("tinta"),
+  muted: v("muted"),
+  muted2: v("muted-2"),
 } as const;
 
 /** Colores del semáforo de cumplimiento (con fondos suaves para pills). */
 export const SEM_COLORS = {
-  VERDE: "#2E8B60",
-  AMARILLO: "#C08A1E",
-  ROJO: "#B23B3B",
-  GRIS: "#93A0AC",
-  AZUL: "#1E6FA8", // sobrecumplimiento (opcional)
+  VERDE: v("sem-verde"),
+  AMARILLO: v("sem-ambar"),
+  ROJO: v("sem-rojo"),
+  GRIS: v("sem-gris"),
+  AZUL: v("azul"), // sobrecumplimiento (opcional)
 } as const;
 
 export const SEM_BG = {
-  VERDE: "#E7F3EC",
-  AMARILLO: "#FAF2DF",
-  ROJO: "#F7E7E7",
-  GRIS: "#EEF1F4",
-  AZUL: "#EAF2F8",
+  VERDE: v("sem-verde-bg"),
+  AMARILLO: v("sem-ambar-bg"),
+  ROJO: v("sem-rojo-bg"),
+  GRIS: v("sem-gris-bg"),
+  AZUL: v("azul-soft"),
 } as const;
 
 /** Color para la serie de meta planificada en las gráficas temporales. */
-export const META_SERIES_COLOR = "#9AA6B1";
+export const META_SERIES_COLOR = v("meta-serie");

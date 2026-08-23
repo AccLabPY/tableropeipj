@@ -6,7 +6,7 @@ export function TestModeBanner() {
   return (
     <div
       role="status"
-      className="flex items-center justify-center gap-2 border-b border-[#EAD9AE] bg-sem-ambar-bg px-3 py-[6px] text-center text-[11px] font-semibold text-sem-ambar sm:px-4 sm:text-[12px]"
+      className="flex items-center justify-center gap-2 border-b border-sem-ambar-border bg-sem-ambar-bg px-3 py-[6px] text-center text-[11px] font-semibold text-sem-ambar sm:px-4 sm:text-[12px]"
     >
       <span aria-hidden="true">⚠</span>
       MODO PRUEBA — está viendo datos de demostración (base peipj_test). Los
