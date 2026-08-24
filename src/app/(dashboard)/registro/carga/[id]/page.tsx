@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Download, ExternalLink, Paperclip } from "lucide-react";
-import { requirePage } from "@/server/auth/guards";
+import { requirePage, tieneRol } from "@/server/auth/guards";
 import { getCtx } from "@/server/db/env";
 import { detalleCarga } from "@/server/services/detalle-carga.service";
 import { ApiError } from "@/server/api/api-error";
 import { BackButton } from "@/ui/components/back-button";
 import { Card, CardBody, CardHeader, Tag } from "@/ui/components/card";
 import { ChipWorkflow, WF_CHIP } from "@/ui/features/shared/chip-workflow";
+import { PanelValidacionCarga } from "@/ui/features/registro/panel-validacion-carga";
 import { cn, fmtBytes, fmtFechaCorta, fmtNum, fmtValor } from "@/lib/utils";
 import type { DetalleCargaDTO } from "@/shared/dtos/detalle-carga";
 
@@ -56,6 +57,7 @@ export default async function DetalleCargaPage({
   }
   const m = d.medicion;
   const ind = d.indicador;
+  const puedeValidar = tieneRol(actor, "DGPD_VALIDADOR", "ADMIN");
 
   return (
     <section>
@@ -132,6 +134,17 @@ export default async function DetalleCargaPage({
         </div>
       </div>
       <div className="mb-5 h-px bg-linea" />
+
+      {/* Panel de resolución del validador — solo sobre la última versión */}
+      {puedeValidar && d.esUltimaVersion ? (
+        <PanelValidacionCarga medicionId={m.id} estado={m.estado} />
+      ) : null}
+      {puedeValidar && !d.esUltimaVersion ? (
+        <p className="mb-4 rounded-pj-sm border border-sem-ambar-border bg-sem-ambar-bg px-3 py-2 text-[12px] text-sem-ambar-fg">
+          Esta es una versión histórica (existe una versión posterior): las
+          resoluciones se toman sobre la última versión de la carga.
+        </p>
+      ) : null}
 
       <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
         {/* Qué se cargó */}

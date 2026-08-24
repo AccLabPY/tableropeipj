@@ -43,6 +43,14 @@ export async function detalleCarga(
   if (!ind) throw noEncontrado("Indicador de la carga");
   const tipoCalculo = clasificarFormula(ind.formula, ind.esEscala);
 
+  const posteriores = await ctx.db.medicion.count({
+    where: {
+      indicadorId: m.indicadorId,
+      periodoId: m.periodoId,
+      version: { gt: m.version },
+    },
+  });
+
   const nombres = await nombresDeUsuarios([
     ...m.historial.map((h) => h.usuarioId).filter((x): x is number => x !== null),
     ...m.validaciones.map((v) => v.usuarioId).filter((x): x is number => x !== null),
@@ -61,6 +69,7 @@ export async function detalleCarga(
     },
     cargadorNombre:
       m.usuarioCargaId !== null ? (nombres.get(m.usuarioCargaId) ?? null) : null,
+    esUltimaVersion: posteriores === 0,
     historial: m.historial.map((h) => ({
       estadoAnterior: h.estadoAnterior as EstadoWF | null,
       estadoNuevo: h.estadoNuevo as EstadoWF,

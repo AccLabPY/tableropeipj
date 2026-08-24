@@ -31,6 +31,8 @@ export interface DetalleCargaDTO {
     variablesDef: VariableDef[];
   };
   cargadorNombre: string | null;
+  /** true si no existe una versión posterior de este indicador/período. */
+  esUltimaVersion: boolean;
   historial: EventoHistorialDTO[];
   resoluciones: ResolucionDTO[];
 }

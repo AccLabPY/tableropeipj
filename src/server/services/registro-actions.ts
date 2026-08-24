@@ -10,6 +10,7 @@ import {
   eliminarEvidencia,
   enviar,
   guardarBorrador,
+  rectificar,
   tomarEnRevision,
   validar,
 } from "@/server/services/medicion.service";
@@ -147,6 +148,30 @@ export async function validarMedicionAction(
       RECHAZADO: "Medición RECHAZADA.",
     }[datos.resultado];
     return { ok: true, mensaje: texto };
+  } catch (e) {
+    return { ok: false, mensaje: mensajeDeError(e) };
+  }
+}
+
+/** Rectificación de una APROBADA: crea la versión siguiente en borrador. */
+export async function rectificarMedicionAction(
+  medicionId: string,
+  motivo: string,
+): Promise<ResultadoAccion> {
+  try {
+    const actor = await requireApi("DGPD_VALIDADOR", "ADMIN");
+    const ctx = await getCtx(actor);
+    const limpio = motivo.trim();
+    if (limpio.length < 5) {
+      return { ok: false, mensaje: "Indique el motivo de la rectificación." };
+    }
+    const nueva = await rectificar(ctx, BigInt(medicionId), limpio);
+    revalidatePath("/registro");
+    return {
+      ok: true,
+      mensaje: `Medición rectificada: se creó la versión ${nueva.version} en borrador para su corrección.`,
+      medicionId: String(nueva.id),
+    };
   } catch (e) {
     return { ok: false, mensaje: mensajeDeError(e) };
   }
