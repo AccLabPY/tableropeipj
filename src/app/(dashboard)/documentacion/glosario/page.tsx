@@ -169,6 +169,29 @@ export default function GlosarioPage() {
               </p>
             </GlosarioItem>
 
+            <GlosarioItem termino="Detalle de la carga (expediente)">
+              <p>
+                La vista individual de una medición: qué se cargó, evidencias,
+                resoluciones de la DGPD y el historial de estados completo con
+                autor, fecha y causa. Se abre desde las notificaciones, desde
+                Registro («Ver detalle de la carga») o desde cada versión en la
+                ficha del indicador. Para la DGPD incluye el panel de
+                resolución sobre la última versión.
+              </p>
+            </GlosarioItem>
+
+            <GlosarioItem termino="Notificaciones (campanita)">
+              <p>
+                Bandeja personal de novedades, en la barra superior. Toda
+                transición del workflow notifica a quien corresponde: las
+                cargas enviadas avisan a la DGPD; las resoluciones avisan a la
+                dependencia (con el comentario del validador); y una
+                aprobación que deja al indicador en semáforo crítico alerta a
+                ambos. El contador rojo marca las no leídas; se actualiza solo,
+                cada minuto.
+              </p>
+            </GlosarioItem>
+
             <GlosarioItem termino="Año de referencia 2025">
               <p>
                 El ejercicio previo al PEI. Sus mediciones (p. ej. el cierre

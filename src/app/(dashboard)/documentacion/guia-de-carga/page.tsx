@@ -47,7 +47,7 @@ export default function GuiaDeCargaPage() {
       />
 
       <Card>
-        <CardHeader title="Walkthrough" meta="8 pasos" />
+        <CardHeader title="Walkthrough" meta="9 pasos" />
         <CardBody>
           <Paso n={1} titulo="Abra Registro y elija el indicador">
             <p>
@@ -71,6 +71,12 @@ export default function GuiaDeCargaPage() {
                 </li>
               </ul>
             </Maqueta>
+            <p>
+              La lista tiene un <b>buscador</b> por código o nombre. También
+              puede llegar con el indicador ya seleccionado desde su ficha
+              (botón <b>«Reportar avance»</b> en{" "}
+              <b>Indicadores → ficha del indicador</b>).
+            </p>
             <IrAPantalla href="/registro">Ir a Carga de avances</IrAPantalla>
           </Paso>
 
@@ -156,6 +162,14 @@ export default function GuiaDeCargaPage() {
           </Paso>
 
           <Paso n={7} titulo="Qué pasa después del envío">
+            <p>
+              Cada cambio de estado le llega como <b>notificación en la
+              campanita</b> 🔔 con el comentario del validador; al tocarla se
+              abre el <b>detalle de la carga</b>. El indicador de progreso
+              (Borrador → Enviado → Validado por DGPD) refleja el estado: reloj
+              ámbar mientras la DGPD la tiene en revisión, ✕ roja si fue
+              rechazada.
+            </p>
             <ul className="list-disc space-y-1 pl-5">
               <li>
                 <b>Aprobada</b> — el valor pasa a alimentar los tableros
@@ -173,7 +187,19 @@ export default function GuiaDeCargaPage() {
             </ul>
           </Paso>
 
-          <Paso n={8} titulo="¿Se aprobó con un error? Rectificación">
+          <Paso n={8} titulo="Consulte el expediente: detalle de la carga">
+            <p>
+              El enlace <b>«Ver detalle de la carga»</b> (junto al indicador de
+              progreso, o desde cada versión listada en la ficha del
+              indicador) abre el <b>expediente completo</b>: qué se cargó
+              (variables y valor), las evidencias adjuntas, las resoluciones de
+              la DGPD con sus causas y el historial de estados con autor,
+              fecha y comentario de cada paso. Es el lugar para leer{" "}
+              <b>por qué</b> una carga fue observada o rechazada.
+            </p>
+          </Paso>
+
+          <Paso n={9} titulo="¿Se aprobó con un error? Rectificación">
             <p>
               Una medición aprobada nunca se edita ni se borra. Si detecta un
               error, solicite la <b>rectificación</b> a la DGPD: la versión

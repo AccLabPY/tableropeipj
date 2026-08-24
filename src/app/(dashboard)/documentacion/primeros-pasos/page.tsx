@@ -23,7 +23,7 @@ const ROLES = [
   },
   {
     rol: "Validador DGPD",
-    ve: "Visión total + panel de validación en Registro (aprobar/observar/rechazar) + Administración de matriz y escalas.",
+    ve: "Visión total + resolución de cargas (en Registro o en el detalle de cada carga) + Administración de matriz y escalas.",
   },
   {
     rol: "Administrador",
@@ -43,7 +43,7 @@ export default function PrimerosPasosPage() {
       />
 
       <Card>
-        <CardHeader title="Guía" meta="5 pasos" />
+        <CardHeader title="Guía" meta="7 pasos" />
         <CardBody>
           <Paso n={1} titulo="Inicie sesión con su correo institucional">
             <p>
@@ -94,9 +94,10 @@ export default function PrimerosPasosPage() {
             <p>
               En computadora, el menú está siempre visible a la izquierda,
               agrupado en <b>Seguimiento</b> (tableros de consulta),{" "}
-              <b>Registro</b> (carga de avances) y <b>Configuración</b>{" "}
-              (administración). En el celular, ábralo con el botón ☰ de la
-              barra superior — la plataforma es 100% usable desde el móvil.
+              <b>Registro</b> (carga de avances), <b>Configuración</b>{" "}
+              (administración) y <b>Ayuda</b> (esta documentación). En el
+              celular, ábralo con el botón ☰ de la barra superior — la
+              plataforma es 100% usable desde el móvil.
             </p>
             <IrAPantalla href="/ejecutivo">Ir al Tablero ejecutivo</IrAPantalla>
           </Paso>
@@ -111,7 +112,29 @@ export default function PrimerosPasosPage() {
             </p>
           </Paso>
 
-          <Paso n={5} titulo="Modo prueba (solo administradores)">
+          <Paso n={5} titulo="Atienda la campanita de notificaciones">
+            <p>
+              Arriba a la derecha, la <b>campanita 🔔</b> concentra las
+              novedades que le conciernen: si usted carga datos, cada cambio
+              de estado de sus cargas (tomada en revisión, aprobada, observada,
+              rechazada, rectificada); si valida, cada carga nueva enviada por
+              las dependencias y las alertas de <b>indicadores en estado
+              crítico</b>. El número rojo indica cuántas no leyó; al tocar una
+              notificación se abre directamente el detalle correspondiente.
+            </p>
+          </Paso>
+
+          <Paso n={6} titulo="Elija su interfaz: Agentes PEI o Clásico">
+            <p>
+              El conmutador de la barra superior alterna entre el tema{" "}
+              <b>Agentes PEI</b> (moderno, con la identidad del programa) y el{" "}
+              <b>Clásico</b> institucional. La elección se guarda en su cuenta
+              y lo acompaña en cualquier dispositivo. Los reportes imprimibles
+              salen siempre con el formato Clásico institucional.
+            </p>
+          </Paso>
+
+          <Paso n={7} titulo="Modo prueba (solo administradores)">
             <p>
               El Administrador puede conmutar su sesión a una base de{" "}
               <b>prueba</b> con datos ficticios, ideal para capacitación: verá

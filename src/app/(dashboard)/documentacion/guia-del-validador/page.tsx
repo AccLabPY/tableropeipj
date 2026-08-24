@@ -23,20 +23,38 @@ export default function GuiaDelValidadorPage() {
       />
 
       <Card>
-        <CardHeader title="Walkthrough" meta="6 pasos" />
+        <CardHeader title="Walkthrough" meta="7 pasos" />
         <CardBody>
           <Paso n={1} titulo="Identifique lo pendiente de validación">
             <p>
-              En <b>Registro</b>, los indicadores con chip <b>Enviado</b> son
-              su bandeja de trabajo. La vista de <b>Gobernanza</b> muestra el
-              panorama completo: cuántas mediciones hay en cada estado y qué
-              dependencias están al día.
+              La <b>campanita de notificaciones</b> 🔔 le avisa de cada carga
+              nueva enviada por las dependencias (y de los indicadores que
+              entran en estado crítico al aprobarse): tocarla abre el detalle
+              de esa carga, listo para resolver. Además, en <b>Registro</b> los
+              indicadores con chip <b>Enviado</b> son su bandeja de trabajo, y{" "}
+              <b>Gobernanza</b> muestra el panorama completo: cuántas
+              mediciones hay en cada estado y qué dependencias están al día.
             </p>
             <IrAPantalla href="/registro">Ir a Registro</IrAPantalla>{" "}
             <IrAPantalla href="/gobernanza">Ir a Gobernanza</IrAPantalla>
           </Paso>
 
-          <Paso n={2} titulo="Revise el valor y sus variables">
+          <Paso n={2} titulo="Abra el detalle de la carga (el expediente)">
+            <p>
+              Cada carga tiene su <b>vista de detalle</b> — se llega desde la
+              notificación, desde «Ver detalle de la carga» en Registro o desde
+              cada versión en la ficha del indicador. En una sola pantalla:
+              qué se cargó (variables, valor, fuente, observaciones), las
+              evidencias con descarga, las resoluciones previas y el{" "}
+              <b>historial de estados completo</b> con autor, fecha y causa de
+              cada transición. El panel <b>«Resolución de la DGPD»</b> de esa
+              misma pantalla permite tomar en revisión, aprobar, observar,
+              rechazar o rectificar sin cambiar de vista (solo sobre la última
+              versión).
+            </p>
+          </Paso>
+
+          <Paso n={3} titulo="Revise el valor y sus variables">
             <p>
               El panel «Validación DGPD» muestra el valor cargado y su versión.
               Verifique el desglose: las variables (a), (b), (c) que informó la
@@ -47,7 +65,7 @@ export default function GuiaDelValidadorPage() {
             </p>
           </Paso>
 
-          <Paso n={3} titulo="Descargue y revise las evidencias">
+          <Paso n={4} titulo="Descargue y revise las evidencias">
             <p>
               Antes de resolver, el panel lista las evidencias respaldatorias
               con su botón <b>Descargar</b>. Coteje que el archivo respalde
@@ -72,7 +90,7 @@ export default function GuiaDelValidadorPage() {
             </Callout>
           </Paso>
 
-          <Paso n={4} titulo="Opcional: tome la medición en revisión">
+          <Paso n={5} titulo="Opcional: tome la medición en revisión">
             <p>
               El botón <b>«Tomar en revisión»</b> marca que usted está
               analizando esa medición (estado «En revisión»). Es útil cuando la
@@ -81,7 +99,7 @@ export default function GuiaDelValidadorPage() {
             </p>
           </Paso>
 
-          <Paso n={5} titulo="Resuelva: aprobar, observar o rechazar">
+          <Paso n={6} titulo="Resuelva: aprobar, observar o rechazar">
             <ul className="list-disc space-y-1 pl-5">
               <li>
                 <b>Aprobar</b> — el valor se publica en los tableros oficiales
@@ -99,14 +117,19 @@ export default function GuiaDelValidadorPage() {
             </ul>
             <p>
               Cada resolución queda firmada con su usuario, fecha y comentario
-              en el historial inmutable de la medición.
+              en el historial inmutable de la medición, y{" "}
+              <b>notifica automáticamente a la dependencia</b> en su campanita
+              (con el comentario incluido). Si al aprobar el indicador queda en
+              semáforo crítico, el sistema emite además una alerta a
+              validadores y a la dependencia responsable.
             </p>
           </Paso>
 
-          <Paso n={6} titulo="Rectificación de una aprobada">
+          <Paso n={7} titulo="Rectificación de una aprobada">
             <p>
               Si una medición aprobada resulta errónea, use{" "}
-              <b>Rectificar</b>: la versión vigente pasa a «Rectificada» (queda
+              <b>Rectificar</b> (disponible en el detalle de la carga
+              aprobada): la versión vigente pasa a «Rectificada» (queda
               archivada, visible en el historial) y se crea la versión
               siguiente en borrador para que la dependencia corrija y reenvíe.
               Los tableros dejan de contar el valor rectificado hasta que la
