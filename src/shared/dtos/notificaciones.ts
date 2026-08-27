@@ -7,7 +7,11 @@ export type TipoNotificacion =
   | "CARGA_OBSERVADA"
   | "CARGA_RECHAZADA"
   | "CARGA_RECTIFICADA"
-  | "INDICADOR_CRITICO";
+  | "INDICADOR_CRITICO"
+  | "PLAZO_PROXIMO"
+  | "PRORROGA_OTORGADA"
+  | "CARGA_CERRADA"
+  | "CARGA_HABILITADA";
 
 export interface NotificacionDTO {
   id: string;

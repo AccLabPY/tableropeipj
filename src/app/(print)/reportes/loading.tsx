@@ -8,7 +8,7 @@ export default function LoadingReporteImprimible() {
       <Esqueleto className="mt-4 h-[110px] w-full" />
       <Esqueleto className="mt-4 h-[260px] w-full" />
       <Esqueleto className="mt-4 h-[200px] w-full" />
-      <p className="mt-6 text-center text-[12px] text-muted">
+      <p className="mt-6 text-center text-[13.5px] text-muted">
         Generando el reporte con los datos oficiales…
       </p>
     </div>

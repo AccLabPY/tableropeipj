@@ -23,11 +23,11 @@ const ROLES = [
   },
   {
     rol: "Validador DGPD",
-    ve: "Visión total + resolución de cargas (en Registro o en el detalle de cada carga) + Administración de matriz y escalas.",
+    ve: "Visión total + resolución de cargas (aprobar u observar), prórrogas y cierre de la carga + Administración de matriz, escalas y plazos.",
   },
   {
     rol: "Administrador",
-    ve: "Todo + gestión de usuarios, umbrales del semáforo y conmutación al modo prueba.",
+    ve: "Todo + gestión de usuarios, estructura del PEI (alta/baja de objetivos, acciones e indicadores), plazos de carga, presupuesto y modo prueba.",
   },
 ] as const;
 
@@ -54,8 +54,7 @@ export default function PrimerosPasosPage() {
             </p>
             <Callout tipo="advertencia">
               No comparta su cuenta. Si necesita un usuario nuevo para su
-              dependencia, solicítelo a la DGPD — el Administrador lo crea en
-              minutos.
+              dependencia, solicítelo a la DGPD.
             </Callout>
           </Paso>
 

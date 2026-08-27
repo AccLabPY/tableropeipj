@@ -6,3 +6,4 @@ export * from "./agregaciones";
 export * from "./estados";
 export * from "./escala";
 export * from "./formula";
+export * from "./plazos";

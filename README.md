@@ -121,6 +121,39 @@ plataforma cachea agresivamente en memoria (`src/server/services/cache.ts`):
 > Para juzgar la velocidad usar `npm run build && npm start`: `npm run dev`
 > compila cada ruta en el primer acceso y siempre se siente más lento.
 
+## Plazos de carga, prórrogas y SLA
+
+Ventana de carga por indicador (`src/domain/plazos.ts`, dominio puro y testeado;
+`plazos.service.ts` en la capa de aplicación):
+
+- **Plazo**: `Periodo.fechaLimiteCarga` fija el vencimiento general del
+  ejercicio (Administración → Plazos de carga). Cada acto administrativo
+  posterior se registra append-only en `VentanaCarga` con alcance
+  **GLOBAL / OE / AE / INDICADOR / DEPENDENCIA**, autor y motivo.
+- **Resolución**: la fecha efectiva es la **más tardía** aplicable (una
+  prórroga nunca acorta un plazo); un acto manual posterior (APERTURA/CIERRE)
+  manda sobre el cálculo por fecha. Sin fecha ⇒ carga abierta.
+- **Cierre automático**: al vencer, `exigirCargaHabilitada()` bloquea con 409
+  `CARGA_CERRADA` el guardado, el envío y los adjuntos **solo para las
+  dependencias**; DGPD y ADMIN siguen operando (son quienes prorrogan).
+- **Avisos**: a 7 y a 1 día del vencimiento se emite `PLAZO_PROXIMO` a la
+  dependencia (evaluación perezosa con throttle horario desde
+  `GET /api/v1/notificaciones`), y al entrar a Registro aparece un popup con
+  los indicadores por vencer (una vez por sesión).
+- **SLA**: cada envío escribe una fila en `SlaCarga` (plazo vigente, días de
+  desvío, en plazo, con prórroga). El resumen por dependencia se ve en
+  **Gobernanza → SLA de carga** y en la hoja "SLA de carga" del Excel de
+  mediciones.
+
+Otros cambios pedidos por el Poder Judicial (2026): el **rechazo se retiró del
+circuito** (`ValidarInputSchema` acepta solo APROBADO/OBSERVADO; el estado
+subsiste para el histórico); DGPD/Admin pueden **eliminar evidencias** mientras
+la medición no esté aprobada; ante los roles de carga el historial muestra
+**"la DGPD"** en lugar del nombre del validador; Administración incorpora
+**Estructura del PEI** (alta/baja de OE, AE e indicadores) y **Ejecución
+presupuestaria** (asignado/ejecutado del ejercicio, publicada en el Reporte
+ejecutivo con gráfico).
+
 ## Notificaciones (campanita)
 
 Bandeja in-app por usuario (tabla `Notificacion`, en ambas bases de datos):

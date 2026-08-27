@@ -47,13 +47,15 @@ export default function GuiaDeCargaPage() {
       />
 
       <Card>
-        <CardHeader title="Walkthrough" meta="9 pasos" />
+        <CardHeader title="Walkthrough" meta="10 pasos" />
         <CardBody>
           <Paso n={1} titulo="Abra Registro y elija el indicador">
             <p>
-              En <b>Registro → Carga de avances</b> verá su lista de trabajo:
-              solo los indicadores cuya dependencia responsable es la suya. El
-              chip de cada uno indica en qué punto del circuito está:
+              En <b>Registro → Carga de avances</b> verá la <b>tabla</b> de sus
+              indicadores: solo aquellos cuya dependencia responsable es la
+              suya, con su estado, su plazo de carga y el botón{" "}
+              <b>«Reportar avance»</b>. El chip de cada fila indica en qué punto
+              del circuito está:
             </p>
             <Maqueta titulo="Indicadores a cargo">
               <ul className="space-y-2">
@@ -72,15 +74,35 @@ export default function GuiaDeCargaPage() {
               </ul>
             </Maqueta>
             <p>
-              La lista tiene un <b>buscador</b> por código o nombre. También
-              puede llegar con el indicador ya seleccionado desde su ficha
-              (botón <b>«Reportar avance»</b> en{" "}
-              <b>Indicadores → ficha del indicador</b>).
+              La tabla tiene <b>buscador</b> (código, nombre, objetivo o
+              dependencia) y <b>filtros rápidos</b>: sin enviar, en validación,
+              validados y por vencer. Al pulsar <b>«Reportar avance»</b> se abre
+              la <b>pantalla del indicador</b>, donde solo aparece ese indicador
+              y su formulario —sin la lista de los demás—; el botón{" "}
+              <b>«Todos los indicadores»</b> lo devuelve a la tabla. También se
+              llega directo desde la ficha del indicador o desde una
+              notificación.
             </p>
             <IrAPantalla href="/registro">Ir a Carga de avances</IrAPantalla>
           </Paso>
 
-          <Paso n={2} titulo="Lea «Cómo se calcula» antes de cargar">
+          <Paso n={2} titulo="Controle el plazo de carga">
+            <p>
+              Cada indicador tiene una <b>ventana de carga</b>: una franja
+              arriba del formulario indica hasta cuándo puede reportar. Cuando
+              faltan 7 días o menos, el aviso se vuelve ámbar y usted recibe una{" "}
+              <b>notificación en la campanita</b>; al entrar a Registro también
+              aparece un recordatorio con los indicadores por vencer.
+            </p>
+            <Callout tipo="advertencia">
+              Al vencer el plazo la carga <b>se cierra automáticamente</b>: el
+              formulario queda en solo lectura. Para volver a cargar, solicite
+              una <b>prórroga</b> a la DGPD, que puede otorgarla por indicador,
+              por acción, por objetivo o para toda su dependencia.
+            </Callout>
+          </Paso>
+
+          <Paso n={3} titulo="Lea «Cómo se calcula» antes de cargar">
             <p>
               Cada indicador muestra su fórmula oficial y la descripción de
               cada variable, tomadas de la ficha técnica. Usted{" "}
@@ -89,7 +111,7 @@ export default function GuiaDeCargaPage() {
             </p>
           </Paso>
 
-          <Paso n={3} titulo="Cargue las variables (o el nivel de escala)">
+          <Paso n={4} titulo="Cargue las variables (o el nivel de escala)">
             <p>El formulario se adapta al tipo de indicador:</p>
             <ul className="list-disc space-y-1 pl-5">
               <li>
@@ -129,7 +151,7 @@ export default function GuiaDeCargaPage() {
             </Callout>
           </Paso>
 
-          <Paso n={4} titulo="Complete la fuente / medio de verificación">
+          <Paso n={5} titulo="Complete la fuente / medio de verificación">
             <p>
               Indique el documento que respalda el dato: informe, acta,
               memoria, planilla o reporte estadístico. Este texto acompaña a la
@@ -137,7 +159,7 @@ export default function GuiaDeCargaPage() {
             </p>
           </Paso>
 
-          <Paso n={5} titulo="Adjunte las evidencias respaldatorias">
+          <Paso n={6} titulo="Adjunte las evidencias respaldatorias">
             <p>
               Suba los archivos que sustentan el valor (PDF, imagen, Excel,
               Word o CSV — hasta 25 MB cada uno). Si aún no guardó el borrador,
@@ -152,7 +174,7 @@ export default function GuiaDeCargaPage() {
             </Callout>
           </Paso>
 
-          <Paso n={6} titulo="Guarde el borrador… o envíe a validación">
+          <Paso n={7} titulo="Guarde el borrador… o envíe a validación">
             <p>
               <b>«Guardar borrador»</b> conserva su carga sin exponerla: puede
               volver a editarla cuando quiera y aún no aparece en ningún
@@ -161,7 +183,7 @@ export default function GuiaDeCargaPage() {
             </p>
           </Paso>
 
-          <Paso n={7} titulo="Qué pasa después del envío">
+          <Paso n={8} titulo="Qué pasa después del envío">
             <p>
               Cada cambio de estado le llega como <b>notificación en la
               campanita</b> 🔔 con el comentario del validador; al tocarla se
@@ -180,14 +202,11 @@ export default function GuiaDeCargaPage() {
                 validador: corrija lo señalado y reenvíe (el circuito completo
                 queda en el historial).
               </li>
-              <li>
-                <b>Rechazada</b> — la medición no procede para el período; el
-                comentario del validador explica el motivo.
-              </li>
+
             </ul>
           </Paso>
 
-          <Paso n={8} titulo="Consulte el expediente: detalle de la carga">
+          <Paso n={9} titulo="Consulte el expediente: detalle de la carga">
             <p>
               El enlace <b>«Ver detalle de la carga»</b> (junto al indicador de
               progreso, o desde cada versión listada en la ficha del
@@ -199,7 +218,7 @@ export default function GuiaDeCargaPage() {
             </p>
           </Paso>
 
-          <Paso n={9} titulo="¿Se aprobó con un error? Rectificación">
+          <Paso n={10} titulo="¿Se aprobó con un error? Rectificación">
             <p>
               Una medición aprobada nunca se edita ni se borra. Si detecta un
               error, solicite la <b>rectificación</b> a la DGPD: la versión

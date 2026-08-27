@@ -1,26 +1,16 @@
-import {
-  Esqueleto,
-  EsqueletoCard,
-  EsqueletoHeader,
-} from "@/ui/components/esqueleto";
+import { Esqueleto, EsqueletoCard, EsqueletoHeader } from "@/ui/components/esqueleto";
 
-/** Skeleton del Registro: worklist + formulario. */
+/** Skeleton del listado de indicadores a cargo. */
 export default function LoadingRegistro() {
   return (
-    <section aria-busy="true" aria-label="Cargando registro…">
+    <section aria-busy="true" aria-label="Cargando indicadores a cargo…">
       <EsqueletoHeader />
-      <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
-        <EsqueletoCard className="h-[300px] md:h-[560px]" />
-        <div className="space-y-4">
-          <EsqueletoCard className="h-[120px]" />
-          <EsqueletoCard className="h-[160px]" />
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <Esqueleto className="h-[64px]" />
-            <Esqueleto className="h-[64px]" />
-          </div>
-          <EsqueletoCard className="h-[90px]" />
-        </div>
+      <div className="mb-3 flex flex-wrap gap-2">
+        {["w-[88px]", "w-[96px]", "w-[110px]", "w-[96px]", "w-[92px]"].map((w) => (
+          <Esqueleto key={w} className={`h-[26px] ${w}`} />
+        ))}
       </div>
+      <EsqueletoCard className="h-[520px]" />
     </section>
   );
 }

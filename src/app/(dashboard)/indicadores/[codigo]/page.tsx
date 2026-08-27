@@ -79,7 +79,7 @@ export default async function DetalleIndicadorPage({
           </a>
           {puedeCargar ? (
             <Link
-              href={`/registro?anio=${anio}&indicador=${est.codigo}`}
+              href={`/registro/indicador/${est.codigo}?anio=${anio}`}
               className="inline-flex items-center gap-[6px] whitespace-nowrap rounded-pj border border-azul-d bg-azul px-3 py-[6px] text-[11.5px] font-semibold text-white shadow-sm hover:bg-azul-d agentes:rounded-chip agentes:border-transparent agentes:bg-accion agentes:hover:brightness-105"
             >
               <ClipboardEdit className="h-3.5 w-3.5" />

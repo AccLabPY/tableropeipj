@@ -7,6 +7,7 @@ import { noEncontrado } from "@/server/api/api-error";
 import type { IndicadorEstadoDTO } from "@/shared/dtos/estado-pei";
 import { calcularEstadoPEI, catalogoIndicadores } from "./estado-pei.service";
 import { fichaIndicador } from "./indicador-ficha.service";
+import { slaPorDependencia } from "./sla.service";
 import { num } from "./mappers";
 
 /**
@@ -212,7 +213,42 @@ export async function excelMediciones(ctx: Ctx, anio: number): Promise<Buffer> {
   }
   ws.getColumn("freporte").numFmt = "dd/mm/yyyy";
   ws.getColumn("fcorte").numFmt = "dd/mm/yyyy";
+  await hojaSla(wb, ctx, anio); // puntualidad de carga por dependencia
   return aBuffer(wb);
+}
+
+/**
+ * Hoja de SLA de carga: puntualidad de cada dependencia frente al plazo
+ * vigente al momento de cada envío.
+ */
+export async function hojaSla(
+  wb: ExcelJS.Workbook,
+  ctx: Ctx,
+  anio: number,
+): Promise<void> {
+  const filas = await slaPorDependencia(ctx, anio);
+  const ws = hoja(wb, "SLA de carga", [
+    { header: "Dependencia", key: "dep", width: 46 },
+    { header: "Envíos", key: "envios", width: 10 },
+    { header: "En plazo", key: "enPlazo", width: 11 },
+    { header: "Fuera de plazo", key: "fuera", width: 15 },
+    { header: "Puntualidad %", key: "pct", width: 15 },
+    { header: "Atraso promedio (días)", key: "prom", width: 22 },
+    { header: "Atraso máximo (días)", key: "max", width: 20 },
+    { header: "Con prórroga", key: "prorroga", width: 14 },
+  ]);
+  for (const f of filas) {
+    ws.addRow({
+      dep: f.dependencia,
+      envios: f.envios,
+      enPlazo: f.enPlazo,
+      fuera: f.fueraDePlazo,
+      pct: f.puntualidad !== null ? Math.round(f.puntualidad * 100) : "—",
+      prom: f.atrasoPromedio ?? "—",
+      max: f.atrasoMaximo ?? "—",
+      prorroga: f.conProrroga,
+    });
+  }
 }
 
 /** Un objetivo estratégico: hoja resumen (AEs) + hoja de indicadores. */

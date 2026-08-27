@@ -53,11 +53,11 @@ export default async function ReporteIndicadorPage({
 
       <div className="mb-4 flex flex-wrap items-center gap-4 rounded-pj border border-linea px-4 py-3 print:break-inside-avoid">
         <div>
-          <div className="text-[10px] uppercase tracking-[.07em] text-muted">
+          <div className="text-[11.5px] uppercase tracking-[.07em] text-muted">
             Cumplimiento {anio}
           </div>
           <div
-            className="tnum font-serif text-[26px] leading-none"
+            className="tnum font-serif text-[30px] leading-none"
             style={{ color: SEM_COLORS[est.semaforo] }}
           >
             {fmtPct(est.capado)}
@@ -122,7 +122,7 @@ export default async function ReporteIndicadorPage({
               <dt className="text-[9px] font-semibold uppercase tracking-[.05em] text-muted">
                 {k}
               </dt>
-              <dd className="text-[11px] leading-snug">{v}</dd>
+              <dd className="text-[12.5px] leading-snug">{v}</dd>
             </div>
           ))}
       </dl>
@@ -191,7 +191,7 @@ export default async function ReporteIndicadorPage({
       {ficha.mediciones.some((m) => m.evidencias.length > 0) ? (
         <>
           <h2 className={SECCION_REPORTE}>Evidencias respaldatorias</h2>
-          <ul className="list-disc space-y-1 pl-5 text-[11.5px]">
+          <ul className="list-disc space-y-1 pl-5 text-[13px]">
             {ficha.mediciones.flatMap((m) =>
               m.evidencias.map((e) => (
                 <li key={e.id}>

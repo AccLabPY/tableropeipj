@@ -25,6 +25,9 @@ import { tieneRol } from "@/server/auth/guards";
 import type { MedicionInput, ValidarInput, EvidenciaInput } from "@/shared/schemas/medicion";
 import { num } from "./mappers";
 import { invalidarEstadoPEI } from "./estado-cache";
+import { catalogoIndicadores } from "./estado-pei.service";
+import { exigirCargaHabilitada, ventanaDeIndicador } from "./plazos.service";
+import { registrarEnvio } from "./sla.service";
 import {
   notificarCriticoSiCorresponde,
   notificarTransicion,
@@ -99,6 +102,15 @@ function exigirPropiedad(ctx: Ctx, dependenciaId: number): void {
   if (esScoped && !ctx.actor.dependenciaIds.includes(dependenciaId)) {
     throw sinPermiso();
   }
+}
+
+/** Indicador (del catálogo cacheado) al que pertenece una medición. */
+async function indicadorDeMedicion(
+  ctx: Ctx,
+  indicadorId: number,
+): Promise<IndicadorCompleto | undefined> {
+  const inds = await catalogoIndicadores(ctx);
+  return inds.find((i) => i.id === indicadorId);
 }
 
 async function medicionOThrow(ctx: Ctx, id: bigint): Promise<MedicionCompleta> {
@@ -210,6 +222,7 @@ export async function guardarBorrador(
   const principal = ind.responsables.find((r) => r.rol === "PRINCIPAL");
   if (!principal) throw new ApiError(422, "SIN_RESPONSABLE", "El indicador no tiene dependencia principal.");
   exigirPropiedad(ctx, principal.dependenciaId);
+  await exigirCargaHabilitada(ctx, ind, input.anio);
 
   const periodo = await periodoAnual(ctx, input.anio);
   const { valor, valores } = await derivarValor(ctx, ind, input);
@@ -279,9 +292,22 @@ export async function guardarBorrador(
 export async function enviar(ctx: Ctx, id: bigint): Promise<MedicionCompleta> {
   const m = await medicionOThrow(ctx, id);
   exigirPropiedad(ctx, m.dependenciaId);
+  const ind = await indicadorDeMedicion(ctx, m.indicadorId);
+  if (ind) await exigirCargaHabilitada(ctx, ind, m.periodo.anio);
   const desde = m.estado as EstadoWF;
   exigirTransicion(ctx, desde, "ENVIADO");
   await transicionar(ctx, m.id, desde, "ENVIADO");
+  // Bitácora de SLA: puntualidad del envío frente al plazo vigente.
+  if (ind) {
+    const ventana = await ventanaDeIndicador(ctx, ind, m.periodo.anio);
+    await registrarEnvio(ctx, {
+      medicionId: m.id,
+      indicadorId: m.indicadorId,
+      dependenciaId: m.dependenciaId,
+      periodoId: m.periodoId,
+      ventana,
+    });
+  }
   await notificarSeguro(ctx, m, "ENVIADO");
   return medicionOThrow(ctx, id);
 }
@@ -426,6 +452,8 @@ export async function agregarEvidenciaArchivo(
   }
   const m = await medicionOThrow(ctx, id);
   exigirPropiedad(ctx, m.dependenciaId);
+  const ind = await indicadorDeMedicion(ctx, m.indicadorId);
+  if (ind) await exigirCargaHabilitada(ctx, ind, m.periodo.anio);
   const hashSha256 = createHash("sha256").update(archivo.contenido).digest("hex");
   await ctx.db.evidencia.create({
     data: {
@@ -451,13 +479,28 @@ export async function eliminarEvidencia(
     include: { medicion: { select: { dependenciaId: true, estado: true } } },
   });
   if (!ev) throw noEncontrado("Evidencia");
-  exigirPropiedad(ctx, ev.medicion.dependenciaId);
-  if (!ESTADOS_EDITABLES.includes(ev.medicion.estado as EstadoWF)) {
-    throw new ApiError(
-      409,
-      "MEDICION_EN_CURSO",
-      "Solo se pueden eliminar adjuntos mientras la medición es editable.",
-    );
+  const estado = ev.medicion.estado as EstadoWF;
+  const esValidador = tieneRol(ctx.actor, "ADMIN", "DGPD_VALIDADOR");
+
+  if (esValidador) {
+    // DGPD/Admin pueden depurar adjuntos mientras la medición no sea oficial:
+    // una vez APROBADA (o archivada como RECTIFICADA) el expediente es inmutable.
+    if (estado === "APROBADO" || estado === "RECTIFICADO") {
+      throw new ApiError(
+        409,
+        "MEDICION_OFICIAL",
+        "No se pueden eliminar adjuntos de una medición ya validada: rectifique la medición para corregirla.",
+      );
+    }
+  } else {
+    exigirPropiedad(ctx, ev.medicion.dependenciaId);
+    if (!ESTADOS_EDITABLES.includes(estado)) {
+      throw new ApiError(
+        409,
+        "MEDICION_EN_CURSO",
+        "Solo se pueden eliminar adjuntos mientras la medición es editable.",
+      );
+    }
   }
   await ctx.db.evidencia.delete({ where: { id: evidenciaId } });
 }

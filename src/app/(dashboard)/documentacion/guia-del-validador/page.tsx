@@ -23,7 +23,7 @@ export default function GuiaDelValidadorPage() {
       />
 
       <Card>
-        <CardHeader title="Walkthrough" meta="7 pasos" />
+        <CardHeader title="Walkthrough" meta="8 pasos" />
         <CardBody>
           <Paso n={1} titulo="Identifique lo pendiente de validación">
             <p>
@@ -99,7 +99,7 @@ export default function GuiaDelValidadorPage() {
             </p>
           </Paso>
 
-          <Paso n={6} titulo="Resuelva: aprobar, observar o rechazar">
+          <Paso n={6} titulo="Resuelva: aprobar u observar">
             <ul className="list-disc space-y-1 pl-5">
               <li>
                 <b>Aprobar</b> — el valor se publica en los tableros oficiales
@@ -110,11 +110,17 @@ export default function GuiaDelValidadorPage() {
                 corrección. El comentario es obligatorio: sea específico sobre
                 qué corregir.
               </li>
-              <li>
-                <b>Rechazar</b> — la medición no procede (comentario
-                obligatorio). Es un estado terminal para esa versión.
-              </li>
             </ul>
+            <Callout tipo="info">
+              El <b>rechazo se retiró del circuito</b> (2026): una carga
+              incorrecta se observa para que la dependencia la corrija, de modo
+              que ningún indicador quede sin dato por una resolución terminal.
+            </Callout>
+            <p>
+              Si la carga tiene adjuntos que no corresponden, puede{" "}
+              <b>eliminarlos</b> desde el panel de evidencias mientras la
+              medición no esté aprobada.
+            </p>
             <p>
               Cada resolución queda firmada con su usuario, fecha y comentario
               en el historial inmutable de la medición, y{" "}
@@ -125,7 +131,37 @@ export default function GuiaDelValidadorPage() {
             </p>
           </Paso>
 
-          <Paso n={7} titulo="Rectificación de una aprobada">
+          <Paso n={7} titulo="Plazos: prórrogas, habilitación y cierre">
+            <p>
+              Cada indicador tiene una ventana de carga que se cierra sola al
+              vencer el plazo del ejercicio. Desde el panel «Resolución de la
+              DGPD» —en Registro o en el detalle de la carga— usted puede:
+            </p>
+            <ul className="list-disc space-y-1 pl-5">
+              <li>
+                <b>Prórroga</b> — extiende la fecha límite con el alcance que
+                elija: solo ese indicador, toda la dependencia, la acción o el
+                objetivo completo.
+              </li>
+              <li>
+                <b>Cerrar carga</b> — bloquea anticipadamente la carga (por
+                ejemplo, tras el corte de datos del período).
+              </li>
+              <li>
+                <b>Habilitar carga</b> — reabre lo que estaba cerrado o vencido.
+              </li>
+            </ul>
+            <p>
+              Todo acto queda registrado con autor y motivo en{" "}
+              <b>Administración → Plazos de carga</b>, y la dependencia recibe
+              la notificación correspondiente. La puntualidad de cada
+              dependencia se mide en <b>Gobernanza → SLA de carga</b>.
+            </p>
+            <IrAPantalla href="/admin/plazos">Ir a Plazos de carga</IrAPantalla>{" "}
+            <IrAPantalla href="/gobernanza">Ver SLA de carga</IrAPantalla>
+          </Paso>
+
+          <Paso n={8} titulo="Rectificación de una aprobada">
             <p>
               Si una medición aprobada resulta errónea, use{" "}
               <b>Rectificar</b> (disponible en el detalle de la carga

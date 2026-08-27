@@ -1,7 +1,11 @@
 "use client";
 
+// Pantalla de carga de UN indicador: sin lista ni buscador (pedido del
+// Poder Judicial, 2026). El listado vive en /registro (RegistroTabla) y
+// esta vista se abre desde el botón "Reportar avance".
+
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
-import { Clock, X } from "lucide-react";
+import { CalendarPlus, Clock, Lock, LockOpen, X } from "lucide-react";
 import {
   calcularCumplimiento,
   calcularValorObservado,
@@ -9,7 +13,7 @@ import {
   semaforo as clasificar,
 } from "@/domain";
 import type { EstadoWF } from "@/domain/types";
-import type { RegistroDTO, RegistroItemDTO } from "@/shared/dtos/registro";
+import type { RegistroDTO, RegistroItemDTO, VentanaDTO } from "@/shared/dtos/registro";
 import type { EvidenciaResumenDTO } from "@/shared/dtos/indicador-ficha";
 import {
   eliminarEvidenciaAction,
@@ -21,18 +25,12 @@ import {
   type ResultadoAccion,
 } from "@/server/services/registro-actions";
 import { Card, CardHeader } from "@/ui/components/card";
-import { BuscadorLista, coincide } from "@/ui/components/buscador-lista";
 import { SemPill } from "@/ui/components/sem-pill";
 import { Spinner } from "@/ui/components/spinner";
 import { ModalResultado } from "@/ui/components/modal-resultado";
 import { WF_CHIP } from "@/ui/features/shared/chip-workflow";
+import { ModalPlazo, type ModoPlazo } from "./modal-plazo";
 import { cn, fmtBytes, fmtFechaCorta, fmtNum, fmtPct, fmtValor } from "@/lib/utils";
-
-// Chips de estado WF compartidos; en Registro "APROBADO" se muestra "Validado".
-const CHIP: typeof WF_CHIP = {
-  ...WF_CHIP,
-  APROBADO: { ...WF_CHIP.APROBADO, label: "Validado" },
-};
 
 const EDITABLES: (EstadoWF | "PENDIENTE")[] = ["PENDIENTE", "BORRADOR", "OBSERVADO"];
 
@@ -69,51 +67,35 @@ function formDesdeItem(it: RegistroItemDTO | undefined): FormState {
   };
 }
 
-export function RegistroView({
+export function RegistroFormulario({
   data,
-  indicadorInicial = null,
+  item,
 }: {
   data: RegistroDTO;
-  /** Código llegado por ?indicador= (acceso directo desde la ficha). */
-  indicadorInicial?: number | null;
+  /** Indicador de la ruta /registro/indicador/[codigo]. */
+  item: RegistroItemDTO;
 }) {
-  const inicialEnLista =
-    indicadorInicial !== null && data.items.some((i) => i.codigo === indicadorInicial);
-  const [selCodigo, setSelCodigo] = useState<number | null>(
-    inicialEnLista ? indicadorInicial : (data.items[0]?.codigo ?? null),
-  );
-  const listaRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!inicialEnLista) return;
-    listaRef.current
-      ?.querySelector<HTMLElement>(`[data-codigo="${indicadorInicial}"]`)
-      ?.scrollIntoView({ block: "center" });
-  }, [inicialEnLista, indicadorInicial]);
-  const item = data.items.find((i) => i.codigo === selCodigo);
   const [form, setForm] = useState<FormState>(() => formDesdeItem(item));
   const [toast, setToast] = useState<ResultadoAccion | null>(null);
-  const [busqueda, setBusqueda] = useState("");
-  const itemsFiltrados = useMemo(
-    () =>
-      data.items.filter((i) =>
-        coincide(`${i.codigo} ${i.nombre} ${i.aeCodigo ?? ""}`, busqueda),
-      ),
-    [data.items, busqueda],
-  );
+  const [modalPlazo, setModalPlazo] = useState<ModoPlazo | null>(null);
   const [validacion, setValidacion] = useState<string[] | null>(null);
   const [comentario, setComentario] = useState("");
   const [pendiente, startTransition] = useTransition();
 
-  const seleccionar = (codigo: number) => {
-    setSelCodigo(codigo);
-    setForm(formDesdeItem(data.items.find((i) => i.codigo === codigo)));
+  // Al navegar a otro indicador (misma ruta, distinto código) se rehidrata.
+  useEffect(() => {
+    setForm(formDesdeItem(item));
     setToast(null);
     setComentario("");
-  };
+  }, [item]);
 
-  const estadoWF: EstadoWF | "PENDIENTE" = item?.medicion?.estado ?? "PENDIENTE";
-  const editable = data.puedeCargar && EDITABLES.includes(estadoWF);
-  const modoEscala = item?.tipoCalculo === "NIVEL_ESCALA";
+  const estadoWF: EstadoWF | "PENDIENTE" = item.medicion?.estado ?? "PENDIENTE";
+  // La carga se bloquea al vencer el plazo o al cerrarla la DGPD; los roles de
+  // validación (DGPD/Admin) siguen pudiendo operar para corregir o regularizar.
+  const cargaCerrada = item.ventana.estado === "CERRADA" && !data.puedeValidar;
+  const editable =
+    data.puedeCargar && EDITABLES.includes(estadoWF) && !cargaCerrada;
+  const modoEscala = item.tipoCalculo === "NIVEL_ESCALA";
 
   /** Valores numéricos del form (NaN → null). */
   const valoresNumericos = useMemo(() => {
@@ -270,79 +252,29 @@ export function RegistroView({
     return { ok: true, mensaje: "Borrador guardado y evidencia adjuntada." };
   };
 
-  return (
-    <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
-      {/* Worklist */}
-      <Card>
-        <CardHeader
-          title="Indicadores a cargo"
-          meta={`${data.items.length} del período`}
-        />
-        <BuscadorLista
-          valor={busqueda}
-          onChange={setBusqueda}
-          placeholder="Buscar indicador (código o nombre)…"
-          resultados={itemsFiltrados.length}
-        />
-        <div ref={listaRef} className="scroll-pj max-h-[300px] overflow-y-auto md:max-h-[640px]">
-          {indicadorInicial !== null && !inicialEnLista ? (
-            <p className="border-b border-sem-ambar-border bg-sem-ambar-bg px-4 py-2 text-[11.5px] text-sem-ambar-fg">
-              El indicador {indicadorInicial} no está en su lista de carga (no
-              pertenece a su dependencia o no aplica al período).
-            </p>
-          ) : null}
-          {itemsFiltrados.length === 0 && data.items.length > 0 ? (
-            <p className="px-4 py-6 text-center text-[12px] text-muted">
-              Sin indicadores que coincidan con “{busqueda}”.
-            </p>
-          ) : null}
-          {itemsFiltrados.map((i) => {
-            const chip = CHIP[i.medicion?.estado ?? "PENDIENTE"];
-            return (
-              <button
-                key={i.codigo}
-                type="button"
-                data-codigo={i.codigo}
-                onClick={() => seleccionar(i.codigo)}
-                className={cn(
-                  "block w-full border-b border-linea-2 px-[14px] py-[11px] text-left hover:bg-hover",
-                  i.codigo === selCodigo &&
-                    "bg-azul-soft shadow-[inset_3px_0_0_rgb(var(--c-azul))]",
-                )}
-              >
-                <span className="flex items-center justify-between gap-2">
-                  <span className="font-serif text-[12.5px] font-semibold text-azul-d">
-                    {i.codigo}
-                  </span>
-                  <span
-                    className={`rounded-chip px-[7px] py-[1px] text-[10px] font-semibold ${chip.cls}`}
-                  >
-                    {chip.label}
-                  </span>
-                </span>
-                <span className="mt-[3px] block text-[12px] leading-[1.3]">
-                  {i.nombre.length > 76 ? `${i.nombre.slice(0, 76)}…` : i.nombre}
-                </span>
-              </button>
-            );
-          })}
-          {data.items.length === 0 ? (
-            <p className="px-4 py-6 text-center text-muted">
-              Su usuario no tiene indicadores asignados para la carga.
-            </p>
-          ) : null}
-        </div>
-      </Card>
+  const ventana = item.ventana;
 
+  return (
+    <div>
       {/* Formulario */}
       <Card>
         <CardHeader
-          title={item ? item.nombre : "Seleccione un indicador"}
-          meta={item ? `Cód. ${item.codigo} · ${item.aeCodigo ?? "Nivel OE"}` : ""}
+          title="Carga del avance"
+          meta={
+            item.medicion
+              ? `versión ${item.medicion.version} · ejercicio ${data.anio}`
+              : `ejercicio ${data.anio}`
+          }
         />
         <div className="p-4">
-          {item ? (
-            <>
+          <>
+              {/* Aviso solo si la carga está cerrada: el plazo vigente ya se
+                  muestra en el encabezado de la pantalla. */}
+              <AvisoCargaCerrada
+                ventana={item.ventana}
+                puedeValidar={data.puedeValidar}
+              />
+
               {/* Ficha resumida */}
               <div className="grid grid-cols-1 gap-px overflow-hidden rounded-pj border border-linea bg-linea xs:grid-cols-2 lg:grid-cols-4">
                 <FichaCelda label="Objetivo" valor={item.oeCodigo} />
@@ -616,33 +548,48 @@ export function RegistroView({
               ) : null}
               {data.puedeCargar && !editable && estadoWF !== "APROBADO" ? (
                 <p className="mt-3 text-[12px] text-muted">
-                  La medición está {CHIP[estadoWF].label.toLowerCase()}: no puede
-                  editarse hasta la resolución del validador.
+                  {cargaCerrada
+                    ? "El plazo de carga está cerrado: solicite una prórroga a la DGPD."
+                    : `La medición está ${WF_CHIP[estadoWF].label.toLowerCase()}: no puede editarse hasta la resolución del validador.`}
                 </p>
               ) : null}
 
               {/* Panel del validador */}
-              {data.puedeValidar &&
-              item.medicion &&
-              ["ENVIADO", "EN_REVISION"].includes(item.medicion.estado) ? (
+              {data.puedeValidar ? (
                 <div className="mt-[18px] rounded-pj border border-azul-line bg-azul-soft p-4">
                   <div className="mb-2 text-[12.5px] font-semibold text-azul-d">
-                    Validación DGPD — valor cargado:{" "}
-                    {fmtValor(item.medicion.valorObservado, item.unidad)} (v
-                    {item.medicion.version})
+                    Validación DGPD
+                    {item.medicion ? (
+                      <>
+                        {" "}
+                        — valor cargado:{" "}
+                        {fmtValor(item.medicion.valorObservado, item.unidad)} (v
+                        {item.medicion.version})
+                      </>
+                    ) : (
+                      <> — sin carga de la dependencia en este período</>
+                    )}
                   </div>
 
-                  <div className="mb-3">
-                    <div className="mb-1 text-2xs font-semibold uppercase tracking-[.06em] text-azul-d">
-                      Evidencias respaldatorias — revisar antes de resolver
+                  {item.medicion ? (
+                    <div className="mb-3">
+                      <div className="mb-1 text-2xs font-semibold uppercase tracking-[.06em] text-azul-d">
+                        Evidencias respaldatorias — revisar antes de resolver
+                      </div>
+                      <ListaEvidencias
+                        evidencias={item.medicion.evidencias}
+                        puedeEliminar={
+                          item.medicion.estado !== "APROBADO" &&
+                          item.medicion.estado !== "RECTIFICADO"
+                        }
+                        onEliminar={(id) =>
+                          ejecutar(() => eliminarEvidenciaAction(id))
+                        }
+                      />
                     </div>
-                    <ListaEvidencias
-                      evidencias={item.medicion.evidencias}
-                      puedeEliminar={false}
-                    />
-                  </div>
+                  ) : null}
 
-                  {item.medicion.estado === "ENVIADO" ? (
+                  {item.medicion?.estado === "ENVIADO" ? (
                     <button
                       type="button"
                       disabled={pendiente}
@@ -657,11 +604,14 @@ export function RegistroView({
                     </button>
                   ) : null}
 
+                  {item.medicion &&
+                  ["ENVIADO", "EN_REVISION"].includes(item.medicion.estado) ? (
+                    <>
                   <textarea
                     value={comentario}
                     onChange={(e) => setComentario(e.target.value)}
                     rows={2}
-                    placeholder="Comentario de la validación (obligatorio al observar/rechazar)…"
+                    placeholder="Comentario de la validación (obligatorio al observar)…"
                     className="mb-3 block w-full resize-y rounded-pj border border-linea bg-superficie px-[9px] py-2 text-[12.5px]"
                   />
                   <div className="flex flex-wrap gap-[10px]">
@@ -697,35 +647,47 @@ export function RegistroView({
                         );
                       }}
                     />
-                    <BotonValidar
-                      texto="Rechazar"
-                      cls="border-sem-rojo-fg bg-sem-rojo text-white hover:opacity-90"
-                      disabled={pendiente}
-                      onClick={() => {
-                        if (comentario.trim().length < 5) {
-                          setValidacion([
-                            "El comentario de la validación es obligatorio al rechazar (mínimo 5 caracteres): fundamente el motivo del rechazo.",
-                          ]);
-                          return;
-                        }
-                        ejecutar(() =>
-                          validarMedicionAction(item.medicion!.id, {
-                            resultado: "RECHAZADO",
-                            comentario,
-                          }),
-                        );
-                      }}
-                    />
+                  </div>
+                    </>
+                  ) : null}
+
+                  {/* Gestión del plazo de carga de este indicador */}
+                  <div className="mt-3 flex flex-wrap items-center gap-[10px] border-t border-azul-line pt-3">
+                    <span className="text-2xs font-semibold uppercase tracking-[.06em] text-azul-d">
+                      Plazo de carga
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setModalPlazo("PRORROGA")}
+                      className="tap inline-flex items-center gap-[6px] rounded-pj border border-azul-line bg-superficie px-3 py-[7px] text-[11.5px] font-semibold text-azul-d hover:bg-azul-soft agentes:rounded-chip"
+                    >
+                      <CalendarPlus className="h-3.5 w-3.5" />
+                      Prórroga
+                    </button>
+                    {ventana?.estado === "CERRADA" ? (
+                      <button
+                        type="button"
+                        onClick={() => setModalPlazo("APERTURA")}
+                        className="tap inline-flex items-center gap-[6px] rounded-pj border border-sem-verde-border bg-superficie px-3 py-[7px] text-[11.5px] font-semibold text-sem-verde-fg hover:bg-sem-verde-bg agentes:rounded-chip"
+                      >
+                        <LockOpen className="h-3.5 w-3.5" />
+                        Habilitar carga
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setModalPlazo("CIERRE")}
+                        className="tap inline-flex items-center gap-[6px] rounded-pj border border-linea bg-superficie px-3 py-[7px] text-[11.5px] font-semibold text-muted hover:bg-hover agentes:rounded-chip"
+                      >
+                        <Lock className="h-3.5 w-3.5" />
+                        Cerrar carga
+                      </button>
+                    )}
                   </div>
                 </div>
               ) : null}
 
-            </>
-          ) : (
-            <p className="py-8 text-center text-muted">
-              Seleccione un indicador de la lista para cargar su avance.
-            </p>
-          )}
+          </>
         </div>
       </Card>
 
@@ -743,6 +705,24 @@ export function RegistroView({
         detalles={validacion ?? undefined}
         alCerrar={() => setValidacion(null)}
       />
+
+      {/* Prórroga / habilitación / cierre (DGPD y Admin) */}
+      {modalPlazo ? (
+        <ModalPlazo
+          modo={modalPlazo}
+          abierto
+          alCerrar={() => setModalPlazo(null)}
+          objetivo={{
+            anio: data.anio,
+            codigo: item.codigo,
+            nombre: item.nombre,
+            oeCodigo: item.oeCodigo,
+            aeCodigo: item.aeCodigo,
+            dependencia: item.dependenciaPrincipal,
+            dependenciaId: item.dependenciaPrincipalId,
+          }}
+        />
+      ) : null}
     </div>
   );
 }
@@ -1030,5 +1010,38 @@ function BotonValidar({
       {disabled ? <Spinner /> : null}
       {texto}
     </button>
+  );
+}
+
+/** Banda de estado del plazo de carga del indicador seleccionado. */
+/**
+ * Aviso de carga cerrada (vencida o cerrada por la DGPD). Solo se muestra en
+ * ese caso: el plazo vigente ya figura en el encabezado de la pantalla.
+ */
+function AvisoCargaCerrada({
+  ventana,
+  puedeValidar,
+}: {
+  ventana: VentanaDTO;
+  puedeValidar: boolean;
+}) {
+  if (ventana.estado !== "CERRADA") return null;
+  const fecha = ventana.fechaLimite ? fmtFechaCorta(ventana.fechaLimite) : null;
+  return (
+    <div className="mb-3 flex flex-wrap items-center gap-2 rounded-pj-sm border border-sem-rojo-border bg-sem-rojo-bg px-3 py-2 text-[12px] text-sem-rojo-fg">
+      <Lock className="h-4 w-4 flex-none" />
+      <b>Carga cerrada</b>
+      <span>
+        {ventana.cierreManual
+          ? "La DGPD cerró la carga de este indicador."
+          : `El plazo venció el ${fecha ?? "—"}.`}
+        {ventana.motivo ? ` “${ventana.motivo}”` : ""}
+      </span>
+      <span className="text-sem-rojo-fg/80">
+        {puedeValidar
+          ? "Como validador puede cargar igualmente o habilitar la carga."
+          : "Solicite una prórroga a la DGPD para volver a cargar."}
+      </span>
+    </div>
   );
 }

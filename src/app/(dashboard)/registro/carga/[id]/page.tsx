@@ -137,7 +137,20 @@ export default async function DetalleCargaPage({
 
       {/* Panel de resolución del validador — solo sobre la última versión */}
       {puedeValidar && d.esUltimaVersion ? (
-        <PanelValidacionCarga medicionId={m.id} estado={m.estado} />
+        <PanelValidacionCarga
+          medicionId={m.id}
+          estado={m.estado}
+          ventana={d.ventana}
+          objetivo={{
+            anio: m.periodoAnio,
+            codigo: ind.codigo,
+            nombre: ind.nombre,
+            oeCodigo: ind.oeCodigo,
+            aeCodigo: ind.aeCodigo,
+            dependencia: m.dependencia,
+            dependenciaId: ind.dependenciaId,
+          }}
+        />
       ) : null}
       {puedeValidar && !d.esUltimaVersion ? (
         <p className="mb-4 rounded-pj-sm border border-sem-ambar-border bg-sem-ambar-bg px-3 py-2 text-[12px] text-sem-ambar-fg">

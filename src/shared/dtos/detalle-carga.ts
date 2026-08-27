@@ -1,6 +1,7 @@
 import type { EstadoWF } from "@/domain/types";
 import type { MedicionResumenDTO } from "./indicador-ficha";
 import type { VariableDef } from "@/domain/formula";
+import type { VentanaDTO } from "./registro";
 
 /** Un evento del historial de estados, con el actor resuelto. */
 export interface EventoHistorialDTO {
@@ -29,7 +30,10 @@ export interface DetalleCargaDTO {
     aeCodigo: string | null;
     unidad: string;
     variablesDef: VariableDef[];
+    dependenciaId: number | null;
   };
+  /** Ventana de carga vigente (plazo / prórroga / cierre). */
+  ventana: VentanaDTO;
   cargadorNombre: string | null;
   /** true si no existe una versión posterior de este indicador/período. */
   esUltimaVersion: boolean;

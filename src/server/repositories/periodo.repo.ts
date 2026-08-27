@@ -9,6 +9,14 @@ import { noEncontrado } from "@/server/api/api-error";
 const g = globalThis as unknown as { __peiPeriodos?: Map<string, Periodo> };
 const memo = (g.__peiPeriodos ??= new Map<string, Periodo>());
 
+/**
+ * Limpia el memo de períodos (llamar tras editar `fechaLimiteCarga`, que sí
+ * cambia en runtime desde Administración → Plazos de carga).
+ */
+export function invalidarPeriodos(): void {
+  memo.clear();
+}
+
 /** Período anual del año dado (numero=null impide findUnique compuesto). */
 export async function periodoAnual(ctx: Ctx, anio: number): Promise<Periodo> {
   const key = `${ctx.env}:${anio}`;

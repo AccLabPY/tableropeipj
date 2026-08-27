@@ -104,10 +104,11 @@ export default function GlosarioPage() {
               <p>
                 El ciclo de una medición:{" "}
                 <b>
-                  Borrador → Enviado → (En revisión) → Aprobado / Observado /
-                  Rechazado
+                  Borrador → Enviado → (En revisión) → Aprobado / Observado
                 </b>
-                . Observado vuelve a la dependencia para corregir y reenviar.{" "}
+                . Observado vuelve a la dependencia para corregir y reenviar; el
+                rechazo se retiró del circuito en 2026 y solo subsiste en
+                mediciones históricas.{" "}
                 <b>Solo lo Aprobado alimenta los tableros oficiales.</b> Cada
                 transición queda en un historial inmutable con autor, fecha y
                 comentario.
@@ -166,6 +167,41 @@ export default function GlosarioPage() {
                 <b>corresponsables</b> y <b>fuentes</b> que participan de la
                 gestión. El alcance de carga en la plataforma corresponde a la
                 principal.
+              </p>
+            </GlosarioItem>
+
+            <GlosarioItem
+              termino="Ventana de carga"
+              ejemplo="Plazo general 28/02/2027; el indicador 4202 tiene prórroga hasta el 31/03/2027."
+            >
+              <p>
+                Período durante el cual una dependencia puede cargar y enviar el
+                avance de un indicador. Se define con el <b>plazo general del
+                ejercicio</b> y se ajusta con prórrogas o cierres por objetivo,
+                acción, indicador o dependencia. Al vencer, la carga{" "}
+                <b>se cierra automáticamente</b> para las dependencias; la DGPD
+                y la Administración siguen pudiendo operar.
+              </p>
+            </GlosarioItem>
+
+            <GlosarioItem termino="Prórroga">
+              <p>
+                Extensión del plazo otorgada por la DGPD con un alcance
+                determinado. Nunca acorta un plazo vigente (siempre gana la
+                fecha más tardía), queda registrada con autor y motivo, y
+                notifica a la dependencia alcanzada.
+              </p>
+            </GlosarioItem>
+
+            <GlosarioItem
+              termino="SLA de carga"
+              ejemplo="12 envíos, 10 en plazo (83%), atraso promedio de 4 días."
+            >
+              <p>
+                Medición de la puntualidad de cada dependencia: al enviar una
+                medición se registra si llegó dentro del plazo vigente y con
+                cuántos días de desvío. El resumen por dependencia está en{" "}
+                <b>Gobernanza → SLA de carga</b>.
               </p>
             </GlosarioItem>
 

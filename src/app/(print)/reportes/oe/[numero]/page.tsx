@@ -45,11 +45,11 @@ export default async function ReporteOEPage({
 
       <div className="mb-4 flex flex-wrap items-center gap-4 rounded-pj border border-linea px-4 py-3 print:break-inside-avoid">
         <div>
-          <div className="text-[10px] uppercase tracking-[.07em] text-muted">
+          <div className="text-[11.5px] uppercase tracking-[.07em] text-muted">
             Avance {anio}
           </div>
           <div
-            className="tnum font-serif text-[26px] leading-none"
+            className="tnum font-serif text-[30px] leading-none"
             style={{ color: SEM_COLORS[oe.semaforo] }}
           >
             {fmtPct(oe.avance)}
@@ -62,7 +62,7 @@ export default async function ReporteOEPage({
       </div>
 
       {oe.indicadorOE ? (
-        <p className="mb-4 text-[11.5px] text-muted">
+        <p className="mb-4 text-[13px] text-muted">
           Indicador declarado del objetivo (cód. {oe.indicadorOE.codigo}):{" "}
           {oe.indicadorOE.nombre} — cumplimiento{" "}
           <b>{fmtPct(oe.indicadorOE.capado)}</b>. El avance del encabezado es el
@@ -75,7 +75,7 @@ export default async function ReporteOEPage({
           <h2 className={SECCION_REPORTE}>
             {ae.codigo} — {ae.nombre}{" "}
             <span
-              className="tnum ml-2 text-[13px]"
+              className="tnum ml-2 text-[14.5px]"
               style={{ color: SEM_COLORS[ae.semaforo] }}
             >
               {fmtPct(ae.avance)}

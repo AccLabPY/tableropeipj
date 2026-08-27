@@ -66,3 +66,52 @@ export const UsuarioUpdateSchema = UsuarioCreateSchema.omit({
     password: z.string().min(8).max(72).optional().or(z.literal("")),
   });
 export type UsuarioUpdate = z.infer<typeof UsuarioUpdateSchema>;
+
+// --------------------------- Estructura del PEI -----------------------------
+/** Alta de un objetivo estratégico. */
+export const OeCreateSchema = z.object({
+  codigo: z
+    .string()
+    .trim()
+    .regex(/^OE\d{1,2}$/, "El código debe tener el formato OE1, OE2, …"),
+  nombre: z.string().trim().min(5).max(600),
+});
+
+/** Alta de una acción estratégica. */
+export const AeCreateSchema = z.object({
+  codigo: z
+    .string()
+    .trim()
+    .regex(/^A\.E\.\d{1,2}\.\d{1,2}$/, "El código debe tener el formato A.E.1.1"),
+  nombre: z.string().trim().min(5).max(600),
+  oeCodigo: z.string().trim().min(2).max(10),
+});
+
+/** Alta de un indicador (la matriz edita el resto de los atributos). */
+export const IndicadorCreateSchema = z.object({
+  codigo: z.coerce.number().int().min(1).max(9999),
+  nombre: z.string().trim().min(5).max(600),
+  /** "OE1" para indicadores de objetivo, "A.E.1.1" para los de acción. */
+  padre: z.string().trim().min(2).max(20),
+  unidad: z.enum(["PORCENTAJE", "NUMERO", "PUNTAJE", "INDICE"]),
+  sentido: z.enum(["ASC", "DESC"]),
+  formula: z.string().max(500).nullish(),
+  variables: z.string().max(1000).nullish(),
+  lineaBase: z.coerce.number().finite().nullable(),
+  dependenciaId: z.coerce.number().int().positive(),
+  metas: z
+    .array(
+      z.object({
+        anio: z.number().int().min(2026).max(2030),
+        valorMeta: z.coerce.number().finite().nullable(),
+      }),
+    )
+    .length(5),
+});
+
+/** Baja de una entidad de la estructura. */
+export const EstructuraDeleteSchema = z.object({
+  tipo: z.enum(["OE", "AE", "INDICADOR"]),
+  /** Código: "OE1" | "A.E.1.1" | "4202". */
+  codigo: z.string().trim().min(1).max(20),
+});

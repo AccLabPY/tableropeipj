@@ -5,10 +5,14 @@ import { useRouter } from "next/navigation";
 import {
   AlertTriangle,
   Bell,
+  CalendarClock,
+  CalendarPlus,
   CheckCircle2,
   Eye,
   FileWarning,
   History,
+  Lock,
+  LockOpen,
   Send,
   XCircle,
 } from "lucide-react";
@@ -31,6 +35,10 @@ const ICONO: Record<
   CARGA_RECHAZADA: { Icon: XCircle, cls: "bg-sem-rojo-bg text-sem-rojo-fg" },
   CARGA_RECTIFICADA: { Icon: History, cls: "bg-purpura-bg text-purpura" },
   INDICADOR_CRITICO: { Icon: AlertTriangle, cls: "bg-sem-rojo-bg text-sem-rojo-fg" },
+  PLAZO_PROXIMO: { Icon: CalendarClock, cls: "bg-sem-ambar-bg text-sem-ambar-fg" },
+  PRORROGA_OTORGADA: { Icon: CalendarPlus, cls: "bg-sem-verde-bg text-sem-verde-fg" },
+  CARGA_CERRADA: { Icon: Lock, cls: "bg-sem-gris-bg text-muted" },
+  CARGA_HABILITADA: { Icon: LockOpen, cls: "bg-azul-soft text-azul" },
 };
 
 /** "hace 5 min", "hace 3 h", "ayer", "12/08/2026". */

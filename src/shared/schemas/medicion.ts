@@ -40,8 +40,13 @@ export const MedicionInputSchema = z
 
 export type MedicionInput = z.infer<typeof MedicionInputSchema>;
 
+/**
+ * Resolución de la DGPD. Por decisión institucional (2026) el rechazo se
+ * retiró del circuito: una carga incorrecta se OBSERVA para su corrección.
+ * RECHAZADO subsiste en la BD solo para las mediciones históricas.
+ */
 export const ValidarInputSchema = z.object({
-  resultado: z.enum(["APROBADO", "OBSERVADO", "RECHAZADO"]),
+  resultado: z.enum(["APROBADO", "OBSERVADO"]),
   comentario: z.string().max(2000).nullish(),
 });
 export type ValidarInput = z.infer<typeof ValidarInputSchema>;

@@ -2,9 +2,17 @@ import type { TipoNotif } from "@prisma/client";
 import type { Ctx } from "@/server/db/env";
 import { prismaControl } from "@/server/db/client";
 import type { EstadoWF } from "@/domain/types";
-import { calcularCumplimiento, resolverUmbral, semaforo as clasificar } from "@/domain";
+import {
+  calcularCumplimiento,
+  resolverUmbral,
+  semaforo as clasificar,
+  umbralAviso,
+  type VentanaEfectiva,
+} from "@/domain";
 import type { MedicionCompleta } from "@/server/repositories/medicion.repo";
 import { conTTL, TTL_LARGO } from "./cache";
+import { periodoAnual } from "@/server/repositories/periodo.repo";
+import { resolutorVentanas } from "./plazos.service";
 import { catalogoIndicadores, umbralesCached } from "./estado-pei.service";
 import { num } from "./mappers";
 import type { NotificacionDTO } from "@/shared/dtos/notificaciones";
@@ -234,4 +242,116 @@ export async function marcarTodasLeidas(ctx: Ctx): Promise<void> {
     where: { usuarioId: ctx.actor.userId, leidaEn: null },
     data: { leidaEn: new Date() },
   });
+}
+
+// ---------------------------------------------------------------- plazos
+
+/**
+ * Notifica un acto administrativo sobre la ventana de carga (prórroga,
+ * cierre o habilitación) a las dependencias alcanzadas.
+ */
+export async function notificarActoDePlazo(
+  ctx: Ctx,
+  datos: {
+    tipo: Extract<
+      TipoNotif,
+      "PRORROGA_OTORGADA" | "CARGA_CERRADA" | "CARGA_HABILITADA"
+    >;
+    dependenciaIds: number[];
+    titulo: string;
+    cuerpo: string;
+    url: string;
+    indicadorId?: number | null;
+  },
+): Promise<void> {
+  const listas = await Promise.all(
+    datos.dependenciaIds.map((id) => usuariosDeDependencia(id)),
+  );
+  const destinatarios = listas.flat();
+  await crearPara(ctx, destinatarios, {
+    tipo: datos.tipo,
+    indicadorId: datos.indicadorId ?? null,
+    titulo: datos.titulo,
+    cuerpo: datos.cuerpo,
+    url: datos.url,
+  });
+}
+
+/** Throttle en memoria de la evaluación de vencimientos (1 vez por hora/entorno). */
+const g = globalThis as unknown as { __peiAvisos?: Map<string, number> };
+const ultimaCorrida = (g.__peiAvisos ??= new Map<string, number>());
+const UNA_HORA = 3_600_000;
+
+/**
+ * Emite avisos PLAZO_PROXIMO para los indicadores cuya ventana vence en ≤7 o
+ * ≤1 días y todavía no fueron enviados. Idempotente por indicador+umbral+día:
+ * se consulta si ya existe una notificación equivalente reciente.
+ * Se dispara de forma perezosa (al consultar la bandeja) con throttle horario.
+ */
+export async function emitirAvisosVencimiento(
+  ctx: Ctx,
+  anio: number,
+): Promise<void> {
+  const clave = `${ctx.env}:${anio}`;
+  const ahora = Date.now();
+  const previa = ultimaCorrida.get(clave) ?? 0;
+  if (ahora - previa < UNA_HORA) return;
+  ultimaCorrida.set(clave, ahora);
+
+  try {
+    const periodo = await periodoAnual(ctx, anio);
+    const [indicadores, ventanaDe] = await Promise.all([
+      catalogoIndicadores(ctx),
+      resolutorVentanas(ctx, anio),
+    ]);
+    // Indicadores que ya salieron de la dependencia (no hace falta avisar).
+    const yaEnviados = await ctx.db.medicion.findMany({
+      where: {
+        periodoId: periodo.id,
+        estado: { in: ["ENVIADO", "EN_REVISION", "APROBADO", "RECTIFICADO"] },
+      },
+      select: { indicadorId: true },
+    });
+    const resueltos = new Set(yaEnviados.map((m) => m.indicadorId));
+    const desdeAyer = new Date(ahora - 20 * UNA_HORA);
+
+    for (const ind of indicadores) {
+      if (resueltos.has(ind.id)) continue;
+      const v: VentanaEfectiva = ventanaDe(ind);
+      const umbral = umbralAviso(v);
+      if (umbral === null) continue;
+
+      const principal =
+        ind.responsables.find((r) => r.rol === "PRINCIPAL") ?? ind.responsables[0];
+      if (!principal) continue;
+
+      const titulo =
+        umbral === 1
+          ? `Vence hoy el plazo de carga del indicador ${ind.codigo}`
+          : `Faltan ${v.diasRestantes} días para el cierre de carga del indicador ${ind.codigo}`;
+
+      // Idempotencia: ¿ya se avisó lo mismo en las últimas 20 horas?
+      const existe = await ctx.db.notificacion.findFirst({
+        where: {
+          tipo: "PLAZO_PROXIMO",
+          indicadorId: ind.id,
+          titulo,
+          creadaEn: { gte: desdeAyer },
+        },
+        select: { id: true },
+      });
+      if (existe) continue;
+
+      const destinatarios = await usuariosDeDependencia(principal.dependenciaId);
+      await crearPara(ctx, destinatarios, {
+        tipo: "PLAZO_PROXIMO",
+        indicadorId: ind.id,
+        titulo,
+        cuerpo: `${ind.nombre} · ejercicio ${anio}. Cargue y envíe el avance antes del cierre; luego necesitará una prórroga de la DGPD.`,
+        url: `/registro/indicador/${ind.codigo}?anio=${anio}`,
+      });
+    }
+  } catch (e) {
+    console.error("[notificaciones] avisos de vencimiento:", e);
+  }
 }

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { requirePage } from "@/server/auth/guards";
 import { getCtx } from "@/server/db/env";
 import { estadoPEI } from "@/server/services/estado-cache";
+import { slaPorDependencia } from "@/server/services/sla.service";
 import { AnioQuery } from "@/shared/schemas/query";
 import { PageHeader } from "@/ui/components/page-header";
 import { Card, CardBody, CardHeader, Tag } from "@/ui/components/card";
@@ -28,7 +29,10 @@ export default async function GobernanzaPage({
   const actor = await requirePage();
   const ctx = await getCtx(actor);
   const anio = AnioQuery.parse(searchParams.anio);
-  const estado = await estadoPEI(ctx, anio);
+  const [estado, sla] = await Promise.all([
+    estadoPEI(ctx, anio),
+    slaPorDependencia(ctx, anio),
+  ]);
 
   const reportables = estado.indicadores.filter(
     (i) => i.meta !== null && !i.metaConcluida,
@@ -130,6 +134,90 @@ export default async function GobernanzaPage({
             <b>{fmtPct(estado.cobertura.fraccion)}</b> (
             {estado.cobertura.aprobadas}/{estado.cobertura.esperadas}).
           </p>
+        </CardBody>
+      </Card>
+
+      {/* SLA de carga: puntualidad de las dependencias frente al plazo */}
+      <Card className="mb-4">
+        <CardHeader
+          title="SLA de carga por dependencia"
+          meta={`${sla.reduce((n, s) => n + s.envios, 0)} envíos registrados`}
+        />
+        <CardBody className="p-0">
+          {sla.length === 0 ? (
+            <p className="px-4 py-6 text-center text-[12.5px] text-muted">
+              Todavía no hay envíos registrados para medir la puntualidad del
+              ejercicio {anio}.
+            </p>
+          ) : (
+            <DataTable
+              celdaClassName="px-4 py-2"
+              columnas={[
+                {
+                  key: "dependencia",
+                  header: "Dependencia",
+                  movil: "titulo",
+                  cell: (f) => f.dependencia,
+                },
+                {
+                  key: "envios",
+                  header: "Envíos",
+                  align: "right",
+                  tnum: true,
+                  cell: (f) => f.envios,
+                },
+                {
+                  key: "puntualidad",
+                  header: "En plazo",
+                  align: "right",
+                  tnum: true,
+                  movil: "insignia",
+                  cell: (f) => (
+                    <span
+                      className={
+                        f.puntualidad === null
+                          ? "text-muted"
+                          : f.puntualidad >= 0.9
+                            ? "font-semibold text-sem-verde-fg"
+                            : f.puntualidad >= 0.7
+                              ? "font-semibold text-sem-ambar-fg"
+                              : "font-semibold text-sem-rojo-fg"
+                      }
+                    >
+                      {f.puntualidad === null ? "—" : fmtPct(f.puntualidad)}
+                    </span>
+                  ),
+                },
+                {
+                  key: "fuera",
+                  header: "Fuera de plazo",
+                  align: "right",
+                  tnum: true,
+                  cell: (f) => f.fueraDePlazo,
+                },
+                {
+                  key: "atraso",
+                  header: "Atraso prom.",
+                  align: "right",
+                  tnum: true,
+                  tdClassName: "text-[12px] text-muted",
+                  cell: (f) =>
+                    f.atrasoPromedio === null ? "—" : `${f.atrasoPromedio} d`,
+                },
+                {
+                  key: "prorroga",
+                  header: "Con prórroga",
+                  align: "right",
+                  tnum: true,
+                  tdClassName: "text-[12px] text-muted",
+                  cell: (f) => f.conProrroga,
+                },
+              ]}
+              filas={sla}
+              keyFila={(f) => f.dependenciaId}
+              vacio="Sin envíos registrados."
+            />
+          )}
         </CardBody>
       </Card>
 

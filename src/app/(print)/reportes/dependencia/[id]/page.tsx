@@ -52,12 +52,12 @@ export default async function ReporteDependenciaPage({
 
       <div className="mb-4 flex flex-wrap gap-3">
         <div className="rounded-pj border border-linea px-4 py-2 print:break-inside-avoid">
-          <div className="text-[9.5px] uppercase tracking-[.07em] text-muted">
+          <div className="text-[11px] uppercase tracking-[.07em] text-muted">
             Cobertura de reporte del período
           </div>
-          <div className="tnum mt-1 font-serif text-[22px] leading-none">
+          <div className="tnum mt-1 font-serif text-[26px] leading-none">
             {aprobadas}/{reportables.length}{" "}
-            <span className="text-[13px] text-muted">
+            <span className="text-[14.5px] text-muted">
               (
               {fmtPct(
                 reportables.length > 0 ? aprobadas / reportables.length : 0,
@@ -112,7 +112,7 @@ export default async function ReporteDependenciaPage({
         </tbody>
       </table>
 
-      <p className="mt-3 text-[10.5px] text-muted">
+      <p className="mt-3 text-[12px] text-muted">
         Se listan los indicadores cuya dependencia principal es {nombre}. Las
         corresponsabilidades no se incluyen en este reporte.
       </p>

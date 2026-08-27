@@ -13,6 +13,7 @@ import { ProgressBar } from "@/ui/components/progress";
 import { SemPill } from "@/ui/components/sem-pill";
 import { LazyDonutSemaforo } from "@/ui/charts/lazy";
 import { SEM_COLORS } from "@/ui/theme/tokens";
+import { BarraPresupuesto } from "@/ui/features/reportes/barra-presupuesto";
 import { fmtPct, fmtValor } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Reporte ejecutivo" };
@@ -26,7 +27,10 @@ export default async function ReporteEjecutivoPage({
   const actor = await requirePage();
   const ctx = await getCtx(actor);
   const anio = AnioQuery.parse(searchParams.anio);
-  const estado = await estadoPEI(ctx, anio);
+  const [estado, presupuesto] = await Promise.all([
+    estadoPEI(ctx, anio),
+    ctx.db.presupuestoEjercicio.findUnique({ where: { anio } }),
+  ]);
 
   const atencion = estado.indicadores
     .filter((i) => i.capado !== null)
@@ -74,17 +78,17 @@ export default async function ReporteEjecutivoPage({
               key={oe.codigo}
               className="grid grid-cols-[44px_1fr_48px] items-center gap-3 border-b border-linea-2 py-[8px] last:border-b-0 print:break-inside-avoid"
             >
-              <div className="font-serif text-[13px] font-semibold text-azul-d">
+              <div className="font-serif text-[14.5px] font-semibold text-azul-d">
                 {oe.codigo}
               </div>
               <div className="min-w-0">
-                <div className="text-[11.5px] leading-[1.3]">{oe.nombre}</div>
+                <div className="text-[13px] leading-[1.3]">{oe.nombre}</div>
                 <div className="mt-[5px]">
                   <ProgressBar frac={oe.avance} sem={oe.semaforo} />
                 </div>
               </div>
               <div
-                className="tnum text-right text-[13px] font-semibold"
+                className="tnum text-right text-[14.5px] font-semibold"
                 style={{ color: SEM_COLORS[oe.semaforo] }}
               >
                 {fmtPct(oe.avance)}
@@ -95,7 +99,7 @@ export default async function ReporteEjecutivoPage({
         <div className="print:break-inside-avoid">
           <h2 className={SECCION_REPORTE}>Distribución del semáforo</h2>
           <LazyDonutSemaforo distribucion={estado.distribucion} fijo />
-          <ul className="mt-1 space-y-[3px] text-[11px] text-muted">
+          <ul className="mt-1 space-y-[3px] text-[12.5px] text-muted">
             {(["VERDE", "AMARILLO", "ROJO", "GRIS"] as const).map((s) => (
               <li key={s} className="flex items-center gap-[6px]">
                 <span
@@ -168,6 +172,22 @@ export default async function ReporteEjecutivoPage({
         </tbody>
       </table>
 
+      <h2 className={SECCION_REPORTE}>Ejecución presupuestaria {anio}</h2>
+      {presupuesto ? (
+        <BarraPresupuesto
+          anio={anio}
+          asignado={Number(presupuesto.asignado)}
+          ejecutado={Number(presupuesto.ejecutado)}
+        />
+      ) : (
+        <p className="text-[13px] text-muted">
+          Sin datos de ejecución presupuestaria cargados para el ejercicio
+          {" "}
+          {anio}. La Administración puede registrarlos en Administración →
+          Ejecución presupuestaria.
+        </p>
+      )}
+
       <PieReporte />
     </article>
   );
@@ -184,11 +204,11 @@ function Kpi({
 }) {
   return (
     <div className="rounded-pj border border-linea px-3 py-2 print:break-inside-avoid">
-      <div className="text-[9.5px] uppercase tracking-[.07em] text-muted">
+      <div className="text-[11px] uppercase tracking-[.07em] text-muted">
         {etiqueta}
       </div>
       <div
-        className="tnum mt-1 font-serif text-[22px] leading-none"
+        className="tnum mt-1 font-serif text-[26px] leading-none"
         style={color ? { color } : undefined}
       >
         {valor}

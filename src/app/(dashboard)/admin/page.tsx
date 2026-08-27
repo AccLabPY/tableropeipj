@@ -33,8 +33,23 @@ export default async function AdminPage() {
       titulo: "Escalas de criticidad",
       desc: `Umbrales del semáforo con herencia Global → OE → AE → Indicador (${nUmbrales} configuradas).`,
     },
+    {
+      href: "/admin/plazos",
+      titulo: "Plazos de carga",
+      desc: "Fecha límite del ejercicio, habilitación y cierre de la carga, y prórrogas por indicador o dependencia.",
+    },
     ...(esAdmin
       ? [
+          {
+            href: "/admin/estructura",
+            titulo: "Estructura del PEI",
+            desc: "Alta y baja de objetivos estratégicos, acciones e indicadores de la matriz.",
+          },
+          {
+            href: "/admin/presupuesto",
+            titulo: "Ejecución presupuestaria",
+            desc: "Presupuesto asignado y ejecutado del ejercicio para el Reporte ejecutivo.",
+          },
           {
             href: "/admin/usuarios",
             titulo: "Usuarios y accesos",

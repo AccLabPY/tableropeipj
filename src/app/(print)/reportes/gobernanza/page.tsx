@@ -87,7 +87,7 @@ export default async function ReporteGobernanzaPage({
               className="min-w-[92px] rounded-pj border border-linea px-3 py-2 print:break-inside-avoid"
             >
               <span
-                className={`inline-block rounded-chip px-2 py-[2px] text-[10px] font-semibold ${w.cls}`}
+                className={`inline-block rounded-chip px-2 py-[2px] text-[11.5px] font-semibold ${w.cls}`}
               >
                 {w.label}
               </span>
@@ -98,7 +98,7 @@ export default async function ReporteGobernanzaPage({
           );
         })}
       </div>
-      <p className="mt-2 text-[11px] text-muted">
+      <p className="mt-2 text-[12.5px] text-muted">
         Cobertura global del período: <b>{fmtPct(estado.cobertura.fraccion)}</b>{" "}
         ({estado.cobertura.aprobadas}/{estado.cobertura.esperadas} mediciones
         aprobadas). Solo lo aprobado alimenta los tableros oficiales.
@@ -137,11 +137,11 @@ export default async function ReporteGobernanzaPage({
       <h2 className={SECCION_REPORTE}>Calidad del dato</h2>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="print:break-inside-avoid">
-          <h3 className="mb-1 text-[11px] font-semibold uppercase tracking-[.05em] text-muted">
+          <h3 className="mb-1 text-[12.5px] font-semibold uppercase tracking-[.05em] text-muted">
             Requieren diagnóstico previo (
             {estado.indicadores.filter((i) => i.requiereDiagnostico).length})
           </h3>
-          <p className="tnum text-[11.5px] text-muted">
+          <p className="tnum text-[13px] text-muted">
             {estado.indicadores
               .filter((i) => i.requiereDiagnostico)
               .map((i) => i.codigo)
@@ -149,11 +149,11 @@ export default async function ReporteGobernanzaPage({
           </p>
         </div>
         <div className="print:break-inside-avoid">
-          <h3 className="mb-1 text-[11px] font-semibold uppercase tracking-[.05em] text-muted">
+          <h3 className="mb-1 text-[12.5px] font-semibold uppercase tracking-[.05em] text-muted">
             Línea base pendiente (
             {estado.indicadores.filter((i) => i.basePendiente).length})
           </h3>
-          <p className="tnum text-[11.5px] text-muted">
+          <p className="tnum text-[13px] text-muted">
             {estado.indicadores
               .filter((i) => i.basePendiente)
               .map((i) => `${i.codigo} — ${i.nombre}`)

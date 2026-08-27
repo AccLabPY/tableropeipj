@@ -52,11 +52,11 @@ export default async function ReporteAEPage({
 
       <div className="mb-4 flex flex-wrap items-center gap-4 rounded-pj border border-linea px-4 py-3 print:break-inside-avoid">
         <div>
-          <div className="text-[10px] uppercase tracking-[.07em] text-muted">
+          <div className="text-[11.5px] uppercase tracking-[.07em] text-muted">
             Avance {anio}
           </div>
           <div
-            className="tnum font-serif text-[26px] leading-none"
+            className="tnum font-serif text-[30px] leading-none"
             style={{ color: SEM_COLORS[ae.semaforo] }}
           >
             {fmtPct(ae.avance)}

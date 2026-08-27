@@ -424,6 +424,10 @@ enum TipoNotif {
   CARGA_RECHAZADA
   CARGA_RECTIFICADA
   INDICADOR_CRITICO
+  PLAZO_PROXIMO
+  PRORROGA_OTORGADA
+  CARGA_CERRADA
+  CARGA_HABILITADA
 }
 
 model Notificacion {
@@ -443,4 +447,65 @@ model Notificacion {
 
   @@index([usuarioId, leidaEn])
   @@index([usuarioId, creadaEn])
+}
+
+// --------------- Ventanas de carga (plazos, prórrogas, cierres) -------------
+enum ScopeVentana {
+  GLOBAL
+  OE
+  AE
+  INDICADOR
+  DEPENDENCIA
+}
+
+enum TipoVentana {
+  PLAZO // fecha límite fijada por la DGPD/Admin
+  PRORROGA // extensión otorgada por la DGPD
+  APERTURA // habilitación manual (reabre la carga)
+  CIERRE // cierre manual (bloquea la carga)
+}
+
+model VentanaCarga {
+  // Append-only: cada fila es un acto administrativo sobre el plazo de carga.
+  // La ventana efectiva de un indicador se resuelve combinando las filas
+  // aplicables por scope (ver src/domain/plazos.ts).
+  id          Int          @id @default(autoincrement())
+  periodoId   Int
+  scope       ScopeVentana
+  entidad     String // "GLOBAL" | "OE1" | "A.E.1.1" | "4202" | id de dependencia
+  tipo        TipoVentana
+  fechaLimite DateTime? // PLAZO / PRORROGA
+  motivo      String?      @db.Text
+  usuarioId   Int?
+  creadoEn    DateTime     @default(now())
+
+  @@index([periodoId, scope, entidad])
+  @@index([periodoId, tipo])
+}
+
+model SlaCarga {
+  // Una fila por ENVÍO a validación: mide la puntualidad de la dependencia.
+  id            Int       @id @default(autoincrement())
+  medicionId    BigInt
+  indicadorId   Int
+  dependenciaId Int
+  periodoId     Int
+  fechaLimite   DateTime?
+  fechaEnvio    DateTime  @default(now())
+  /// Negativo = anticipado; positivo = atraso (días).
+  diasDesvio    Int?
+  enPlazo       Boolean   @default(true)
+  conProrroga   Boolean   @default(false)
+
+  @@index([periodoId, dependenciaId])
+  @@index([medicionId])
+}
+
+model PresupuestoEjercicio {
+  // Ejecución presupuestaria institucional del ejercicio (Reporte Ejecutivo).
+  anio          Int      @id
+  asignado      Decimal  @db.Decimal(20, 2)
+  ejecutado     Decimal  @db.Decimal(20, 2)
+  actualizadoEn DateTime @updatedAt
+  usuarioId     Int?
 }
