@@ -25,7 +25,9 @@ export function AppBarAgentes({
               Agentes PEI
             </div>
             <div className="truncate text-[9.5px] font-medium uppercase tracking-[.14em] text-white/80 sm:text-[10px]">
-              Poder Judicial del Paraguay
+              {/* En móvil el nombre completo se cortaba: sigla institucional. */}
+              <span className="sm:hidden">PJ · CSJ</span>
+              <span className="hidden sm:inline">Poder Judicial del Paraguay</span>
             </div>
           </div>
         </div>

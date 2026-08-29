@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ClipboardEdit } from "lucide-react";
+import { ClipboardEdit, FileSpreadsheet } from "lucide-react";
 import { requirePage } from "@/server/auth/guards";
 import { getCtx } from "@/server/db/env";
 import { fichaIndicador } from "@/server/services/indicador-ficha.service";
@@ -12,6 +12,7 @@ import { DataTable } from "@/ui/components/data-table";
 import { SemPill } from "@/ui/components/sem-pill";
 import { BackButton } from "@/ui/components/back-button";
 import { LinkExportar } from "@/ui/features/reportes/link-exportar";
+import { BarraAcciones } from "@/ui/components/barra-acciones";
 import { LazySerieIndicador } from "@/ui/charts/lazy";
 import { SEM_COLORS } from "@/ui/theme/tokens";
 import { fmtFechaCorta, fmtNum, fmtPct, fmtValor } from "@/lib/utils";
@@ -64,29 +65,34 @@ export default async function DetalleIndicadorPage({
 
   return (
     <section>
-      <div className="flex flex-wrap items-center justify-between gap-2">
+      {/* Acciones: volver a la izquierda; exportaciones secundarias y la
+          acción primaria (Reportar avance) a la derecha, en una sola línea. */}
+      <div className="flex items-center justify-between gap-3">
         <BackButton />
-        <div className="flex flex-wrap items-center gap-2">
+        <BarraAcciones>
           <LinkExportar
             href={`/reportes/indicador/${est.codigo}?anio=${anio}`}
-            etiqueta="Exportar ficha PDF"
+            etiqueta="Ficha PDF"
+            etiquetaLarga="Exportar ficha PDF"
           />
           <a
             href={`/api/v1/reportes/indicador/${est.codigo}?anio=${anio}`}
-            className="inline-flex items-center gap-[6px] whitespace-nowrap rounded-pj border border-linea bg-superficie px-3 py-[6px] text-[11.5px] font-semibold text-tinta hover:bg-hover"
+            title="Exportar la ficha en Excel"
+            className="inline-flex flex-none items-center gap-[6px] whitespace-nowrap rounded-pj border border-linea bg-superficie px-3 py-[6px] text-[11.5px] font-semibold text-tinta hover:bg-hover agentes:rounded-chip"
           >
-            Exportar Excel
+            <FileSpreadsheet className="h-3.5 w-3.5 text-sem-verde-fg" />
+            Excel
           </a>
           {puedeCargar ? (
             <Link
               href={`/registro/indicador/${est.codigo}?anio=${anio}`}
-              className="inline-flex items-center gap-[6px] whitespace-nowrap rounded-pj border border-azul-d bg-azul px-3 py-[6px] text-[11.5px] font-semibold text-white shadow-sm hover:bg-azul-d agentes:rounded-chip agentes:border-transparent agentes:bg-accion agentes:hover:brightness-105"
+              className="inline-flex flex-none items-center gap-[6px] whitespace-nowrap rounded-pj border border-azul-d bg-azul px-3 py-[6px] text-[11.5px] font-semibold text-white shadow-sm hover:bg-azul-d agentes:rounded-chip agentes:border-transparent agentes:bg-accion agentes:hover:brightness-105"
             >
               <ClipboardEdit className="h-3.5 w-3.5" />
               Reportar avance
             </Link>
           ) : null}
-        </div>
+        </BarraAcciones>
       </div>
       <div className="my-[14px] flex flex-wrap items-start justify-between gap-x-8 gap-y-4">
         <div className="min-w-0 flex-1 basis-full sm:basis-[420px]">

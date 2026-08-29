@@ -45,10 +45,10 @@ export default async function EjecutivoPage({
         title="Tablero ejecutivo"
         subtitle={`Cumplimiento de metas · ejercicio ${anio} · 6 objetivos · ${estado.indicadores.length} indicadores`}
         right={
-          <div className="flex flex-wrap items-center gap-2">
+          <>
             <LinkExportar href={`/reportes/ejecutivo?anio=${anio}`} />
             <AnioSelector anio={anio} />
-          </div>
+          </>
         }
       />
 

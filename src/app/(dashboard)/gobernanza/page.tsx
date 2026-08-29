@@ -94,10 +94,10 @@ export default async function GobernanzaPage({
         title="Gobernanza del dato"
         subtitle={`Cobertura, flujo de validación y calidad · ejercicio ${anio} · ${reportables.length} indicadores reportables`}
         right={
-          <div className="flex flex-wrap items-center gap-2">
+          <>
             <LinkExportar href={`/reportes/gobernanza?anio=${anio}`} />
             <AnioSelector anio={anio} />
-          </div>
+          </>
         }
       />
 

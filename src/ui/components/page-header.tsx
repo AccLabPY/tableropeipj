@@ -35,7 +35,7 @@ export function PageHeader({
           ) : null}
         </div>
         {right ? (
-          <div className="relative w-full agentes:[&_label]:text-white/90 sm:w-auto">
+          <div className="relative flex w-full flex-wrap items-center justify-end gap-2 agentes:[&_label]:text-white/90 sm:w-auto">
             {right}
           </div>
         ) : null}

@@ -46,10 +46,13 @@ export function AppBar({
           <Crest />
           <div className="min-w-0 leading-[1.1]">
             <div className="truncate font-serif text-[13.5px] tracking-wide sm:text-[15px]">
-              Poder Judicial del Paraguay
+              {/* En móvil el nombre completo se cortaba: sigla institucional. */}
+              <span className="sm:hidden">PJ · CSJ</span>
+              <span className="hidden sm:inline">Poder Judicial del Paraguay</span>
             </div>
             <div className="truncate text-[9.5px] uppercase tracking-[.16em] text-on-marca sm:text-[10.5px]">
-              Corte Suprema de Justicia
+              <span className="sm:hidden">PEI 2026–2030</span>
+              <span className="hidden sm:inline">Corte Suprema de Justicia</span>
             </div>
           </div>
         </div>
