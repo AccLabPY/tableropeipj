@@ -65,9 +65,9 @@ export default async function DetalleCargaPage({
         <BackButton />
         <Link
           href={`/indicadores/${ind.codigo}?anio=${m.periodoAnio}`}
-          className="inline-flex items-center gap-[6px] rounded-pj border border-linea bg-superficie px-3 py-[6px] text-[11.5px] font-semibold text-tinta hover:bg-hover agentes:rounded-chip"
+          className="tap inline-flex h-[34px] flex-none items-center gap-[6px] whitespace-nowrap rounded-pj border border-linea bg-superficie px-3 text-[12px] font-semibold text-tinta hover:border-azul-line hover:bg-hover agentes:rounded-chip"
         >
-          Ver ficha del indicador
+          Ficha
           <ExternalLink className="h-3.5 w-3.5" />
         </Link>
       </div>

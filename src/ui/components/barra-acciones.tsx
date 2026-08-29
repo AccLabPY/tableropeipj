@@ -15,7 +15,7 @@ export function BarraAcciones({
   return (
     <div
       className={cn(
-        "scroll-pj -mx-1 flex max-w-full items-center justify-end gap-2 overflow-x-auto px-1 py-[2px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+        "scroll-pj -mx-1 flex min-w-0 max-w-full items-center justify-end gap-2 overflow-x-auto px-1 py-[2px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
         className,
       )}
     >

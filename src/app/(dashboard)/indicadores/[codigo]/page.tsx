@@ -72,24 +72,23 @@ export default async function DetalleIndicadorPage({
         <BarraAcciones>
           <LinkExportar
             href={`/reportes/indicador/${est.codigo}?anio=${anio}`}
-            etiqueta="Ficha PDF"
-            etiquetaLarga="Exportar ficha PDF"
+            titulo="Abrir la ficha imprimible del indicador"
           />
           <a
             href={`/api/v1/reportes/indicador/${est.codigo}?anio=${anio}`}
-            title="Exportar la ficha en Excel"
-            className="inline-flex flex-none items-center gap-[6px] whitespace-nowrap rounded-pj border border-linea bg-superficie px-3 py-[6px] text-[11.5px] font-semibold text-tinta hover:bg-hover agentes:rounded-chip"
+            title="Descargar la ficha en Excel"
+            className="tap inline-flex h-[34px] flex-none items-center gap-[6px] whitespace-nowrap rounded-pj border border-linea bg-superficie px-3 text-[12px] font-semibold text-tinta hover:border-azul-line hover:bg-hover agentes:rounded-chip"
           >
-            <FileSpreadsheet className="h-3.5 w-3.5 text-sem-verde-fg" />
+            <FileSpreadsheet className="h-[15px] w-[15px] text-sem-verde-fg" />
             Excel
           </a>
           {puedeCargar ? (
             <Link
               href={`/registro/indicador/${est.codigo}?anio=${anio}`}
-              className="inline-flex flex-none items-center gap-[6px] whitespace-nowrap rounded-pj border border-azul-d bg-azul px-3 py-[6px] text-[11.5px] font-semibold text-white shadow-sm hover:bg-azul-d agentes:rounded-chip agentes:border-transparent agentes:bg-accion agentes:hover:brightness-105"
+              className="tap inline-flex h-[34px] flex-none items-center gap-[6px] whitespace-nowrap rounded-pj border border-azul-d bg-azul px-3 text-[12px] font-semibold text-white shadow-sm hover:bg-azul-d agentes:rounded-chip agentes:border-transparent agentes:bg-accion agentes:hover:brightness-105"
             >
-              <ClipboardEdit className="h-3.5 w-3.5" />
-              Reportar avance
+              <ClipboardEdit className="h-[15px] w-[15px]" />
+              Reportar
             </Link>
           ) : null}
         </BarraAcciones>

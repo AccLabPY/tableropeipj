@@ -42,19 +42,19 @@ export default async function RegistroIndicadorPage({
 
   return (
     <section>
-      <div className="flex flex-wrap items-center justify-between gap-2">
+      <div className="flex items-center justify-between gap-3">
         <Link
           href={`/registro?anio=${anio}`}
-          className="tap inline-flex items-center gap-[7px] rounded-pj border border-linea bg-superficie px-[13px] py-[7px] text-[12.5px] font-semibold hover:border-azul-line hover:bg-hover agentes:rounded-chip"
+          className="tap inline-flex h-[34px] flex-none items-center gap-[7px] whitespace-nowrap rounded-pj border border-linea bg-superficie px-[13px] text-[12px] font-semibold hover:border-azul-line hover:bg-hover agentes:rounded-chip"
         >
           <ArrowLeft className="h-4 w-4" />
-          Todos los indicadores
+          Indicadores
         </Link>
         <Link
           href={`/indicadores/${item.codigo}?anio=${anio}`}
-          className="inline-flex items-center gap-[6px] rounded-pj border border-linea bg-superficie px-3 py-[6px] text-[11.5px] font-semibold text-tinta hover:bg-hover agentes:rounded-chip"
+          className="tap inline-flex h-[34px] flex-none items-center gap-[6px] whitespace-nowrap rounded-pj border border-linea bg-superficie px-3 text-[12px] font-semibold text-tinta hover:border-azul-line hover:bg-hover agentes:rounded-chip"
         >
-          Ver ficha del indicador
+          Ficha
           <ExternalLink className="h-3.5 w-3.5" />
         </Link>
       </div>
