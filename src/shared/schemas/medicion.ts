@@ -13,7 +13,7 @@ export const MedicionInputSchema = z
         z.coerce.number().finite(),
       )
       .nullish(),
-    nivelEscala: z.coerce.number().int().min(1).max(10).nullish(),
+    nivelEscala: z.coerce.number().int().min(0).max(10).nullish(),
     // Compatibilidad con la API v1 previa:
     numerador: z.coerce.number().finite().nullish(),
     denominador: z.coerce.number().finite().nullish(),

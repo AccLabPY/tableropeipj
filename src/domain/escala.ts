@@ -34,3 +34,23 @@ export function nivelDePct(
   }
   return ordenada.length ? ordenada[ordenada.length - 1] : null;
 }
+
+/**
+ * Nivel ALCANZADO para un % editable (convención 2026): el mayor nivel cuyo
+ * pctMax es ≤ al porcentaje reportado. Un 35% con niveles al 20/40/60/80/100
+ * alcanza el nivel 1 (superó su cota) y está en camino al nivel 2.
+ * El nivel 0 "Preparativos" (pctMax 0) absorbe todo avance previo al primer
+ * umbral. Devuelve null si no hay escala o el % es null.
+ */
+export function nivelAlcanzado(
+  escala: NivelEscala[],
+  pct: number | null,
+): NivelEscala | null {
+  if (pct === null || escala.length === 0) return null;
+  const ordenada = [...escala].sort((a, b) => a.nivel - b.nivel);
+  let alcanzado: NivelEscala | null = null;
+  for (const n of ordenada) {
+    if (n.pctMax <= pct) alcanzado = n;
+  }
+  return alcanzado;
+}

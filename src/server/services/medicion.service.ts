@@ -5,6 +5,7 @@ import {
   ESTADOS_EDITABLES,
   calcularValorObservado,
   clasificarFormula,
+  nivelAlcanzado,
   validarTransicion,
   variablesRequeridas,
   pctDeNivel,
@@ -134,17 +135,39 @@ async function derivarValor(
   ctx: Ctx,
   ind: IndicadorCompleto,
   input: MedicionInput,
-): Promise<{ valor: number; valores: Record<string, number> | null }> {
-  // 1) Escala: el nivel manda.
+): Promise<{
+  valor: number;
+  valores: Record<string, number> | null;
+  /** Nivel de escala a persistir (derivado del % o informado). */
+  nivel: number | null;
+}> {
+  const escala = ind.escala.map((e) => ({
+    nivel: e.nivel,
+    pctMin: num(e.pctMin)!,
+    pctMax: num(e.pctMax)!,
+  }));
+
+  // 1a) Escala con % editable (2026): el porcentaje manda y el nivel se
+  //     deriva automáticamente (mayor nivel cuya cota se alcanzó).
+  if (ind.esEscala && input.valorObservado != null) {
+    const pct = input.valorObservado;
+    if (pct < 0 || pct > 100) {
+      throw new ApiError(
+        422,
+        "PORCENTAJE_INVALIDO",
+        "El avance de un indicador de escala se reporta como porcentaje entre 0 y 100.",
+      );
+    }
+    return {
+      valor: pct,
+      valores: null,
+      nivel: nivelAlcanzado(escala, pct)?.nivel ?? null,
+    };
+  }
+
+  // 1b) Escala por nivel (compatibilidad con la API previa): el nivel manda.
   if (input.nivelEscala != null) {
-    const pct = pctDeNivel(
-      ind.escala.map((e) => ({
-        nivel: e.nivel,
-        pctMin: num(e.pctMin)!,
-        pctMax: num(e.pctMax)!,
-      })),
-      input.nivelEscala,
-    );
+    const pct = pctDeNivel(escala, input.nivelEscala);
     if (pct === null) {
       throw new ApiError(
         422,
@@ -152,7 +175,7 @@ async function derivarValor(
         "El nivel reportado no existe en la escala del indicador.",
       );
     }
-    return { valor: pct, valores: null };
+    return { valor: pct, valores: null, nivel: input.nivelEscala };
   }
 
   const tipo = clasificarFormula(ind.formula, ind.esEscala);
@@ -180,7 +203,7 @@ async function derivarValor(
     for (const clave of variablesRequeridas(tipo)) {
       valores[clave] = input.valores[clave]!;
     }
-    return { valor: r.valor, valores };
+    return { valor: r.valor, valores, nivel: null };
   }
 
   // 3) Compatibilidad con la API previa.
@@ -195,6 +218,7 @@ async function derivarValor(
     return {
       valor: r.valor,
       valores: { a: input.numerador, b: input.denominador },
+      nivel: null,
     };
   }
   if (input.valorObservado != null) {
@@ -202,6 +226,7 @@ async function derivarValor(
       valor: input.valorObservado,
       valores:
         tipo === "VALOR_DIRECTO" ? { valor: input.valorObservado } : null,
+      nivel: null,
     };
   }
   throw new ApiError(422, "VALOR_FALTANTE", "No se pudo derivar el valor observado.");
@@ -225,7 +250,7 @@ export async function guardarBorrador(
   await exigirCargaHabilitada(ctx, ind, input.anio);
 
   const periodo = await periodoAnual(ctx, input.anio);
-  const { valor, valores } = await derivarValor(ctx, ind, input);
+  const { valor, valores, nivel } = await derivarValor(ctx, ind, input);
 
   const existentes = await ctx.db.medicion.findMany({
     where: { indicadorId: ind.id, periodoId: periodo.id },
@@ -242,7 +267,7 @@ export async function guardarBorrador(
   const datos = {
     numerador: numerador != null ? D(numerador) : null,
     denominador: denominador != null ? D(denominador) : null,
-    nivelEscala: input.nivelEscala ?? null,
+    nivelEscala: nivel,
     valoresVariables: valores ?? Prisma.JsonNull,
     valorObservado: D(valor),
     fuente: input.fuente ?? null,
@@ -403,13 +428,24 @@ export async function agregarEvidencia(
   await ctx.db.evidencia.create({
     data: {
       medicionId: m.id,
-      nombreArchivo: input.nombreArchivo,
+      nombreArchivo: repararNombreArchivo(input.nombreArchivo),
       tipo: input.tipo ?? null,
       rutaOUrl: input.rutaOUrl,
       hashSha256: input.hashSha256 ?? null,
       usuarioId: ctx.actor.userId,
     },
   });
+}
+
+/**
+ * Repara nombres de archivo con mojibake (bytes UTF-8 decodificados como
+ * Latin-1 en el multipart: "aceptaciÃ³n" → "aceptación"). Solo actúa si el
+ * patrón es inequívoco y la reparación produce texto válido.
+ */
+export function repararNombreArchivo(nombre: string): string {
+  if (!/[ÃÂ][\u0080-\u00BF]/.test(nombre)) return nombre;
+  const reparado = Buffer.from(nombre, "latin1").toString("utf8");
+  return reparado.includes("\uFFFD") ? nombre : reparado;
 }
 
 const EVIDENCIA_TAMANIO_MAXIMO = 25 * 1024 * 1024; // 25MB
@@ -458,7 +494,7 @@ export async function agregarEvidenciaArchivo(
   await ctx.db.evidencia.create({
     data: {
       medicionId: m.id,
-      nombreArchivo: archivo.nombreArchivo,
+      nombreArchivo: repararNombreArchivo(archivo.nombreArchivo),
       rutaOUrl: null,
       contenido: archivo.contenido,
       mimeType: archivo.mimeType,

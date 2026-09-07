@@ -117,14 +117,15 @@ export default function GlosarioPage() {
 
             <GlosarioItem
               termino="Escala de avance"
-              ejemplo="«Nivel 2 — Banco de Proyectos aprobado formalmente (40%)»: al reportar el nivel 2, el valor del período es 40%."
+              ejemplo="Se reporta 35%: superó la cota del nivel 1 (20%) sin llegar a la del nivel 2 (40%) ⇒ nivel alcanzado 1."
             >
               <p>
-                En 31 indicadores cualitativos, el avance se reporta eligiendo
-                el <b>nivel alcanzado</b> en una escala definida en la ficha
-                (planificación → inicial → intermedio → avanzado →
-                optimización). Cada nivel equivale a un porcentaje; el sistema
-                lo aplica automáticamente.
+                En 31 indicadores cualitativos, el avance se reporta como un{" "}
+                <b>porcentaje editable</b> (0–100) y el sistema determina
+                automáticamente el <b>nivel alcanzado</b>: el mayor nivel cuya
+                cota ya se superó (nivel 0 = preparativos → planificación →
+                inicial → intermedio → avanzado → optimización). El nivel no se
+                elige a mano, para que el % y el nivel nunca se contradigan.
               </p>
             </GlosarioItem>
 

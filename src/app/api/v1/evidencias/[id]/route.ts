@@ -34,7 +34,8 @@ export async function GET(
     return new Response(new Uint8Array(ev.contenido), {
       headers: {
         "Content-Type": ev.mimeType ?? "application/octet-stream",
-        "Content-Disposition": `attachment; filename="${encodeURIComponent(ev.nombreArchivo)}"`,
+        // RFC 5987: fallback ASCII + nombre real en UTF-8 (tildes intactas).
+        "Content-Disposition": `attachment; filename="${ev.nombreArchivo.replace(/[^\x20-\x7e]/g, "_").replace(/"/g, "'")}"; filename*=UTF-8''${encodeURIComponent(ev.nombreArchivo)}`,
         "Content-Length": String(ev.contenido.length),
         "Cache-Control": "private, no-store",
       },

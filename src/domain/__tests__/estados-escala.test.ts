@@ -5,7 +5,7 @@ import {
   transicionesDesde,
   validarTransicion,
 } from "../estados";
-import { nivelDePct, pctDeNivel } from "../escala";
+import { nivelAlcanzado, nivelDePct, pctDeNivel } from "../escala";
 
 describe("máquina de estados del workflow", () => {
   it("flujo feliz: BORRADOR→ENVIADO→EN_REVISION→APROBADO", () => {
@@ -70,5 +70,42 @@ describe("escala nivel→%", () => {
   it("nivelDePct hace el mapeo inverso", () => {
     expect(nivelDePct(escala, 50)?.nivel).toBe(2);
     expect(nivelDePct(escala, 60)?.nivel).toBe(3);
+  });
+});
+
+describe("nivel alcanzado con % editable (convención 2026)", () => {
+  const escala = [
+    { nivel: 0, pctMin: 0, pctMax: 0 }, // Preparativos
+    { nivel: 1, pctMin: 0, pctMax: 20 },
+    { nivel: 2, pctMin: 20, pctMax: 40 },
+    { nivel: 3, pctMin: 40, pctMax: 60 },
+    { nivel: 4, pctMin: 60, pctMax: 80 },
+    { nivel: 5, pctMin: 80, pctMax: 100 },
+  ];
+
+  it("35% alcanza el nivel 1 (superó 20, no llegó a 40)", () => {
+    expect(nivelAlcanzado(escala, 35)?.nivel).toBe(1);
+  });
+
+  it("las cotas exactas alcanzan su nivel", () => {
+    expect(nivelAlcanzado(escala, 20)?.nivel).toBe(1);
+    expect(nivelAlcanzado(escala, 40)?.nivel).toBe(2);
+    expect(nivelAlcanzado(escala, 100)?.nivel).toBe(5);
+  });
+
+  it("por debajo del primer umbral queda en nivel 0 (preparativos)", () => {
+    expect(nivelAlcanzado(escala, 0)?.nivel).toBe(0);
+    expect(nivelAlcanzado(escala, 15)?.nivel).toBe(0);
+  });
+
+  it("sin nivel 0 y por debajo del primer umbral no alcanza ninguno", () => {
+    const sinCero = escala.filter((e) => e.nivel !== 0);
+    expect(nivelAlcanzado(sinCero, 15)).toBeNull();
+    expect(nivelAlcanzado(sinCero, 20)?.nivel).toBe(1);
+  });
+
+  it("null o escala vacía devuelven null", () => {
+    expect(nivelAlcanzado(escala, null)).toBeNull();
+    expect(nivelAlcanzado([], 50)).toBeNull();
   });
 });

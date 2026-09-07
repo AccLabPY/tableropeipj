@@ -124,9 +124,12 @@ export default function GuiaDeCargaPage() {
                 metros cuadrados).
               </li>
               <li>
-                <b>Escala de avance</b> — un selector con los niveles
-                cualitativos de la ficha; el % del nivel elegido es el valor
-                del período.
+                <b>Escala de avance</b> — usted informa el <b>porcentaje de
+                avance</b> (0 a 100) y el sistema determina solo el{" "}
+                <b>nivel alcanzado</b>: un 35% con cotas al 20/40/60/80/100
+                corresponde al nivel 1 (superó su cota, en camino al nivel 2).
+                El <b>nivel 0</b> son los preparativos, antes del primer
+                umbral. El nivel no se elige a mano.
               </li>
             </ul>
             <Maqueta titulo="Registro · fórmula (a) / (b) × 100">

@@ -10,6 +10,7 @@ import {
   calcularCumplimiento,
   calcularValorObservado,
   formulaLegible,
+  nivelAlcanzado,
   semaforo as clasificar,
 } from "@/domain";
 import type { EstadoWF } from "@/domain/types";
@@ -37,7 +38,8 @@ const EDITABLES: (EstadoWF | "PENDIENTE")[] = ["PENDIENTE", "BORRADOR", "OBSERVA
 interface FormState {
   /** Valores base por clave de variable ("a","b","c" o "valor"), como texto. */
   valores: Record<string, string>;
-  nivel: string;
+  /** % de avance de un indicador de escala (editable; el nivel se deriva). */
+  pctEscala: string;
   fuente: string;
   obs: string;
 }
@@ -61,7 +63,10 @@ function formDesdeItem(it: RegistroItemDTO | undefined): FormState {
   }
   return {
     valores,
-    nivel: m?.nivelEscala != null ? String(m.nivelEscala) : "",
+    pctEscala:
+      it?.tipoCalculo === "NIVEL_ESCALA" && m?.valorObservado != null
+        ? String(m.valorObservado)
+        : "",
     fuente: m?.fuente ?? "",
     obs: m?.observaciones ?? "",
   };
@@ -115,14 +120,20 @@ export function RegistroFormulario({
   const derivado = useMemo(() => {
     if (!item) return { valor: null as number | null, error: undefined };
     if (modoEscala) {
-      const n = parseInt(form.nivel, 10);
-      const esc = item.escala.find((e) => e.nivel === n);
-      return { valor: esc ? esc.pctMax : null, error: undefined };
+      const pct = parseFloat(form.pctEscala);
+      if (Number.isNaN(pct)) return { valor: null, error: undefined };
+      return { valor: pct, error: undefined };
     }
     const r = calcularValorObservado(item.tipoCalculo, valoresNumericos);
     return { valor: r.valor, error: r.error };
-  }, [item, form.nivel, valoresNumericos, modoEscala]);
+  }, [item, form.pctEscala, valoresNumericos, modoEscala]);
   const valorDerivado = derivado.valor;
+
+  /** Nivel alcanzado según el % (mismo motor de dominio que el servidor). */
+  const nivelAuto = useMemo(() => {
+    if (!modoEscala || valorDerivado === null) return null;
+    return nivelAlcanzado(item.escala, valorDerivado);
+  }, [modoEscala, item.escala, valorDerivado]);
 
   /** CÁLCULO EN VIVO con el MISMO motor de dominio que usa el backend. */
   const enVivo = useMemo(() => {
@@ -150,7 +161,9 @@ export function RegistroFormulario({
     return {
       indicadorCodigo: item.codigo,
       anio: data.anio,
-      nivelEscala: form.nivel === "" ? null : Number(form.nivel),
+      nivelEscala: null,
+      valorObservado:
+        modoEscala && form.pctEscala !== "" ? Number(form.pctEscala) : null,
       valores: modoEscala || Object.keys(valores).length === 0 ? null : valores,
       fuente: form.fuente || null,
       observaciones: form.obs || null,
@@ -168,10 +181,11 @@ export function RegistroFormulario({
     if (!item) return ["Seleccione un indicador de la lista."];
     const problemas: string[] = [];
     if (modoEscala) {
-      if (form.nivel === "") {
-        problemas.push(
-          "Seleccione el nivel alcanzado en la escala del indicador.",
-        );
+      const pct = parseFloat(form.pctEscala);
+      if (form.pctEscala === "" || Number.isNaN(pct)) {
+        problemas.push("Informe el porcentaje de avance del período (0 a 100).");
+      } else if (pct < 0 || pct > 100) {
+        problemas.push("El porcentaje de avance debe estar entre 0 y 100.");
       }
     } else {
       for (const def of item.variablesDef) {
@@ -345,24 +359,73 @@ export function RegistroFormulario({
                 >
                   <div className="grid grid-cols-1 gap-[14px] sm:grid-cols-2">
                     {modoEscala ? (
-                      <label className="text-2xs uppercase tracking-[.06em] text-muted sm:col-span-2">
-                        Nivel alcanzado (escala del indicador)
-                        <select
-                          value={form.nivel}
-                          onChange={(e) =>
-                            setForm({ ...form, nivel: e.target.value })
-                          }
-                          className="mt-1 block w-full rounded-pj border border-linea bg-superficie px-2 py-2 text-[12.5px] normal-case tracking-normal text-tinta"
-                        >
-                          <option value="">— Seleccionar nivel —</option>
-                          {item.escala.map((e) => (
-                            <option key={e.nivel} value={e.nivel}>
-                              Nivel {e.nivel} · {e.descripcion} ({fmtNum(e.pctMax)}
-                              %)
-                            </option>
-                          ))}
-                        </select>
-                      </label>
+                      <div className="sm:col-span-2">
+                        <div className="grid grid-cols-1 gap-[14px] xs:grid-cols-[180px_1fr]">
+                          <label className="text-2xs uppercase tracking-[.06em] text-muted">
+                            Avance del período (%)
+                            <input
+                              type="number"
+                              min={0}
+                              max={100}
+                              step="any"
+                              value={form.pctEscala}
+                              onChange={(e) =>
+                                setForm({ ...form, pctEscala: e.target.value })
+                              }
+                              placeholder="0"
+                              className="mt-1 block w-full rounded-pj border border-linea bg-superficie px-[9px] py-2 text-[13px] normal-case tracking-normal text-tinta"
+                            />
+                          </label>
+                          <div className="text-2xs uppercase tracking-[.06em] text-muted">
+                            Nivel alcanzado (automático)
+                            <div className="mt-1 flex min-h-[38px] items-center rounded-pj border border-linea bg-hover px-3 py-2 text-[12.5px] normal-case tracking-normal">
+                              {nivelAuto ? (
+                                <span>
+                                  <b className="text-azul-d">
+                                    Nivel {nivelAuto.nivel}
+                                  </b>{" "}
+                                  <span className="text-muted">
+                                    · {nivelAuto.descripcion}
+                                  </span>
+                                </span>
+                              ) : (
+                                <span className="text-muted-2">
+                                  Se determina según el porcentaje cargado.
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        {/* Escala de referencia: el nivel se selecciona solo,
+                            según la cota alcanzada por el % reportado. */}
+                        <ul className="mt-3 space-y-[4px]">
+                          {[...item.escala]
+                            .sort((a, b) => a.nivel - b.nivel)
+                            .map((e) => (
+                              <li
+                                key={e.nivel}
+                                className={cn(
+                                  "flex items-baseline gap-2 rounded-pj-sm border px-3 py-[6px] text-[11.5px]",
+                                  nivelAuto?.nivel === e.nivel
+                                    ? "border-azul bg-azul-soft font-semibold text-azul-d"
+                                    : "border-linea-2 text-muted",
+                                )}
+                              >
+                                <span className="tnum flex-none font-serif font-semibold">
+                                  Nivel {e.nivel}
+                                </span>
+                                <span className="min-w-0 flex-1">
+                                  {e.descripcion}
+                                </span>
+                                <span className="tnum flex-none text-[10.5px]">
+                                  {e.nivel === 0
+                                    ? "preparativos"
+                                    : `desde ${fmtNum(e.pctMax)}%`}
+                                </span>
+                              </li>
+                            ))}
+                        </ul>
+                      </div>
                     ) : (
                       /* Inputs dinámicos: un campo por variable de la fórmula,
                          con su descripción breve visible. */
