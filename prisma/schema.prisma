@@ -1,18 +1,21 @@
 // ============================================================================
 //  Plataforma de Seguimiento del PEI 2026–2030 — schema Prisma
-//  Fase A: TiDB Serverless (MySQL 8 compatible)  ·  Fase B: PostgreSQL on-premise
-//  Portabilidad: cambiar provider a "postgresql" y regenerar migraciones.
+//  Fase B: PostgreSQL 17 on-premise (pnud-db, Poder Judicial).
+//  FKs nativas (sin relationMode="prisma"); las referencias a Usuario quedan
+//  como FKs sueltas a propósito: el padrón vive en la base de control (prod)
+//  y peipj_test no puede apuntarle con constraints.
 //  El cálculo de cumplimiento vive en la capa de dominio (TS), NO en vistas SQL.
+//  Esquema gestionado con `prisma migrate deploy` (nunca `db push` contra PG).
 // ============================================================================
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"] // dev Windows + Docker bookworm
 }
 
 datasource db {
-  provider     = "mysql" // Fase B: "postgresql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma" // TiDB: integridad referencial emulada por Prisma
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 // ------------------------------- Enums --------------------------------------
@@ -128,7 +131,9 @@ model Indicador {
   activo              Boolean     @default(true)
 
   oe           ObjetivoEstrategico    @relation(fields: [oeId], references: [id])
-  ae           AccionEstrategica?     @relation(fields: [aeId], references: [id])
+  // Restrict explícito: el default para FK opcional sería SetNull y dejaría
+  // indicadores nivel AE con aeId=null si fallara el guard de la aplicación.
+  ae           AccionEstrategica?     @relation(fields: [aeId], references: [id], onDelete: Restrict)
   metas        Meta[]
   escala       EscalaIndicador[]
   responsables IndicadorDependencia[]
@@ -258,7 +263,7 @@ model Evidencia {
   /// Legado (flujo solo-metadata, agregarEvidencia): URL/ruta NAS externa.
   /// null ⇔ el binario real vive en `contenido` (flujo de adjuntos nuevo).
   rutaOUrl      String?  @db.Text
-  contenido     Bytes?   @db.LongBlob // binario real (máx. 25MB, validado en el service)
+  contenido     Bytes? // bytea: binario real (máx. 25MB, validado en el service)
   mimeType      String?
   tamanioBytes  Int?
   hashSha256    String?

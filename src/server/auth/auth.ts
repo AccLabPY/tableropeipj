@@ -27,7 +27,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       async authorize(credentials) {
         const parsed = CredencialesSchema.safeParse(credentials);
         if (!parsed.success) return null;
-        const { email, password } = parsed.data;
+        const { password } = parsed.data;
+        // El email se guarda normalizado: en PostgreSQL el unique/findUnique
+        // distinguen mayúsculas (en TiDB la collation los igualaba).
+        const email = parsed.data.email.trim().toLowerCase();
 
         const usuario = await prismaControl().usuario.findUnique({
           where: { email },
