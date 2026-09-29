@@ -137,14 +137,16 @@ export async function crearUsuarioAction(
     await requireApi("ADMIN");
     const d = UsuarioCreateSchema.parse(input);
     const db = prismaControl();
-    const existe = await db.usuario.findUnique({ where: { email: d.email } });
+    // Normalizado: el unique de email en PostgreSQL distingue mayúsculas.
+    const email = d.email.trim().toLowerCase();
+    const existe = await db.usuario.findUnique({ where: { email } });
     if (existe) {
       throw new ApiError(409, "EMAIL_DUPLICADO", "Ya existe un usuario con ese correo.");
     }
     const u = await db.usuario.create({
       data: {
         nombre: d.nombre,
-        email: d.email,
+        email,
         passwordHash: await bcrypt.hash(d.password, 10),
         roles: { create: d.roles.map((rol) => ({ rol })) },
         dependencias: {
@@ -174,7 +176,7 @@ export async function actualizarUsuarioAction(
       where: { id: d.id },
       data: {
         nombre: d.nombre,
-        email: d.email,
+        email: d.email.trim().toLowerCase(),
         activo: d.activo,
         ...(d.password ? { passwordHash: await bcrypt.hash(d.password, 10) } : {}),
       },

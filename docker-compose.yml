@@ -1,0 +1,26 @@
+# Despliegue en pnud-app. Layout esperado:
+#   /opt/peipj/app   → clon del repositorio (este archivo)
+#   /opt/peipj/.env  → secretos de runtime (root:pnud 640; nunca en el repo)
+# El puerto solo se publica en loopback: Apache hace de reverse proxy en :80.
+services:
+  peipj:
+    build: .
+    image: peipj:latest
+    container_name: peipj
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"
+    env_file:
+      - ../.env
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
