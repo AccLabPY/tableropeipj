@@ -7,6 +7,17 @@ Institucional 2026–2030: captura de mediciones por dependencia, validación po
 flujo de estados (DGPD) y tableros analíticos con cumplimiento **normalizado
 por sentido y línea base**.
 
+## Repositorios
+
+- **Canónico**: [`AccLabPY/tableropeipj`](https://github.com/AccLabPY/tableropeipj) —
+  todo el desarrollo, ramas y PRs ocurren acá (rama principal: `main`).
+- **Espejo**: `franciscoraguilera/PEI-PJ` — copia de respaldo de solo lectura,
+  actualizada manualmente con `git push personal --all`. Nadie desarrolla contra
+  el espejo.
+
+El despliegue productivo corre on-premise en el Poder Judicial
+(ver [docs/despliegue-pj.md](docs/despliegue-pj.md)).
+
 ## Invariantes del sistema
 
 1. El cumplimiento NUNCA es `valor/meta`: se normaliza por sentido (ASC/DESC)
