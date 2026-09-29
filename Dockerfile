@@ -24,6 +24,10 @@ RUN npm run build
 FROM node:20-bookworm-slim AS runner
 WORKDIR /app
 ENV NODE_ENV=production PORT=3000 HOSTNAME=0.0.0.0 NEXT_TELEMETRY_DISABLED=1
+# Sin el paquete openssl, Prisma no detecta libssl 3 y cae al engine 1.1.x
+# (inexistente en bookworm): el login moría con PrismaClientInitializationError.
+RUN apt-get update -qq && apt-get install -yqq --no-install-recommends openssl \
+    && rm -rf /var/lib/apt/lists/*
 RUN groupadd -g 1001 nodejs && useradd -u 1001 -g nodejs -m nextjs
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
