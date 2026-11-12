@@ -1,7 +1,7 @@
 /**
  * Warm-up al arrancar el servidor (Next instrumentation hook):
- * precalienta las conexiones a TiDB y el caché del estado del PEI para que
- * el PRIMER visitante no pague los ~10 round-trips a us-east-1.
+ * precalienta las conexiones a PostgreSQL y el caché del estado del PEI para
+ * que el PRIMER visitante no pague el cómputo en frío.
  * Corre en background: no bloquea el arranque ni rompe si la base no responde.
  */
 export async function register(): Promise<void> {

@@ -52,10 +52,13 @@ export default function GuiaDeCargaPage() {
           <Paso n={1} titulo="Abra Registro y elija el indicador">
             <p>
               En <b>Registro → Carga de avances</b> verá la <b>tabla</b> de sus
-              indicadores: solo aquellos cuya dependencia responsable es la
-              suya, con su estado, su plazo de carga y el botón{" "}
-              <b>«Reportar avance»</b>. El chip de cada fila indica en qué punto
-              del circuito está:
+              indicadores: aquellos donde su dependencia es responsable, con su
+              estado, su plazo de carga y el botón <b>«Reportar»</b>. La
+              dependencia <b>principal</b> y las <b>corresponsables</b> cargan
+              la misma medición (cualquiera puede completarla, adjuntar y
+              enviarla); si su dependencia figura solo como <b>fuente</b>, verá
+              el indicador en modo consulta. El chip de cada fila indica en qué
+              punto del circuito está:
             </p>
             <Maqueta titulo="Indicadores a cargo">
               <ul className="space-y-2">
@@ -154,11 +157,17 @@ export default function GuiaDeCargaPage() {
             </Callout>
           </Paso>
 
-          <Paso n={5} titulo="Complete la fuente / medio de verificación">
+          <Paso n={5} titulo="Complete la fuente y la fecha de corte">
             <p>
               Indique el documento que respalda el dato: informe, acta,
-              memoria, planilla o reporte estadístico. Este texto acompaña a la
-              medición en la ficha del indicador y en los reportes.
+              memoria, planilla o reporte estadístico. La fuente es{" "}
+              <b>obligatoria para enviar</b> y acompaña a la medición en la
+              ficha del indicador y en los reportes.
+            </p>
+            <p>
+              Si corresponde, informe la <b>fecha de corte</b>: hasta qué fecha
+              abarca la información (por ejemplo, 30/06 para un avance del
+              primer semestre). Es opcional.
             </p>
           </Paso>
 
@@ -171,9 +180,9 @@ export default function GuiaDeCargaPage() {
               validador de la DGPD descargará estos archivos antes de aprobar.
             </p>
             <Callout tipo="advertencia">
-              Los adjuntos solo pueden eliminarse mientras la medición sigue en
-              borrador u observada. Una vez enviada, el expediente queda
-              íntegro.
+              Los adjuntos solo pueden agregarse o eliminarse mientras la
+              medición está en borrador u observada. Una vez enviada, el
+              expediente queda íntegro.
             </Callout>
           </Paso>
 
@@ -191,9 +200,8 @@ export default function GuiaDeCargaPage() {
               Cada cambio de estado le llega como <b>notificación en la
               campanita</b> 🔔 con el comentario del validador; al tocarla se
               abre el <b>detalle de la carga</b>. El indicador de progreso
-              (Borrador → Enviado → Validado por DGPD) refleja el estado: reloj
-              ámbar mientras la DGPD la tiene en revisión, ✕ roja si fue
-              rechazada.
+              (Borrador → Enviado → Validado por DGPD) refleja el estado, con
+              un reloj ámbar mientras la DGPD la tiene en revisión.
             </p>
             <ul className="list-disc space-y-1 pl-5">
               <li>
@@ -205,8 +213,13 @@ export default function GuiaDeCargaPage() {
                 validador: corrija lo señalado y reenvíe (el circuito completo
                 queda en el historial).
               </li>
-
             </ul>
+            <p>
+              Las mediciones <b>rechazadas</b> de ejercicios anteriores (el
+              rechazo se retiró del circuito en 2026) no se editan: al guardar
+              sobre una de ellas se inicia automáticamente una{" "}
+              <b>versión nueva</b> en borrador.
+            </p>
           </Paso>
 
           <Paso n={9} titulo="Consulte el expediente: detalle de la carga">
@@ -217,7 +230,7 @@ export default function GuiaDeCargaPage() {
               (variables y valor), las evidencias adjuntas, las resoluciones de
               la DGPD con sus causas y el historial de estados con autor,
               fecha y comentario de cada paso. Es el lugar para leer{" "}
-              <b>por qué</b> una carga fue observada o rechazada.
+              <b>por qué</b> una carga fue observada.
             </p>
           </Paso>
 
@@ -226,8 +239,9 @@ export default function GuiaDeCargaPage() {
               Una medición aprobada nunca se edita ni se borra. Si detecta un
               error, solicite la <b>rectificación</b> a la DGPD: la versión
               aprobada queda archivada como «Rectificada» y se abre una nueva
-              versión en borrador para corregir — trazabilidad completa, sin
-              reescribir la historia.
+              versión en borrador, con los mismos datos y una copia de las
+              evidencias, para que corrija y reenvíe: trazabilidad completa,
+              sin reescribir la historia.
             </p>
           </Paso>
         </CardBody>

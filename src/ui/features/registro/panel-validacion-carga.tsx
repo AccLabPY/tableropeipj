@@ -38,11 +38,14 @@ import { cn } from "@/lib/utils";
 export function PanelValidacionCarga({
   medicionId,
   estado,
+  puedeResolver: sinAutovalidacion,
   ventana,
   objetivo,
 }: {
   medicionId: string;
   estado: EstadoWF;
+  /** false si el validador intervino en esta versión (autovalidación). */
+  puedeResolver: boolean;
   ventana: VentanaDTO;
   objetivo: {
     anio: number;
@@ -61,12 +64,16 @@ export function PanelValidacionCarga({
   const [modalPlazo, setModalPlazo] = useState<ModoPlazo | null>(null);
   const [pendiente, startTransition] = useTransition();
 
-  const puedeResolver = estado === "ENVIADO" || estado === "EN_REVISION";
-  const puedeTomar = estado === "ENVIADO";
+  const pendienteDeResolucion = estado === "ENVIADO" || estado === "EN_REVISION";
+  const puedeResolver = pendienteDeResolucion && sinAutovalidacion;
+  const puedeTomar = estado === "ENVIADO" && sinAutovalidacion;
   const puedeRectificar = estado === "APROBADO";
 
   const ejecutar = (fn: () => Promise<ResultadoAccion>) =>
     startTransition(async () => setToast(await fn()));
+
+  /** Rectificar: al terminar, abre la versión nueva creada. */
+  const [versionNueva, setVersionNueva] = useState<string | null>(null);
 
   const resolver = (resultado: "APROBADO" | "OBSERVADO") => {
     if (resultado !== "APROBADO" && comentario.trim().length < 5) {
@@ -90,7 +97,11 @@ export function PanelValidacionCarga({
       );
       return;
     }
-    ejecutar(() => rectificarMedicionAction(medicionId, comentario.trim()));
+    startTransition(async () => {
+      const r = await rectificarMedicionAction(medicionId, comentario.trim());
+      if (r.ok && r.medicionId) setVersionNueva(r.medicionId);
+      setToast(r);
+    });
   };
 
   const btn = (extra: string) =>
@@ -113,6 +124,12 @@ export function PanelValidacionCarga({
           }
         />
         <CardBody className="space-y-3">
+          {pendienteDeResolucion && !sinAutovalidacion ? (
+            <p className="rounded-pj-sm border border-sem-ambar-border bg-sem-ambar-bg px-3 py-2 text-[12px] text-sem-ambar-fg">
+              Usted intervino en esta carga (la cargó, editó o envió): debe
+              resolverla otro validador.
+            </p>
+          ) : null}
           {puedeResolver || puedeRectificar ? (
           <label className="block text-2xs uppercase tracking-[.06em] text-muted">
             {puedeRectificar
@@ -186,7 +203,8 @@ export function PanelValidacionCarga({
           ) : puedeRectificar ? (
             <p className="text-[11.5px] text-muted">
               La rectificación pasa esta versión a RECTIFICADO y crea la
-              siguiente en borrador (append-only).
+              siguiente en borrador con los mismos datos y evidencias, para
+              que la dependencia la corrija y la reenvíe.
             </p>
           ) : null}
 
@@ -246,7 +264,12 @@ export function PanelValidacionCarga({
           setToast(null);
           if (ok) {
             setComentario("");
-            router.refresh();
+            if (versionNueva) {
+              router.push(`/registro/carga/${versionNueva}`);
+              setVersionNueva(null);
+            } else {
+              router.refresh();
+            }
           }
         }}
       />

@@ -33,7 +33,16 @@ import { WF_CHIP } from "@/ui/features/shared/chip-workflow";
 import { ModalPlazo, type ModoPlazo } from "./modal-plazo";
 import { cn, fmtBytes, fmtFechaCorta, fmtNum, fmtPct, fmtValor } from "@/lib/utils";
 
-const EDITABLES: (EstadoWF | "PENDIENTE")[] = ["PENDIENTE", "BORRADOR", "OBSERVADO"];
+// RECHAZADO: el rechazo se retiró del circuito en 2026; sobre una versión
+// rechazada la dependencia inicia una versión nueva al guardar.
+const EDITABLES: (EstadoWF | "PENDIENTE")[] = [
+  "PENDIENTE",
+  "BORRADOR",
+  "OBSERVADO",
+  "RECHAZADO",
+];
+/** Estados en los que la medición existente recibe evidencias directamente. */
+const ADJUNTABLES: (EstadoWF | "PENDIENTE")[] = ["BORRADOR", "OBSERVADO"];
 
 interface FormState {
   /** Valores base por clave de variable ("a","b","c" o "valor"), como texto. */
@@ -42,6 +51,8 @@ interface FormState {
   pctEscala: string;
   fuente: string;
   obs: string;
+  /** Fecha de corte del dato (yyyy-mm-dd), opcional. */
+  fechaCorte: string;
 }
 
 function formDesdeItem(it: RegistroItemDTO | undefined): FormState {
@@ -69,6 +80,7 @@ function formDesdeItem(it: RegistroItemDTO | undefined): FormState {
         : "",
     fuente: m?.fuente ?? "",
     obs: m?.observaciones ?? "",
+    fechaCorte: m?.fechaCorte ? m.fechaCorte.slice(0, 10) : "",
   };
 }
 
@@ -98,8 +110,10 @@ export function RegistroFormulario({
   // La carga se bloquea al vencer el plazo o al cerrarla la DGPD; los roles de
   // validación (DGPD/Admin) siguen pudiendo operar para corregir o regularizar.
   const cargaCerrada = item.ventana.estado === "CERRADA" && !data.puedeValidar;
+  // Carga compartida: principal y corresponsables; la fuente solo consulta.
   const editable =
-    data.puedeCargar && EDITABLES.includes(estadoWF) && !cargaCerrada;
+    item.puedeCargar && EDITABLES.includes(estadoWF) && !cargaCerrada;
+  const nuevaVersion = estadoWF === "RECHAZADO";
   const modoEscala = item.tipoCalculo === "NIVEL_ESCALA";
 
   /** Valores numéricos del form (NaN → null). */
@@ -167,6 +181,7 @@ export function RegistroFormulario({
       valores: modoEscala || Object.keys(valores).length === 0 ? null : valores,
       fuente: form.fuente || null,
       observaciones: form.obs || null,
+      fechaCorte: form.fechaCorte || null,
     };
   };
 
@@ -239,13 +254,16 @@ export function RegistroFormulario({
     });
 
   /**
-   * Adjuntar evidencia. Si aún no existe la medición, guarda el borrador
-   * automáticamente y sube el archivo en un solo paso (pedido DGPD).
+   * Adjuntar evidencia. Si aún no existe una versión editable (sin medición o
+   * sobre una rechazada), guarda el borrador automáticamente y sube el
+   * archivo en un solo paso (pedido DGPD).
    */
   const adjuntarEvidencia = async (
     formData: FormData,
   ): Promise<ResultadoAccion> => {
-    if (item?.medicion) return subirEvidenciaAction(item.medicion.id, formData);
+    if (item?.medicion && ADJUNTABLES.includes(estadoWF)) {
+      return subirEvidenciaAction(item.medicion.id, formData);
+    }
     const payload = inputPayload();
     if (!payload || valorDerivado === null) {
       return {
@@ -287,6 +305,7 @@ export function RegistroFormulario({
               <AvisoCargaCerrada
                 ventana={item.ventana}
                 puedeValidar={data.puedeValidar}
+                puedeCargar={item.puedeCargar}
               />
 
               {/* Ficha resumida */}
@@ -330,9 +349,10 @@ export function RegistroFormulario({
                 </div>
                 {modoEscala ? (
                   <p className="mt-2 text-[11.5px] leading-[1.45] text-muted">
-                    Este indicador reporta el <b>nivel cualitativo alcanzado</b>{" "}
-                    en su escala de avance ({item.escala.length} niveles): el %
-                    del nivel seleccionado es el valor observado del período.
+                    Este indicador reporta el <b>porcentaje de avance</b> del
+                    período, que es su valor observado. El sistema determina
+                    solo el <b>nivel alcanzado</b> en la escala (
+                    {item.escala.length} niveles).
                   </p>
                 ) : (
                   <ul className="mt-2 space-y-1">
@@ -476,6 +496,21 @@ export function RegistroFormulario({
                         className="mt-1 block w-full rounded-pj border border-linea bg-superficie px-[9px] py-2 text-[12.5px] normal-case tracking-normal text-tinta"
                       />
                     </label>
+                    <label className="text-2xs uppercase tracking-[.06em] text-muted">
+                      Fecha de corte del dato (opcional)
+                      <input
+                        type="date"
+                        value={form.fechaCorte}
+                        onChange={(e) =>
+                          setForm({ ...form, fechaCorte: e.target.value })
+                        }
+                        className="mt-1 block w-full rounded-pj border border-linea bg-superficie px-[9px] py-2 text-[12.5px] normal-case tracking-normal text-tinta"
+                      />
+                    </label>
+                    <p className="self-end pb-2 text-[11px] leading-[1.4] text-muted-2">
+                      Hasta qué fecha abarca la información reportada; por
+                      ejemplo, 30/06 para un avance del primer semestre.
+                    </p>
                     <label className="text-2xs uppercase tracking-[.06em] text-muted sm:col-span-2">
                       Observaciones
                       <textarea
@@ -497,13 +532,13 @@ export function RegistroFormulario({
                     Evidencias respaldatorias
                   </div>
                   <ListaEvidencias
-                    evidencias={item.medicion?.evidencias ?? []}
-                    puedeEliminar={editable}
+                    evidencias={nuevaVersion ? [] : (item.medicion?.evidencias ?? [])}
+                    puedeEliminar={editable && !nuevaVersion}
                     onEliminar={(id) =>
                       ejecutar(() => eliminarEvidenciaAction(id))
                     }
                   />
-                  {item.medicion || editable ? (
+                  {editable ? (
                     <>
                       <SubidorEvidencia
                         disabled={pendiente}
@@ -511,13 +546,18 @@ export function RegistroFormulario({
                           ejecutarYDevolver(() => adjuntarEvidencia(formData))
                         }
                       />
-                      {!item.medicion ? (
+                      {!item.medicion || nuevaVersion ? (
                         <p className="mt-2 text-[10.5px] text-muted-2">
                           Al adjuntar, el borrador se guarda automáticamente
                           con los valores cargados arriba.
                         </p>
                       ) : null}
                     </>
+                  ) : item.medicion ? (
+                    <p className="mt-2 text-[10.5px] text-muted-2">
+                      Las evidencias solo se agregan mientras la carga está en
+                      borrador u observada.
+                    </p>
                   ) : null}
                 </div>
               ) : null}
@@ -578,8 +618,16 @@ export function RegistroFormulario({
                 </div>
               ) : null}
 
+              {nuevaVersion && editable ? (
+                <p className="mt-3 rounded-pj-sm border border-azul-line bg-azul-soft px-3 py-2 text-[12px] text-azul-d">
+                  La versión {item.medicion?.version} fue rechazada. Al guardar
+                  se inicia la versión {(item.medicion?.version ?? 0) + 1} en
+                  borrador; la rechazada queda en el historial.
+                </p>
+              ) : null}
+
               {/* Acciones de carga */}
-              {data.puedeCargar && editable ? (
+              {editable ? (
                 <div className="mt-[18px] flex flex-col gap-[10px] border-t border-linea-2 pt-4 xs:flex-row xs:flex-wrap">
                   <button
                     type="button"
@@ -611,9 +659,11 @@ export function RegistroFormulario({
               ) : null}
               {data.puedeCargar && !editable && estadoWF !== "APROBADO" ? (
                 <p className="mt-3 text-[12px] text-muted">
-                  {cargaCerrada
-                    ? "El plazo de carga está cerrado: solicite una prórroga a la DGPD."
-                    : `La medición está ${WF_CHIP[estadoWF].label.toLowerCase()}: no puede editarse hasta la resolución del validador.`}
+                  {!item.puedeCargar
+                    ? `Su dependencia figura como fuente de información de este indicador: la carga la realizan ${item.dependenciaPrincipal} y las dependencias corresponsables.`
+                    : cargaCerrada
+                      ? "El plazo de carga está cerrado: solicite una prórroga a la DGPD."
+                      : `La medición está ${WF_CHIP[estadoWF].label.toLowerCase()}: no puede editarse hasta la resolución del validador.`}
                 </p>
               ) : null}
 
@@ -652,7 +702,16 @@ export function RegistroFormulario({
                     </div>
                   ) : null}
 
-                  {item.medicion?.estado === "ENVIADO" ? (
+                  {item.medicion &&
+                  ["ENVIADO", "EN_REVISION"].includes(item.medicion.estado) &&
+                  !item.puedeResolver ? (
+                    <p className="mb-3 rounded-pj-sm border border-sem-ambar-border bg-sem-ambar-bg px-3 py-2 text-[12px] text-sem-ambar-fg">
+                      Usted intervino en esta carga (la cargó, editó o envió):
+                      debe resolverla otro validador.
+                    </p>
+                  ) : null}
+
+                  {item.medicion?.estado === "ENVIADO" && item.puedeResolver ? (
                     <button
                       type="button"
                       disabled={pendiente}
@@ -668,6 +727,7 @@ export function RegistroFormulario({
                   ) : null}
 
                   {item.medicion &&
+                  item.puedeResolver &&
                   ["ENVIADO", "EN_REVISION"].includes(item.medicion.estado) ? (
                     <>
                   <textarea
@@ -686,7 +746,7 @@ export function RegistroFormulario({
                         ejecutar(() =>
                           validarMedicionAction(item.medicion!.id, {
                             resultado: "APROBADO",
-                            comentario: comentario || null,
+                            comentario: comentario.trim() || null,
                           }),
                         )
                       }
@@ -705,7 +765,7 @@ export function RegistroFormulario({
                         ejecutar(() =>
                           validarMedicionAction(item.medicion!.id, {
                             resultado: "OBSERVADO",
-                            comentario,
+                            comentario: comentario.trim(),
                           }),
                         );
                       }}
@@ -1084,9 +1144,11 @@ function BotonValidar({
 function AvisoCargaCerrada({
   ventana,
   puedeValidar,
+  puedeCargar,
 }: {
   ventana: VentanaDTO;
   puedeValidar: boolean;
+  puedeCargar: boolean;
 }) {
   if (ventana.estado !== "CERRADA") return null;
   const fecha = ventana.fechaLimite ? fmtFechaCorta(ventana.fechaLimite) : null;
@@ -1101,9 +1163,11 @@ function AvisoCargaCerrada({
         {ventana.motivo ? ` “${ventana.motivo}”` : ""}
       </span>
       <span className="text-sem-rojo-fg/80">
-        {puedeValidar
-          ? "Como validador puede cargar igualmente o habilitar la carga."
-          : "Solicite una prórroga a la DGPD para volver a cargar."}
+        {puedeValidar && puedeCargar
+          ? "Como administrador puede cargar igualmente, prorrogar o habilitar la carga."
+          : puedeValidar
+            ? "Como validador puede prorrogar o habilitar la carga."
+            : "Solicite una prórroga a la DGPD para volver a cargar."}
       </span>
     </div>
   );

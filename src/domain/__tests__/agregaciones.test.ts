@@ -60,3 +60,13 @@ describe("agregaciones AE/OE/PEI + cobertura", () => {
     ).toEqual({ VERDE: 2, AMARILLO: 0, ROJO: 1, GRIS: 1 });
   });
 });
+
+describe("peso de los indicadores en la AE", () => {
+  it("el avance de la AE pondera por el peso de cada indicador", () => {
+    // (2×1 + 1×0.4) / 3 = 0.8
+    expect(avanceAE([{ capado: 1, peso: 2 }, { capado: 0.4, peso: 1 }])).toBeCloseTo(0.8, 6);
+  });
+  it("los indicadores sin dato no cuentan aunque tengan peso", () => {
+    expect(avanceAE([{ capado: null, peso: 5 }, { capado: 0.5, peso: 1 }])).toBeCloseTo(0.5, 6);
+  });
+});

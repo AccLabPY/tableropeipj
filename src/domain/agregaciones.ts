@@ -1,9 +1,10 @@
 import type { Cobertura, Semaforo } from "./types";
 
 /**
- * Agregaciones jerárquicas (§6): avance AE = promedio ponderado (peso) del
- * `capado` de sus indicadores con estado OK; avance OE = promedio de sus AE;
- * índice PEI = promedio de OE. La cobertura SIEMPRE acompaña al cumplimiento.
+ * Agregaciones jerárquicas (§6): avance AE = promedio ponderado por el peso
+ * de cada indicador (Matriz PEI) del `capado` de sus indicadores con dato;
+ * avance OE = promedio simple de sus AE con dato; índice PEI = promedio
+ * simple de los OE con dato. La cobertura SIEMPRE acompaña al cumplimiento.
  */
 
 export interface ItemAgregable {
@@ -43,7 +44,7 @@ export function avanceOE(avancesAE: (number | null)[]): number | null {
   return conDato.reduce((a, b) => a + b, 0) / conDato.length;
 }
 
-/** Índice PEI = promedio (ponderado) de los avances de OE. */
+/** Índice PEI = promedio de los avances de OE con dato (ponderable, hoy sin peso). */
 export function indicePEI(
   oes: { avance: number | null; peso?: number }[],
 ): number | null {

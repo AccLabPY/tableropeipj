@@ -44,6 +44,8 @@ export interface IndicadorEstadoDTO {
   umbralVerde: number;
   umbralAmarillo: number;
   umbralOrigen: "INDICADOR" | "AE" | "OE" | "GLOBAL";
+  /** Peso del indicador en el avance de su AE (default 1). */
+  peso: number;
   dependenciaPrincipal: string;
   /** Id de la dependencia principal (null si el indicador no tiene responsables). */
   dependenciaPrincipalId: number | null;

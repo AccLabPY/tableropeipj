@@ -62,7 +62,7 @@ export default async function EjecutivoPage({
             <KpiCifra valor={estado.indicePEI} formato="pct" />
           </div>
           <div className="mt-2 text-[11px] text-muted">
-            Promedio ponderado de los 6 OE
+            Promedio de los objetivos con dato
           </div>
           <div className="mt-2">
             <ProgressBar frac={estado.indicePEI} sem="VERDE" alto="h-[5px]" />

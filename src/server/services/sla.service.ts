@@ -1,5 +1,5 @@
 import type { Ctx } from "@/server/db/env";
-import { diasHasta, type VentanaEfectiva } from "@/domain";
+import { calcularSla, type VentanaEfectiva } from "@/domain";
 import { conTTL, TTL_CORTO } from "./cache";
 
 /**
@@ -36,9 +36,8 @@ export async function registrarEnvio(
   try {
     const ahora = new Date();
     const limite = datos.ventana.fechaLimite;
-    // diasHasta > 0 ⇒ envío anticipado; < 0 ⇒ atraso. Guardamos el desvío con
-    // signo positivo = atraso para que las lecturas sean directas.
-    const desvio = limite ? -diasHasta(limite, ahora) : null;
+    // Desvío positivo = días de atraso (un atraso de horas ya cuenta como 1).
+    const { diasDesvio, enPlazo } = calcularSla(limite, ahora);
     await ctx.db.slaCarga.create({
       data: {
         medicionId: datos.medicionId,
@@ -47,8 +46,8 @@ export async function registrarEnvio(
         periodoId: datos.periodoId,
         fechaLimite: limite,
         fechaEnvio: ahora,
-        diasDesvio: desvio,
-        enPlazo: desvio === null ? true : desvio <= 0,
+        diasDesvio,
+        enPlazo,
         conProrroga: datos.ventana.conProrroga,
       },
     });

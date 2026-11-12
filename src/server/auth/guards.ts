@@ -39,7 +39,10 @@ export async function getActor(): Promise<Actor | null> {
 /** Guard de páginas (Server Components): redirige si no cumple. */
 export async function requirePage(...roles: RolUsuario[]): Promise<Actor> {
   const actor = await getActor();
-  if (!actor) redirect("/login");
+  // Sin actor pero con cookie (el middleware dejó pasar): sesión revocada o
+  // vencida. /salir limpia la cookie; ir directo a /login armaría un bucle
+  // con el middleware, que todavía ve la cookie como válida.
+  if (!actor) redirect("/salir");
   if (roles.length && !tieneRol(actor, ...roles)) redirect("/ejecutivo");
   return actor;
 }

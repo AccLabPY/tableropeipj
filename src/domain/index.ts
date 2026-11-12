@@ -7,3 +7,4 @@ export * from "./estados";
 export * from "./escala";
 export * from "./formula";
 export * from "./plazos";
+export * from "./responsables";

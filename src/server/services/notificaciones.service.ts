@@ -4,6 +4,7 @@ import { prismaControl } from "@/server/db/client";
 import type { EstadoWF } from "@/domain/types";
 import {
   calcularCumplimiento,
+  dependenciasResponsables,
   resolverUmbral,
   semaforo as clasificar,
   umbralAviso,
@@ -21,7 +22,8 @@ import type { NotificacionDTO } from "@/shared/dtos/notificaciones";
  * Notificaciones in-app (campanita). Reglas:
  * - Toda transición de la máquina de estados produce notificaciones:
  *   dirección carga→validación notifica a DGPD/ADMIN; dirección
- *   validación→dependencia notifica a los usuarios de la dependencia dueña.
+ *   validación→dependencia notifica a los usuarios de todas las dependencias
+ *   de carga del indicador (principal y corresponsables).
  * - Al APROBAR, si el indicador queda en semáforo ROJO se emite además
  *   INDICADOR_CRITICO a validadores + dependencia responsable.
  * - El emisor nunca se notifica a sí mismo.
@@ -58,6 +60,20 @@ function usuariosDeDependencia(dependenciaId: number): Promise<number[]> {
     });
     return filas.map((f) => f.id);
   });
+}
+
+async function usuariosDeDependencias(ids: number[]): Promise<number[]> {
+  const listas = await Promise.all([...new Set(ids)].map((id) => usuariosDeDependencia(id)));
+  return [...new Set(listas.flat())];
+}
+
+/** Dependencias de carga del indicador de la medición, incluida la dueña. */
+async function dependenciasDeCarga(ctx: Ctx, m: MedicionCompleta): Promise<number[]> {
+  const inds = await catalogoIndicadores(ctx);
+  const ind = inds.find((i) => i.id === m.indicadorId);
+  return [
+    ...new Set([m.dependenciaId, ...(ind ? dependenciasResponsables(ind.responsables) : [])]),
+  ];
 }
 
 // ---------------------------------------------------------------- emisión
@@ -134,7 +150,7 @@ export async function notificarTransicion(
 
   const destinatarios = HACIA_VALIDADORES.includes(hacia)
     ? await usuariosValidacion()
-    : await usuariosDeDependencia(m.dependenciaId);
+    : await usuariosDeDependencias(await dependenciasDeCarga(ctx, m));
 
   await crearPara(ctx, destinatarios, {
     tipo,
@@ -179,7 +195,7 @@ export async function notificarCriticoSiCorresponde(
   const pct = r.capado === null ? "—" : `${Math.round(r.capado * 100)}%`;
   const [validadores, dependencia] = await Promise.all([
     usuariosValidacion(),
-    usuariosDeDependencia(m.dependenciaId),
+    dependenciasDeCarga(ctx, m).then(usuariosDeDependencias),
   ]);
   await crearPara(ctx, [...validadores, ...dependencia], {
     tipo: "INDICADOR_CRITICO",
@@ -264,10 +280,7 @@ export async function notificarActoDePlazo(
     indicadorId?: number | null;
   },
 ): Promise<void> {
-  const listas = await Promise.all(
-    datos.dependenciaIds.map((id) => usuariosDeDependencia(id)),
-  );
-  const destinatarios = listas.flat();
+  const destinatarios = await usuariosDeDependencias(datos.dependenciaIds);
   await crearPara(ctx, destinatarios, {
     tipo: datos.tipo,
     indicadorId: datos.indicadorId ?? null,
@@ -277,16 +290,28 @@ export async function notificarActoDePlazo(
   });
 }
 
-/** Throttle en memoria de la evaluación de vencimientos (1 vez por hora/entorno). */
+/** Throttle en memoria de la evaluación de vencimientos (1 vez por hora/entorno/año). */
 const g = globalThis as unknown as { __peiAvisos?: Map<string, number> };
 const ultimaCorrida = (g.__peiAvisos ??= new Map<string, number>());
 const UNA_HORA = 3_600_000;
 
+const fmtFecha = (d: Date) =>
+  d.toLocaleDateString("es-PY", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    timeZone: "America/Asuncion",
+  });
+
+/** Estados de la última versión que ya salieron de la dependencia. */
+const SALIERON: string[] = ["ENVIADO", "EN_REVISION", "APROBADO"];
+
 /**
- * Emite avisos PLAZO_PROXIMO para los indicadores cuya ventana vence en ≤7 o
- * ≤1 días y todavía no fueron enviados. Idempotente por indicador+umbral+día:
- * se consulta si ya existe una notificación equivalente reciente.
- * Se dispara de forma perezosa (al consultar la bandeja) con throttle horario.
+ * Emite avisos PLAZO_PROXIMO: exactamente dos por indicador y fecha límite
+ * (a 7 días o menos y el último día), a todos los usuarios de las
+ * dependencias de carga, si la última versión todavía no fue enviada. El
+ * título incluye la fecha límite: una prórroga genera avisos nuevos. Se
+ * dispara de forma perezosa al consultar la bandeja, con throttle horario.
  */
 export async function emitirAvisosVencimiento(
   ctx: Ctx,
@@ -300,57 +325,81 @@ export async function emitirAvisosVencimiento(
 
   try {
     const periodo = await periodoAnual(ctx, anio);
-    const [indicadores, ventanaDe] = await Promise.all([
+    const [indicadores, ventanaDe, mediciones] = await Promise.all([
       catalogoIndicadores(ctx),
       resolutorVentanas(ctx, anio),
+      ctx.db.medicion.findMany({
+        where: { periodoId: periodo.id },
+        select: { indicadorId: true, version: true, estado: true },
+        orderBy: [{ indicadorId: "asc" }, { version: "desc" }],
+      }),
     ]);
-    // Indicadores que ya salieron de la dependencia (no hace falta avisar).
-    const yaEnviados = await ctx.db.medicion.findMany({
-      where: {
-        periodoId: periodo.id,
-        estado: { in: ["ENVIADO", "EN_REVISION", "APROBADO", "RECTIFICADO"] },
-      },
-      select: { indicadorId: true },
-    });
-    const resueltos = new Set(yaEnviados.map((m) => m.indicadorId));
-    const desdeAyer = new Date(ahora - 20 * UNA_HORA);
+    const estadoUltima = new Map<number, string>();
+    for (const m of mediciones) {
+      if (!estadoUltima.has(m.indicadorId)) estadoUltima.set(m.indicadorId, m.estado);
+    }
 
+    const avisos: {
+      indicadorId: number;
+      codigo: number;
+      titulo: string;
+      cuerpo: string;
+      deps: number[];
+    }[] = [];
     for (const ind of indicadores) {
-      if (resueltos.has(ind.id)) continue;
+      if (SALIERON.includes(estadoUltima.get(ind.id) ?? "")) continue;
       const v: VentanaEfectiva = ventanaDe(ind);
       const umbral = umbralAviso(v);
-      if (umbral === null) continue;
-
-      const principal =
-        ind.responsables.find((r) => r.rol === "PRINCIPAL") ?? ind.responsables[0];
-      if (!principal) continue;
-
-      const titulo =
-        umbral === 1
-          ? `Vence hoy el plazo de carga del indicador ${ind.codigo}`
-          : `Faltan ${v.diasRestantes} días para el cierre de carga del indicador ${ind.codigo}`;
-
-      // Idempotencia: ¿ya se avisó lo mismo en las últimas 20 horas?
-      const existe = await ctx.db.notificacion.findFirst({
-        where: {
-          tipo: "PLAZO_PROXIMO",
-          indicadorId: ind.id,
-          titulo,
-          creadaEn: { gte: desdeAyer },
-        },
-        select: { id: true },
-      });
-      if (existe) continue;
-
-      const destinatarios = await usuariosDeDependencia(principal.dependenciaId);
-      await crearPara(ctx, destinatarios, {
-        tipo: "PLAZO_PROXIMO",
+      if (umbral === null || !v.fechaLimite || v.diasRestantes === null) continue;
+      const deps = dependenciasResponsables(ind.responsables);
+      if (deps.length === 0) continue;
+      const fecha = fmtFecha(v.fechaLimite);
+      avisos.push({
         indicadorId: ind.id,
-        titulo,
-        cuerpo: `${ind.nombre} · ejercicio ${anio}. Cargue y envíe el avance antes del cierre; luego necesitará una prórroga de la DGPD.`,
-        url: `/registro/indicador/${ind.codigo}?anio=${anio}`,
+        codigo: ind.codigo,
+        deps,
+        titulo:
+          umbral === 1
+            ? `Vence hoy el plazo de carga del indicador ${ind.codigo} (${fecha})`
+            : `Se acerca el cierre de carga del indicador ${ind.codigo}: vence el ${fecha}`,
+        cuerpo:
+          `${ind.nombre} · ejercicio ${anio}. ` +
+          (umbral === 1
+            ? "Hoy es el último día para cargar y enviar el avance; luego necesitará una prórroga de la DGPD."
+            : `Faltan ${v.diasRestantes} días. Cargue y envíe el avance antes del cierre.`),
       });
     }
+    if (avisos.length === 0) return;
+
+    // Idempotencia por (usuario, título): el título fija indicador, umbral y fecha.
+    const existentes = await ctx.db.notificacion.findMany({
+      where: { tipo: "PLAZO_PROXIMO", titulo: { in: avisos.map((a) => a.titulo) } },
+      select: { usuarioId: true, titulo: true },
+    });
+    const enviados = new Set(existentes.map((e) => `${e.usuarioId}|${e.titulo}`));
+
+    const filas: {
+      usuarioId: number;
+      tipo: "PLAZO_PROXIMO";
+      indicadorId: number;
+      titulo: string;
+      cuerpo: string;
+      url: string;
+    }[] = [];
+    for (const a of avisos) {
+      for (const usuarioId of await usuariosDeDependencias(a.deps)) {
+        if (enviados.has(`${usuarioId}|${a.titulo}`)) continue;
+        filas.push({
+          usuarioId,
+          tipo: "PLAZO_PROXIMO",
+          indicadorId: a.indicadorId,
+          titulo: a.titulo,
+          cuerpo: a.cuerpo,
+          url: `/registro/indicador/${a.codigo}?anio=${anio}`,
+        });
+      }
+    }
+    if (filas.length) await ctx.db.notificacion.createMany({ data: filas });
   } catch (e) {
     console.error("[notificaciones] avisos de vencimiento:", e);
   }

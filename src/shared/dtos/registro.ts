@@ -1,4 +1,5 @@
 import type { Sentido } from "@/domain/types";
+import type { RolResponsabilidad } from "@/domain/responsables";
 import type { TipoCalculo, VariableDef } from "@/domain/formula";
 import type { UnidadDTO } from "./estado-pei";
 import type { EscalaNivelDTO, MedicionResumenDTO } from "./indicador-ficha";
@@ -42,6 +43,13 @@ export interface RegistroItemDTO {
   /** Última versión de medición del período (null = sin carga). */
   medicion: MedicionResumenDTO | null;
   ventana: VentanaDTO;
+  /** Rol de las dependencias del usuario sobre el indicador (null = ninguno). */
+  rolDependencia: RolResponsabilidad | null;
+  /** El usuario puede cargar este indicador (principal o corresponsable, o ADMIN). */
+  puedeCargar: boolean;
+  /** El usuario puede tomar en revisión o resolver la última versión
+   *  (es validador y no intervino en ella). */
+  puedeResolver: boolean;
 }
 
 export interface RegistroDTO {

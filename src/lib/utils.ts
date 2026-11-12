@@ -63,3 +63,12 @@ export function fmtFechaCorta(iso: string | null | undefined): string {
     timeZone: "UTC",
   }).format(d);
 }
+
+/**
+ * Días restantes de un plazo para mostrar. Los días se cuentan hacia arriba
+ * (diasRestantes = 1 es el último día), así que 1 o menos es "vence hoy".
+ */
+export function fmtDiasRestantes(d: number, conVerbo = true): string {
+  if (d <= 1) return "vence hoy";
+  return conVerbo ? `faltan ${d} días` : `${d} días`;
+}

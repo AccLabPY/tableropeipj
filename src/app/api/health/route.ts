@@ -1,4 +1,4 @@
-/** Health check para Render/monitoreo. No toca la base (warm-up barato). */
+/** Health check del contenedor (docker compose). No toca la base. */
 export async function GET() {
   return Response.json({
     status: "ok",

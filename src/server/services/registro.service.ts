@@ -1,5 +1,11 @@
 import type { Ctx } from "@/server/db/env";
-import { clasificarFormula, parsearVariables, resolverUmbral } from "@/domain";
+import {
+  clasificarFormula,
+  esAutovalidacion,
+  parsearVariables,
+  resolverUmbral,
+  rolDeDependencias,
+} from "@/domain";
 import { ROLES_VISION_TOTAL, tieneRol } from "@/server/auth/guards";
 import { cargablesPorActor } from "@/server/repositories/indicador.repo";
 import {
@@ -40,7 +46,13 @@ export async function worklistRegistro(
     porIndicador.set(m.indicadorId, arr);
   }
 
+  const puedeValidar = tieneRol(ctx.actor, "DGPD_VALIDADOR", "ADMIN");
+  const puedeCargar = tieneRol(ctx.actor, "DEPENDENCIA_CARGA", "ADMIN");
+  const cargaScoped =
+    tieneRol(ctx.actor, "DEPENDENCIA_CARGA") && !tieneRol(ctx.actor, "ADMIN", "DGPD_VALIDADOR");
+
   const items: RegistroItemDTO[] = indicadores.map((ind) => {
+    const rolDependencia = rolDeDependencias(ind.responsables, ctx.actor.dependenciaIds);
     const metaAnio = ind.metas.find((m) => m.anio === anio);
     const ultima = ultimaVersion(porIndicador.get(ind.id) ?? []);
     const umbral = resolverUmbral(umbrales, {
@@ -82,6 +94,14 @@ export async function worklistRegistro(
         ind.responsables[0]?.dependenciaId ??
         null,
       medicion: ultima ? toMedicionResumen(ultima) : null,
+      rolDependencia,
+      puedeCargar:
+        puedeCargar &&
+        (!cargaScoped || rolDependencia === "PRINCIPAL" || rolDependencia === "CORRESPONSABLE"),
+      puedeResolver:
+        puedeValidar &&
+        ultima !== null &&
+        !esAutovalidacion(ctx.actor.userId, ultima.intervinientesIds),
       ventana: {
         estado: v.estado,
         fechaLimite: v.fechaLimite ? v.fechaLimite.toISOString() : null,
@@ -93,11 +113,13 @@ export async function worklistRegistro(
     };
   });
 
-  // Aviso emergente: indicadores propios por vencer (≤7 días) aún sin enviar.
+  // Aviso emergente: indicadores que el usuario carga, por vencer (≤7 días)
+  // y aún sin enviar.
   const RESUELTOS = ["ENVIADO", "EN_REVISION", "APROBADO", "RECTIFICADO"];
   const proximosAVencer = items
     .filter(
       (i) =>
+        i.puedeCargar &&
         i.ventana.estado === "ABIERTA" &&
         i.ventana.diasRestantes !== null &&
         i.ventana.diasRestantes <= 7 &&
@@ -114,7 +136,7 @@ export async function worklistRegistro(
     anio,
     items,
     proximosAVencer,
-    puedeValidar: tieneRol(ctx.actor, "DGPD_VALIDADOR", "ADMIN"),
-    puedeCargar: tieneRol(ctx.actor, "DEPENDENCIA_CARGA", "ADMIN"),
+    puedeValidar,
+    puedeCargar,
   };
 }

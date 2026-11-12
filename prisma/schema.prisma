@@ -6,6 +6,7 @@
 //  y peipj_test no puede apuntarle con constraints.
 //  El cálculo de cumplimiento vive en la capa de dominio (TS), NO en vistas SQL.
 //  Esquema gestionado con `prisma migrate deploy` (nunca `db push` contra PG).
+//  Migraciones nombradas con prefijo numérico secuencial: 0_init, 1_…, 2_…
 // ============================================================================
 
 generator client {
@@ -205,6 +206,9 @@ model Periodo {
   fechaLimiteCarga DateTime?
   mediciones       Medicion[]
 
+  // Índice único recreado con NULLS NOT DISTINCT (migración 1_unicidad_nulls_not_distinct):
+  // `numero` es NULL en los períodos anuales. Prisma no introspecciona esa marca;
+  // no cambiar columnas ni nombre de este @@unique o se regeneraría sin ella.
   @@unique([anio, tipo, numero])
 }
 
@@ -228,6 +232,9 @@ model Medicion {
   fuente            String?
   usuarioCargaId    Int?
   observaciones     String?   @db.Text
+  /// Usuarios que cargaron, editaron, adjuntaron o enviaron esta versión.
+  /// Ninguno de ellos puede resolverla (regla de autovalidación).
+  intervinientesIds Int[]     @default([])
 
   indicador    Indicador         @relation(fields: [indicadorId], references: [id])
   periodo      Periodo           @relation(fields: [periodoId], references: [id])
@@ -236,6 +243,9 @@ model Medicion {
   evidencias   Evidencia[]
   historial    HistorialEstado[]
 
+  // Índice único recreado con NULLS NOT DISTINCT (migración 1_unicidad_nulls_not_distinct):
+  // circunscripcionId es NULL en toda medición nacional. Prisma no introspecciona
+  // esa marca; no cambiar columnas ni nombre de este @@unique.
   @@unique([indicadorId, periodoId, circunscripcionId, version])
   @@index([indicadorId])
   @@index([periodoId])
@@ -291,15 +301,18 @@ model HistorialEstado {
 
 // ------------------------------ Seguridad -----------------------------------
 model Usuario {
-  id           Int                  @id @default(autoincrement())
-  nombre       String
-  email        String               @unique
-  passwordHash String
-  activo       Boolean              @default(true)
+  id            Int                  @id @default(autoincrement())
+  nombre        String
+  email         String               @unique
+  passwordHash  String
+  activo        Boolean              @default(true)
   /// Tema visual preferido: "agentes" (Agentes PEI, default) | "clasico".
-  tema         String               @default("agentes")
-  roles        UsuarioRol[]
-  dependencias UsuarioDependencia[]
+  tema          String               @default("agentes")
+  /// Se incrementa al desactivar, cambiar la contraseña o cerrar sesiones:
+  /// invalida los JWT emitidos antes.
+  sesionVersion Int                  @default(0)
+  roles         UsuarioRol[]
+  dependencias  UsuarioDependencia[]
 }
 
 model UsuarioRol {
@@ -513,4 +526,27 @@ model PresupuestoEjercicio {
   ejecutado     Decimal  @db.Decimal(20, 2)
   actualizadoEn DateTime @updatedAt
   usuarioId     Int?
+}
+
+// ---------------------------- Auditoría -------------------------------------
+model AuditoriaAdmin {
+  // Bitácora append-only de cambios administrativos (trigger en la migración
+  // impide UPDATE y DELETE). Vive en la base de control; `env` indica sobre qué
+  // base se actuó. usuarioId es FK suelta al padrón (patrón HistorialEstado).
+  id           BigInt   @id @default(autoincrement())
+  fecha        DateTime @default(now())
+  usuarioId    Int
+  usuarioEmail String
+  env          String
+  accion       String
+  entidad      String
+  entidadId    String?
+  antes        Json?
+  despues      Json?
+  motivo       String?  @db.Text
+
+  @@index([fecha])
+  @@index([entidad, entidadId, fecha])
+  @@index([usuarioId, fecha])
+  @@index([accion, fecha])
 }

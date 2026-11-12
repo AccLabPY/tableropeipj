@@ -37,6 +37,11 @@ export interface DetalleCargaDTO {
   cargadorNombre: string | null;
   /** true si no existe una versión posterior de este indicador/período. */
   esUltimaVersion: boolean;
+  /** Id de la última versión del indicador/período (para enlazarla). */
+  ultimaVersionId: string;
+  /** El usuario puede tomar en revisión o resolver esta versión
+   *  (es validador y no intervino en ella). */
+  puedeResolver: boolean;
   historial: EventoHistorialDTO[];
   resoluciones: ResolucionDTO[];
 }

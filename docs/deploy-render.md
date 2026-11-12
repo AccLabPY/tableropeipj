@@ -1,3 +1,7 @@
+> **Histórico.** Describe el entorno anterior en la nube (Render + TiDB),
+> que sigue activo solo como respaldo hasta su decomiso. No usar para nuevos
+> despliegues: la operación vigente está en [despliegue-pj.md](despliegue-pj.md).
+
 # Despliegue en Render + TiDB Serverless (Fase A)
 
 Guía paso a paso para poner la plataforma en producción. El deploy **no está

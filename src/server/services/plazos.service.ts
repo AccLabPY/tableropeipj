@@ -1,5 +1,6 @@
 import type { Ctx } from "@/server/db/env";
 import {
+  dependenciasResponsables,
   resolverVentana,
   type ContextoVentana,
   type ReglaVentana,
@@ -47,7 +48,9 @@ export function contextoDe(ind: IndicadorCompleto): ContextoVentana {
     indicadorCodigo: ind.codigo,
     aeCodigo: ind.ae?.codigo ?? null,
     oeCodigo: ind.oe.codigo,
-    dependenciaIds: ind.responsables.map((r) => r.dependenciaId),
+    // Solo dependencias de carga: una prórroga a una dependencia FUENTE no
+    // extiende el plazo de indicadores que no carga.
+    dependenciaIds: dependenciasResponsables(ind.responsables),
   };
 }
 

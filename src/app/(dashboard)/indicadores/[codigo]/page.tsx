@@ -277,6 +277,9 @@ export default async function DetalleIndicadorPage({
                 label="Umbral efectivo"
                 valor={`≥${Math.round(est.umbralVerde * 100)}% / ≥${Math.round(est.umbralAmarillo * 100)}% (${est.umbralOrigen.toLowerCase()})`}
               />
+              {est.peso !== 1 ? (
+                <Ficha label="Peso en su acción" valor={String(est.peso)} />
+              ) : null}
               {ficha.descripcion ? (
                 <Ficha label="Descripción" valor={ficha.descripcion} ancho />
               ) : null}

@@ -1,10 +1,14 @@
 import { createHash } from "node:crypto";
 import { Prisma, type EstadoWF as EstadoWFDb } from "@prisma/client";
-import type { Ctx } from "@/server/db/env";
+import type { Ctx, CtxTx } from "@/server/db/env";
+import { enTransaccion, esViolacionUnica } from "@/server/db/tx";
 import {
   ESTADOS_EDITABLES,
+  ESTADOS_NUEVA_VERSION,
   calcularValorObservado,
   clasificarFormula,
+  dependenciasResponsables,
+  esAutovalidacion,
   nivelAlcanzado,
   validarTransicion,
   variablesRequeridas,
@@ -13,6 +17,7 @@ import {
 import type { EstadoWF } from "@/domain/types";
 import { ApiError, noEncontrado, sinPermiso } from "@/server/api/api-error";
 import {
+  indicadorPorId,
   porCodigo,
   type IndicadorCompleto,
 } from "@/server/repositories/indicador.repo";
@@ -22,7 +27,7 @@ import {
   scopeMediciones,
   type MedicionCompleta,
 } from "@/server/repositories/medicion.repo";
-import { tieneRol } from "@/server/auth/guards";
+import { tieneRol, type Actor } from "@/server/auth/guards";
 import type { MedicionInput, ValidarInput, EvidenciaInput } from "@/shared/schemas/medicion";
 import { num } from "./mappers";
 import { invalidarEstadoPEI } from "./estado-cache";
@@ -37,10 +42,15 @@ import {
 const D = (n: number) => new Prisma.Decimal(n);
 
 /**
- * Casos de uso del workflow de mediciones (§11).
- * - Historial APPEND-ONLY: toda transición escribe HistorialEstado.
+ * Casos de uso del workflow de mediciones.
+ * - Historial APPEND-ONLY: toda transición escribe HistorialEstado en la misma
+ *   transacción que el cambio de estado.
+ * - Control optimista: el cambio de estado exige que la medición siga en el
+ *   estado leído; si otra persona la movió antes, 409 ESTADO_CAMBIADO.
  * - Una medición APROBADA nunca se sobrescribe: rectificar crea versión nueva.
- * - Las transiciones se validan con la máquina de estados del dominio.
+ * - Carga compartida: principal y corresponsables editan la misma medición.
+ * - Autovalidación: quien intervino en una versión no puede resolverla.
+ * - Notificaciones, SLA e invalidación de cachés van DESPUÉS del commit.
  */
 
 /** Emite notificaciones tras una transición. Nunca rompe el caso de uso. */
@@ -58,33 +68,53 @@ async function notificarSeguro(
   }
 }
 
-function transicionar(
-  ctx: Ctx,
-  medicionId: bigint,
-  desde: EstadoWF | null,
-  hacia: EstadoWF,
-  comentario?: string | null,
-) {
-  invalidarEstadoPEI(); // toda transición puede alterar los tableros
-  return Promise.all([
-    ctx.db.medicion.update({
-      where: { id: medicionId },
-      data: { estado: hacia as EstadoWFDb },
-    }),
-    ctx.db.historialEstado.create({
-      data: {
-        medicionId,
-        estadoAnterior: desde as EstadoWFDb | null,
-        estadoNuevo: hacia as EstadoWFDb,
-        usuarioId: ctx.actor.userId,
-        comentario: comentario ?? null,
-      },
-    }),
-  ]);
+/** Alta del actor en los intervinientes de la versión (si no figura ya). */
+function intervenir(
+  intervinientesIds: readonly number[],
+  actor: Actor,
+): Prisma.MedicionUpdateManyMutationInput {
+  return intervinientesIds.includes(actor.userId)
+    ? {}
+    : { intervinientesIds: { push: actor.userId } };
 }
 
-function exigirTransicion(ctx: Ctx, desde: EstadoWF, hacia: EstadoWF): void {
-  const r = validarTransicion(desde, hacia, ctx.actor.roles);
+/**
+ * Cambio de estado con control optimista + historial, dentro de una
+ * transacción. Con READ COMMITTED, PostgreSQL reevalúa el `estado = desde`
+ * tras el bloqueo de fila: de dos requests concurrentes, solo uno avanza.
+ */
+async function transicionarTx(
+  tx: CtxTx,
+  medicionId: bigint,
+  desde: EstadoWF,
+  hacia: EstadoWF,
+  comentario?: string | null,
+  extra: Prisma.MedicionUpdateManyMutationInput = {},
+): Promise<void> {
+  const { count } = await tx.db.medicion.updateMany({
+    where: { id: medicionId, estado: desde as EstadoWFDb },
+    data: { ...extra, estado: hacia as EstadoWFDb },
+  });
+  if (count !== 1) {
+    throw new ApiError(
+      409,
+      "ESTADO_CAMBIADO",
+      `La medición ya no está en estado ${desde}: otra persona la modificó. Recargue la página.`,
+    );
+  }
+  await tx.db.historialEstado.create({
+    data: {
+      medicionId,
+      estadoAnterior: desde as EstadoWFDb,
+      estadoNuevo: hacia as EstadoWFDb,
+      usuarioId: tx.actor.userId,
+      comentario: comentario ?? null,
+    },
+  });
+}
+
+function exigirTransicion(actor: Actor, desde: EstadoWF, hacia: EstadoWF): void {
+  const r = validarTransicion(desde, hacia, actor.roles);
   if (!r.ok) {
     throw new ApiError(
       r.error === "TRANSICION_INVALIDA" ? 422 : 403,
@@ -96,25 +126,48 @@ function exigirTransicion(ctx: Ctx, desde: EstadoWF, hacia: EstadoWF): void {
   }
 }
 
-function exigirPropiedad(ctx: Ctx, dependenciaId: number): void {
-  const esScoped =
-    tieneRol(ctx.actor, "DEPENDENCIA_CARGA") &&
-    !tieneRol(ctx.actor, "ADMIN", "DGPD_VALIDADOR");
-  if (esScoped && !ctx.actor.dependenciaIds.includes(dependenciaId)) {
-    throw sinPermiso();
+/** ¿El actor carga con alcance limitado a sus dependencias? */
+function esCargaScoped(actor: Actor): boolean {
+  return (
+    tieneRol(actor, "DEPENDENCIA_CARGA") &&
+    !tieneRol(actor, "ADMIN", "DGPD_VALIDADOR")
+  );
+}
+
+/**
+ * Permiso de carga sobre un indicador: la dependencia del actor debe ser
+ * PRINCIPAL o CORRESPONSABLE. ADMIN y DGPD no tienen restricción por
+ * dependencia (DGPD igual no puede cargar: lo impide el guard de rol).
+ */
+function exigirPermisoCarga(actor: Actor, ind: IndicadorCompleto): void {
+  if (!esCargaScoped(actor)) return;
+  const deps = dependenciasResponsables(ind.responsables);
+  if (!deps.some((d) => actor.dependenciaIds.includes(d))) throw sinPermiso();
+}
+
+/** Autovalidación: quien intervino en la versión no puede resolverla. */
+function exigirNoAutovalidacion(actor: Actor, m: MedicionCompleta): void {
+  if (esAutovalidacion(actor.userId, m.intervinientesIds)) {
+    throw new ApiError(
+      403,
+      "AUTOVALIDACION",
+      "No puede resolver una medición que usted cargó, editó o envió: debe hacerlo otro validador.",
+    );
   }
 }
 
-/** Indicador (del catálogo cacheado) al que pertenece una medición. */
+/** Indicador de una medición: del catálogo cacheado o, si está inactivo, de la base. */
 async function indicadorDeMedicion(
   ctx: Ctx,
   indicadorId: number,
-): Promise<IndicadorCompleto | undefined> {
+): Promise<IndicadorCompleto> {
   const inds = await catalogoIndicadores(ctx);
-  return inds.find((i) => i.id === indicadorId);
+  const ind = inds.find((i) => i.id === indicadorId) ?? (await indicadorPorId(ctx, indicadorId));
+  if (!ind) throw noEncontrado("Indicador");
+  return ind;
 }
 
-async function medicionOThrow(ctx: Ctx, id: bigint): Promise<MedicionCompleta> {
+async function medicionOThrow(ctx: CtxTx, id: bigint): Promise<MedicionCompleta> {
   const m = await ctx.db.medicion.findFirst({
     where: { id, ...scopeMediciones(ctx.actor) },
     include: INCLUDE_MEDICION,
@@ -123,24 +176,34 @@ async function medicionOThrow(ctx: Ctx, id: bigint): Promise<MedicionCompleta> {
   return m;
 }
 
+/** Traduce el choque de dos escrituras concurrentes sobre la misma versión. */
+function concurrente(e: unknown): unknown {
+  return esViolacionUnica(e)
+    ? new ApiError(
+        409,
+        "CARGA_CONCURRENTE",
+        "Otra persona registró esta medición al mismo tiempo. Recargue la página.",
+      )
+    : e;
+}
+
 /**
  * Deriva el valor observado con el MOTOR DE FÓRMULAS del dominio. El backend
  * SIEMPRE recalcula a partir de las variables base — nunca confía en un valor
  * precomputado por el cliente. Prioridad de modalidades:
- *   nivelEscala → valores {a,b,c/valor} → legacy numerador/denominador →
- *   legacy valorObservado directo.
+ *   % de escala → nivelEscala → valores {a,b,c/valor} → legacy
+ *   numerador/denominador → legacy valorObservado directo.
  * Devuelve además las variables normalizadas a persistir.
  */
-async function derivarValor(
-  ctx: Ctx,
+function derivarValor(
   ind: IndicadorCompleto,
   input: MedicionInput,
-): Promise<{
+): {
   valor: number;
   valores: Record<string, number> | null;
   /** Nivel de escala a persistir (derivado del % o informado). */
   nivel: number | null;
-}> {
+} {
   const escala = ind.escala.map((e) => ({
     nivel: e.nivel,
     pctMin: num(e.pctMin)!,
@@ -233,10 +296,29 @@ async function derivarValor(
 }
 
 /**
+ * Numerador y denominador de la fórmula, para reportes y la ETL futura.
+ * En la suma-razón ((a)+(b))/(c) el numerador es a+b y el denominador c.
+ */
+function numeradorDenominador(
+  ind: IndicadorCompleto,
+  valores: Record<string, number> | null,
+  input: MedicionInput,
+): { numerador: number | null; denominador: number | null } {
+  if (valores && clasificarFormula(ind.formula, ind.esEscala) === "SUMA_RAZON") {
+    return { numerador: valores.a! + valores.b!, denominador: valores.c! };
+  }
+  return {
+    numerador: valores?.a ?? input.numerador ?? null,
+    denominador: valores?.b ?? input.denominador ?? null,
+  };
+}
+
+/**
  * Crea o actualiza el BORRADOR de la medición del indicador/período.
- * Si la última versión está en estado editable (BORRADOR/OBSERVADO) se
- * actualiza; si no existe medición, se crea v1; si está en curso o aprobada,
- * 409 (la corrección de una aprobada es `rectificar`).
+ * - Sin medición: crea v1.
+ * - Última versión RECHAZADA (circuito retirado): crea v+1 en BORRADOR.
+ * - Última versión BORRADOR/OBSERVADO: la actualiza.
+ * - En curso o aprobada: 409 (la corrección de una aprobada es `rectificar`).
  */
 export async function guardarBorrador(
   ctx: Ctx,
@@ -246,24 +328,12 @@ export async function guardarBorrador(
   if (!ind) throw noEncontrado(`Indicador ${input.indicadorCodigo}`);
   const principal = ind.responsables.find((r) => r.rol === "PRINCIPAL");
   if (!principal) throw new ApiError(422, "SIN_RESPONSABLE", "El indicador no tiene dependencia principal.");
-  exigirPropiedad(ctx, principal.dependenciaId);
+  exigirPermisoCarga(ctx.actor, ind);
   await exigirCargaHabilitada(ctx, ind, input.anio);
 
   const periodo = await periodoAnual(ctx, input.anio);
-  const { valor, valores, nivel } = await derivarValor(ctx, ind, input);
-
-  const existentes = await ctx.db.medicion.findMany({
-    where: { indicadorId: ind.id, periodoId: periodo.id },
-    orderBy: { version: "desc" },
-    take: 1,
-  });
-  const ultima = existentes[0];
-  invalidarEstadoPEI(); // el chip de estado de carga vive en el estado cacheado
-
-  // a↦numerador, b↦denominador cuando la fórmula es una razón de 2 variables
-  // (continuidad con reportes y la ETL futura).
-  const numerador = valores?.a ?? input.numerador ?? null;
-  const denominador = valores?.b ?? input.denominador ?? null;
+  const { valor, valores, nivel } = derivarValor(ind, input);
+  const { numerador, denominador } = numeradorDenominador(ind, valores, input);
   const datos = {
     numerador: numerador != null ? D(numerador) : null,
     denominador: denominador != null ? D(denominador) : null,
@@ -272,85 +342,135 @@ export async function guardarBorrador(
     valorObservado: D(valor),
     fuente: input.fuente ?? null,
     observaciones: input.observaciones ?? null,
-    fechaCorte: input.fechaCorte ?? null,
   };
+  const yo = ctx.actor.userId;
 
-  if (!ultima) {
-    const creada = await ctx.db.medicion.create({
-      data: {
-        indicadorId: ind.id,
-        periodoId: periodo.id,
-        dependenciaId: principal.dependenciaId,
-        usuarioCargaId: ctx.actor.userId,
-        estado: "BORRADOR",
-        version: 1,
-        ...datos,
-      },
-    });
-    await ctx.db.historialEstado.create({
-      data: {
-        medicionId: creada.id,
-        estadoAnterior: null,
-        estadoNuevo: "BORRADOR",
-        usuarioId: ctx.actor.userId,
-      },
-    });
-    return medicionOThrow(ctx, creada.id);
-  }
+  let id: bigint;
+  try {
+    id = await enTransaccion(ctx, async (tx) => {
+      const ultima = await tx.db.medicion.findFirst({
+        where: { indicadorId: ind.id, periodoId: periodo.id },
+        orderBy: { version: "desc" },
+        select: { id: true, estado: true, version: true, intervinientesIds: true },
+      });
 
-  if (!ESTADOS_EDITABLES.includes(ultima.estado as EstadoWF)) {
-    throw new ApiError(
-      409,
-      "MEDICION_EN_CURSO",
-      `Ya existe una medición en estado ${ultima.estado} para este período. ` +
-        (ultima.estado === "APROBADO"
-          ? "Para corregirla, solicite una rectificación."
-          : "Espere el resultado de la validación."),
-    );
+      if (!ultima || ESTADOS_NUEVA_VERSION.includes(ultima.estado as EstadoWF)) {
+        const creada = await tx.db.medicion.create({
+          data: {
+            indicadorId: ind.id,
+            periodoId: periodo.id,
+            dependenciaId: principal.dependenciaId,
+            usuarioCargaId: yo,
+            intervinientesIds: [yo],
+            estado: "BORRADOR",
+            version: (ultima?.version ?? 0) + 1,
+            ...datos,
+            fechaCorte: input.fechaCorte ?? null,
+          },
+        });
+        await tx.db.historialEstado.create({
+          data: {
+            medicionId: creada.id,
+            estadoAnterior: null,
+            estadoNuevo: "BORRADOR",
+            usuarioId: yo,
+            comentario: ultima
+              ? `Nueva versión tras la v${ultima.version} rechazada.`
+              : null,
+          },
+        });
+        return creada.id;
+      }
+
+      if (!ESTADOS_EDITABLES.includes(ultima.estado as EstadoWF)) {
+        throw new ApiError(
+          409,
+          "MEDICION_EN_CURSO",
+          `Ya existe una medición en estado ${ultima.estado} para este período. ` +
+            (ultima.estado === "APROBADO"
+              ? "Para corregirla, solicite una rectificación."
+              : "Espere el resultado de la validación."),
+        );
+      }
+      const { count } = await tx.db.medicion.updateMany({
+        where: {
+          id: ultima.id,
+          estado: { in: ESTADOS_EDITABLES as EstadoWFDb[] },
+        },
+        data: {
+          ...datos,
+          // `undefined` conserva la fecha de corte guardada; `null` la borra.
+          fechaCorte: input.fechaCorte,
+          dependenciaId: principal.dependenciaId,
+          usuarioCargaId: yo,
+          ...intervenir(ultima.intervinientesIds, ctx.actor),
+        },
+      });
+      if (count !== 1) {
+        throw new ApiError(
+          409,
+          "ESTADO_CAMBIADO",
+          "La medición cambió de estado mientras la editaba. Recargue la página.",
+        );
+      }
+      return ultima.id;
+    });
+  } catch (e) {
+    throw concurrente(e);
   }
-  exigirPropiedad(ctx, ultima.dependenciaId);
-  await ctx.db.medicion.update({ where: { id: ultima.id }, data: datos });
-  return medicionOThrow(ctx, ultima.id);
+  invalidarEstadoPEI();
+  return medicionOThrow(ctx, id);
 }
 
-/** BORRADOR/OBSERVADO → ENVIADO (dependencia dueña). */
+/** BORRADOR/OBSERVADO → ENVIADO (dependencias responsables de la carga). */
 export async function enviar(ctx: Ctx, id: bigint): Promise<MedicionCompleta> {
   const m = await medicionOThrow(ctx, id);
-  exigirPropiedad(ctx, m.dependenciaId);
   const ind = await indicadorDeMedicion(ctx, m.indicadorId);
-  if (ind) await exigirCargaHabilitada(ctx, ind, m.periodo.anio);
+  exigirPermisoCarga(ctx.actor, ind);
+  await exigirCargaHabilitada(ctx, ind, m.periodo.anio);
   const desde = m.estado as EstadoWF;
-  exigirTransicion(ctx, desde, "ENVIADO");
-  await transicionar(ctx, m.id, desde, "ENVIADO");
-  // Bitácora de SLA: puntualidad del envío frente al plazo vigente.
-  if (ind) {
-    const ventana = await ventanaDeIndicador(ctx, ind, m.periodo.anio);
-    await registrarEnvio(ctx, {
-      medicionId: m.id,
-      indicadorId: m.indicadorId,
-      dependenciaId: m.dependenciaId,
-      periodoId: m.periodoId,
-      ventana,
-    });
+  exigirTransicion(ctx.actor, desde, "ENVIADO");
+  if (!m.fuente?.trim()) {
+    throw new ApiError(
+      422,
+      "FUENTE_REQUERIDA",
+      "Indique la fuente o medio de verificación antes de enviar a validación.",
+    );
   }
+  await enTransaccion(ctx, (tx) =>
+    transicionarTx(tx, m.id, desde, "ENVIADO", null, intervenir(m.intervinientesIds, ctx.actor)),
+  );
+  invalidarEstadoPEI();
+
+  // Bitácora de SLA: puntualidad del envío frente al plazo vigente.
+  const ventana = await ventanaDeIndicador(ctx, ind, m.periodo.anio);
+  await registrarEnvio(ctx, {
+    medicionId: m.id,
+    indicadorId: m.indicadorId,
+    dependenciaId: m.dependenciaId,
+    periodoId: m.periodoId,
+    ventana,
+  });
   await notificarSeguro(ctx, m, "ENVIADO");
   return medicionOThrow(ctx, id);
 }
 
-/** ENVIADO → EN_REVISION (validador la toma). */
+/** ENVIADO → EN_REVISION (un validador que no intervino la toma). */
 export async function tomarEnRevision(
   ctx: Ctx,
   id: bigint,
 ): Promise<MedicionCompleta> {
   const m = await medicionOThrow(ctx, id);
   const desde = m.estado as EstadoWF;
-  exigirTransicion(ctx, desde, "EN_REVISION");
-  await transicionar(ctx, m.id, desde, "EN_REVISION");
+  exigirTransicion(ctx.actor, desde, "EN_REVISION");
+  exigirNoAutovalidacion(ctx.actor, m);
+  await enTransaccion(ctx, (tx) => transicionarTx(tx, m.id, desde, "EN_REVISION"));
+  invalidarEstadoPEI();
   await notificarSeguro(ctx, m, "EN_REVISION");
   return medicionOThrow(ctx, id);
 }
 
-/** Resolución del validador: APROBADO / OBSERVADO / RECHAZADO + Validacion. */
+/** Resolución del validador: APROBADO u OBSERVADO, con su Validacion. */
 export async function validar(
   ctx: Ctx,
   id: bigint,
@@ -358,23 +478,30 @@ export async function validar(
 ): Promise<MedicionCompleta> {
   const m = await medicionOThrow(ctx, id);
   const desde = m.estado as EstadoWF;
-  exigirTransicion(ctx, desde, input.resultado);
-  await transicionar(ctx, m.id, desde, input.resultado, input.comentario);
-  await ctx.db.validacion.create({
-    data: {
-      medicionId: m.id,
-      usuarioId: ctx.actor.userId,
-      resultado: input.resultado,
-      comentario: input.comentario ?? null,
-    },
+  exigirTransicion(ctx.actor, desde, input.resultado);
+  exigirNoAutovalidacion(ctx.actor, m);
+  const comentario = input.comentario?.trim() || null;
+  await enTransaccion(ctx, async (tx) => {
+    await transicionarTx(tx, m.id, desde, input.resultado, comentario);
+    await tx.db.validacion.create({
+      data: {
+        medicionId: m.id,
+        usuarioId: ctx.actor.userId,
+        resultado: input.resultado,
+        comentario,
+      },
+    });
   });
-  await notificarSeguro(ctx, m, input.resultado, input.comentario);
+  invalidarEstadoPEI();
+  await notificarSeguro(ctx, m, input.resultado, comentario);
   return medicionOThrow(ctx, id);
 }
 
 /**
  * Rectificación de una APROBADA: la versión vigente pasa a RECTIFICADO y se
- * crea la versión n+1 en BORRADOR con los datos copiados (append-only).
+ * crea la versión n+1 en BORRADOR con los datos y las evidencias copiadas
+ * (append-only). La nueva versión conserva quién cargó los datos: la
+ * autovalidación sigue impidiendo que lo resuelvan quienes intervinieron.
  */
 export async function rectificar(
   ctx: Ctx,
@@ -383,38 +510,84 @@ export async function rectificar(
 ): Promise<MedicionCompleta> {
   const m = await medicionOThrow(ctx, id);
   const desde = m.estado as EstadoWF;
-  exigirTransicion(ctx, desde, "RECTIFICADO");
-  await transicionar(ctx, m.id, desde, "RECTIFICADO", motivo);
+  exigirTransicion(ctx.actor, desde, "RECTIFICADO");
 
-  const nueva = await ctx.db.medicion.create({
-    data: {
-      indicadorId: m.indicadorId,
-      periodoId: m.periodoId,
-      dependenciaId: m.dependenciaId,
-      usuarioCargaId: ctx.actor.userId,
-      estado: "BORRADOR",
-      version: m.version + 1,
-      numerador: m.numerador,
-      denominador: m.denominador,
-      nivelEscala: m.nivelEscala,
-      valoresVariables: m.valoresVariables ?? Prisma.JsonNull,
-      valorObservado: m.valorObservado,
-      fuente: m.fuente,
-      observaciones: `Rectifica v${m.version}: ${motivo}`,
-      fechaCorte: m.fechaCorte,
-    },
-  });
-  await ctx.db.historialEstado.create({
-    data: {
-      medicionId: nueva.id,
-      estadoAnterior: null,
-      estadoNuevo: "BORRADOR",
-      usuarioId: ctx.actor.userId,
-      comentario: `Versión de rectificación de v${m.version}.`,
-    },
-  });
-  await notificarSeguro(ctx, m, "RECTIFICADO", motivo);
-  return medicionOThrow(ctx, nueva.id);
+  const nota = `Rectifica v${m.version}: ${motivo}`;
+  let nuevaId: bigint;
+  try {
+    nuevaId = await enTransaccion(
+      ctx,
+      async (tx) => {
+        await transicionarTx(tx, m.id, desde, "RECTIFICADO", motivo);
+        const max = await tx.db.medicion.aggregate({
+          where: { indicadorId: m.indicadorId, periodoId: m.periodoId },
+          _max: { version: true },
+        });
+        const nueva = await tx.db.medicion.create({
+          data: {
+            indicadorId: m.indicadorId,
+            periodoId: m.periodoId,
+            dependenciaId: m.dependenciaId,
+            circunscripcionId: m.circunscripcionId,
+            usuarioCargaId: m.usuarioCargaId,
+            intervinientesIds: m.intervinientesIds,
+            estado: "BORRADOR",
+            version: (max._max.version ?? m.version) + 1,
+            numerador: m.numerador,
+            denominador: m.denominador,
+            nivelEscala: m.nivelEscala,
+            valoresVariables: m.valoresVariables ?? Prisma.JsonNull,
+            valorObservado: m.valorObservado,
+            fuente: m.fuente,
+            observaciones: m.observaciones ? `${m.observaciones}\n\n${nota}` : nota,
+            fechaCorte: m.fechaCorte,
+          },
+        });
+        // Copia de evidencias en la base: los binarios no pasan por Node.
+        await tx.db.$executeRaw`
+          INSERT INTO "Evidencia" ("medicionId", "nombreArchivo", "tipo", "rutaOUrl",
+            "contenido", "mimeType", "tamanioBytes", "hashSha256", "fecha", "usuarioId", "estado")
+          SELECT ${nueva.id}, "nombreArchivo", "tipo", "rutaOUrl", "contenido", "mimeType",
+            "tamanioBytes", "hashSha256", "fecha", "usuarioId", 'heredada'
+          FROM "Evidencia" WHERE "medicionId" = ${m.id}`;
+        await tx.db.historialEstado.create({
+          data: {
+            medicionId: nueva.id,
+            estadoAnterior: null,
+            estadoNuevo: "BORRADOR",
+            usuarioId: ctx.actor.userId,
+            comentario: `Versión de rectificación de v${m.version}.`,
+          },
+        });
+        return nueva.id;
+      },
+      { timeoutMs: 30_000 },
+    );
+  } catch (e) {
+    throw concurrente(e);
+  }
+  invalidarEstadoPEI();
+  const nueva = await medicionOThrow(ctx, nuevaId);
+  await notificarSeguro(ctx, nueva, "RECTIFICADO", motivo);
+  return nueva;
+}
+
+/**
+ * Valida que se pueda adjuntar a la medición: permiso de carga, ventana
+ * abierta y versión editable (BORRADOR u OBSERVADO). Una RECHAZADA primero
+ * debe iniciar su versión nueva con guardarBorrador.
+ */
+async function exigirAdjuntable(ctx: Ctx, m: MedicionCompleta): Promise<void> {
+  const ind = await indicadorDeMedicion(ctx, m.indicadorId);
+  exigirPermisoCarga(ctx.actor, ind);
+  await exigirCargaHabilitada(ctx, ind, m.periodo.anio);
+  if (!ESTADOS_EDITABLES.includes(m.estado as EstadoWF)) {
+    throw new ApiError(
+      409,
+      "MEDICION_EN_CURSO",
+      `No se pueden adjuntar evidencias a una medición en estado ${m.estado}.`,
+    );
+  }
 }
 
 /** Registra metadatos de evidencia (legado: URL/ruta externa, sin binario). */
@@ -424,17 +597,24 @@ export async function agregarEvidencia(
   input: EvidenciaInput,
 ): Promise<void> {
   const m = await medicionOThrow(ctx, id);
-  exigirPropiedad(ctx, m.dependenciaId);
-  await ctx.db.evidencia.create({
-    data: {
-      medicionId: m.id,
-      nombreArchivo: repararNombreArchivo(input.nombreArchivo),
-      tipo: input.tipo ?? null,
-      rutaOUrl: input.rutaOUrl,
-      hashSha256: input.hashSha256 ?? null,
-      usuarioId: ctx.actor.userId,
-    },
+  await exigirAdjuntable(ctx, m);
+  await enTransaccion(ctx, async (tx) => {
+    await tx.db.evidencia.create({
+      data: {
+        medicionId: m.id,
+        nombreArchivo: repararNombreArchivo(input.nombreArchivo),
+        tipo: input.tipo ?? null,
+        rutaOUrl: input.rutaOUrl,
+        hashSha256: input.hashSha256 ?? null,
+        usuarioId: ctx.actor.userId,
+      },
+    });
+    await tx.db.medicion.updateMany({
+      where: { id: m.id },
+      data: intervenir(m.intervinientesIds, ctx.actor),
+    });
   });
+  invalidarEstadoPEI();
 }
 
 /**
@@ -443,9 +623,9 @@ export async function agregarEvidencia(
  * patrón es inequívoco y la reparación produce texto válido.
  */
 export function repararNombreArchivo(nombre: string): string {
-  if (!/[ÃÂ][\u0080-\u00BF]/.test(nombre)) return nombre;
+  if (!/[ÃÂ][\u0080-¿]/.test(nombre)) return nombre;
   const reparado = Buffer.from(nombre, "latin1").toString("utf8");
-  return reparado.includes("\uFFFD") ? nombre : reparado;
+  return reparado.includes("�") ? nombre : reparado;
 }
 
 const EVIDENCIA_TAMANIO_MAXIMO = 25 * 1024 * 1024; // 25MB
@@ -487,40 +667,51 @@ export async function agregarEvidenciaArchivo(
     );
   }
   const m = await medicionOThrow(ctx, id);
-  exigirPropiedad(ctx, m.dependenciaId);
-  const ind = await indicadorDeMedicion(ctx, m.indicadorId);
-  if (ind) await exigirCargaHabilitada(ctx, ind, m.periodo.anio);
+  await exigirAdjuntable(ctx, m);
   const hashSha256 = createHash("sha256").update(archivo.contenido).digest("hex");
-  await ctx.db.evidencia.create({
-    data: {
-      medicionId: m.id,
-      nombreArchivo: repararNombreArchivo(archivo.nombreArchivo),
-      rutaOUrl: null,
-      contenido: archivo.contenido,
-      mimeType: archivo.mimeType,
-      tamanioBytes: archivo.contenido.length,
-      hashSha256,
-      usuarioId: ctx.actor.userId,
+  await enTransaccion(
+    ctx,
+    async (tx) => {
+      await tx.db.evidencia.create({
+        data: {
+          medicionId: m.id,
+          nombreArchivo: repararNombreArchivo(archivo.nombreArchivo),
+          rutaOUrl: null,
+          contenido: archivo.contenido,
+          mimeType: archivo.mimeType,
+          tamanioBytes: archivo.contenido.length,
+          hashSha256,
+          usuarioId: ctx.actor.userId,
+        },
+      });
+      await tx.db.medicion.updateMany({
+        where: { id: m.id },
+        data: intervenir(m.intervinientesIds, ctx.actor),
+      });
     },
-  });
+    { timeoutMs: 30_000 },
+  );
+  invalidarEstadoPEI();
 }
 
-/** Elimina un adjunto propio mientras la medición sigue editable. */
+/**
+ * Elimina un adjunto.
+ * - DGPD y ADMIN depuran adjuntos mientras la medición no sea oficial.
+ * - Las dependencias responsables, solo mientras la medición es editable.
+ */
 export async function eliminarEvidencia(
   ctx: Ctx,
   evidenciaId: bigint,
 ): Promise<void> {
-  const ev = await ctx.db.evidencia.findUnique({
-    where: { id: evidenciaId },
-    include: { medicion: { select: { dependenciaId: true, estado: true } } },
+  const ev = await ctx.db.evidencia.findFirst({
+    where: { id: evidenciaId, medicion: scopeMediciones(ctx.actor) },
+    select: { medicion: { select: { estado: true, indicadorId: true } } },
   });
   if (!ev) throw noEncontrado("Evidencia");
   const estado = ev.medicion.estado as EstadoWF;
-  const esValidador = tieneRol(ctx.actor, "ADMIN", "DGPD_VALIDADOR");
 
-  if (esValidador) {
-    // DGPD/Admin pueden depurar adjuntos mientras la medición no sea oficial:
-    // una vez APROBADA (o archivada como RECTIFICADA) el expediente es inmutable.
+  if (tieneRol(ctx.actor, "ADMIN", "DGPD_VALIDADOR")) {
+    // Una vez APROBADA (o archivada como RECTIFICADA) el expediente es inmutable.
     if (estado === "APROBADO" || estado === "RECTIFICADO") {
       throw new ApiError(
         409,
@@ -529,7 +720,8 @@ export async function eliminarEvidencia(
       );
     }
   } else {
-    exigirPropiedad(ctx, ev.medicion.dependenciaId);
+    const ind = await indicadorDeMedicion(ctx, ev.medicion.indicadorId);
+    exigirPermisoCarga(ctx.actor, ind);
     if (!ESTADOS_EDITABLES.includes(estado)) {
       throw new ApiError(
         409,
@@ -539,4 +731,5 @@ export async function eliminarEvidencia(
     }
   }
   await ctx.db.evidencia.delete({ where: { id: evidenciaId } });
+  invalidarEstadoPEI();
 }

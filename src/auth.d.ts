@@ -15,6 +15,7 @@ declare module "next-auth" {
     roles: RolUsuario[];
     dependenciaIds: number[];
     tema: Tema;
+    sesionVersion: number;
   }
 }
 
@@ -23,5 +24,7 @@ declare module "next-auth/jwt" {
     roles?: RolUsuario[];
     dependenciaIds?: number[];
     tema?: Tema;
+    /** sesionVersion de la cuenta al emitir el token. */
+    sv?: number;
   }
 }

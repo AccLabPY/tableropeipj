@@ -26,6 +26,8 @@ import {
 } from "../src/domain/formula";
 
 const prisma = new PrismaClient();
+/** Reescribe mediciones aunque ya tengan trabajo real en la plataforma. */
+const SOBRESCRIBIR = process.argv.includes("--sobrescribir");
 const D = (n: number) => new Prisma.Decimal(n);
 
 interface MedicionReal {
@@ -139,11 +141,12 @@ async function cargar(m: MedicionReal): Promise<string> {
     fuente: m.fuente,
     observaciones: m.observaciones,
     usuarioCargaId: ADMIN_ID,
+    intervinientesIds: [ADMIN_ID],
     fechaCorte: new Date(`${m.fechaCorte}T00:00:00Z`),
   };
 
   // Idempotencia: una medición nacional (circunscripción null) v1 por
-  // indicador+período; el unique con null no deduplica en MySQL → findFirst.
+  // indicador+período.
   const existente = await prisma.medicion.findFirst({
     where: {
       indicadorId: ind.id,
@@ -153,6 +156,18 @@ async function cargar(m: MedicionReal): Promise<string> {
     },
     select: { id: true },
   });
+  if (existente && !SOBRESCRIBIR) {
+    // Re-ejecutar borraría historial, validaciones y evidencias reales: la
+    // medición ya tiene vida propia en la plataforma.
+    const [versiones, archivos, validaciones] = await Promise.all([
+      prisma.medicion.count({ where: { indicadorId: ind.id, periodoId: periodo.id } }),
+      prisma.evidencia.count({ where: { medicionId: existente.id, contenido: { not: null } } }),
+      prisma.validacion.count({ where: { medicionId: existente.id, usuarioId: { not: ADMIN_ID } } }),
+    ]);
+    if (versiones > 1 || archivos > 0 || validaciones > 0) {
+      return `= ${m.codigo} · ${m.etiqueta} · se conserva (tiene versiones, evidencias o validaciones posteriores; use --sobrescribir para forzar)`;
+    }
+  }
   let medId: bigint;
   if (existente) {
     await prisma.medicion.update({ where: { id: existente.id }, data });

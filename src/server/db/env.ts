@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import type { PrismaClient } from "@prisma/client";
+import type { Prisma, PrismaClient } from "@prisma/client";
 import { prismaFor, type DbEnv } from "./client";
 import { getActor, type Actor } from "@/server/auth/guards";
 
@@ -33,6 +33,19 @@ export interface Ctx {
   db: PrismaClient;
   actor: Actor;
   /** Entorno de datos activo — clave de los cachés en memoria. */
+  env: DbEnv;
+}
+
+/**
+ * Contexto dentro de una transacción interactiva. Es un tipo aparte a
+ * propósito: NO debe llegar a funciones cacheadas (conTTL / SWR), cuyos
+ * refrescos en background podrían correr contra una transacción ya cerrada o
+ * cachear datos sin commitear. `Ctx` es asignable a `CtxTx`, así que los
+ * helpers que sirven en ambos casos se tipan con `CtxTx`.
+ */
+export interface CtxTx {
+  db: Prisma.TransactionClient;
+  actor: Actor;
   env: DbEnv;
 }
 

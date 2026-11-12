@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 /**
  * Factory singleton de PrismaClient por entorno de datos.
  * Máximo 2 clientes por proceso (prod/test), cacheados en globalThis para
- * sobrevivir el HMR de dev y no agotar las conexiones de TiDB Serverless
+ * sobrevivir el HMR de dev y no agotar las conexiones de PostgreSQL
  * (connection_limit va en la propia DATABASE_URL).
  *
  * NADIE importa este módulo directamente salvo `getDb()` (src/server/db/env.ts),

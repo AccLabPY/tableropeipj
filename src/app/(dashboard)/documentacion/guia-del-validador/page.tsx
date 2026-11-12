@@ -121,6 +121,13 @@ export default function GuiaDelValidadorPage() {
               <b>eliminarlos</b> desde el panel de evidencias mientras la
               medición no esté aprobada.
             </p>
+            <Callout tipo="advertencia">
+              <b>Nadie valida lo que cargó.</b> Si usted cargó, editó, adjuntó
+              evidencias o envió una medición, la plataforma no le permite
+              tomarla en revisión, aprobarla ni observarla: debe resolverla
+              otro validador o administrador. Así se garantiza la segregación
+              de funciones.
+            </Callout>
             <p>
               Cada resolución queda firmada con su usuario, fecha y comentario
               en el historial inmutable de la medición, y{" "}
@@ -167,9 +174,11 @@ export default function GuiaDelValidadorPage() {
               <b>Rectificar</b> (disponible en el detalle de la carga
               aprobada): la versión vigente pasa a «Rectificada» (queda
               archivada, visible en el historial) y se crea la versión
-              siguiente en borrador para que la dependencia corrija y reenvíe.
-              Los tableros dejan de contar el valor rectificado hasta que la
-              nueva versión sea aprobada.
+              siguiente en borrador, <b>con los mismos datos y una copia de
+              sus evidencias</b>, para que la dependencia corrija y reenvíe.
+              Al confirmar, la plataforma abre la versión nueva. Los tableros
+              dejan de contar el valor rectificado hasta que la nueva versión
+              sea aprobada.
             </p>
             <Callout tipo="tip">
               La regla de oro del modelo: <b>nada se sobrescribe ni se

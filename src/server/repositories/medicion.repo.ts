@@ -4,13 +4,21 @@ import { ROLES_VISION_TOTAL, tieneRol, type Actor } from "@/server/auth/guards";
 
 /**
  * Repositorio de mediciones. SCOPING FORZADO ACÁ, nunca en componentes:
- * DEPENDENCIA_CARGA solo ve mediciones de sus dependencias; los roles de
- * visión total (ADMIN/DGPD/AUTORIDAD/CONSULTA) ven todo.
+ * DEPENDENCIA_CARGA ve las mediciones de los indicadores donde alguna de sus
+ * dependencias es responsable (principal, corresponsable o fuente), más las
+ * registradas a nombre de sus dependencias aunque luego cambie el principal.
+ * Los roles de visión total (ADMIN/DGPD/AUTORIDAD/CONSULTA) ven todo.
  */
 
 export function scopeMediciones(actor: Actor): Prisma.MedicionWhereInput {
   if (tieneRol(actor, ...ROLES_VISION_TOTAL)) return {};
-  return { dependenciaId: { in: actor.dependenciaIds } };
+  const deps = actor.dependenciaIds;
+  return {
+    OR: [
+      { dependenciaId: { in: deps } },
+      { indicador: { responsables: { some: { dependenciaId: { in: deps } } } } },
+    ],
+  };
 }
 
 /**

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { CalendarClock, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, fmtDiasRestantes } from "@/lib/utils";
 
 /**
  * Aviso emergente al entrar a Registro: indicadores propios cuyo plazo de
@@ -99,11 +99,7 @@ export function AvisoVencimientos({
                       : "bg-sem-ambar-bg text-sem-ambar-fg",
                   )}
                 >
-                  {i.diasRestantes <= 0
-                    ? "vence hoy"
-                    : i.diasRestantes === 1
-                      ? "1 día"
-                      : `${i.diasRestantes} días`}
+                  {fmtDiasRestantes(i.diasRestantes, false)}
                 </span>
               </button>
             </li>

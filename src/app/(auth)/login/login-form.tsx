@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
+import { useSearchParams } from "next/navigation";
 import { Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import { loginAction, type EstadoLogin } from "@/server/auth/actions";
 import { cn } from "@/lib/utils";
@@ -33,6 +34,7 @@ function BotonEntrar({ variante }: { variante: Variante }) {
 export function LoginForm({ variante = "clasico" }: { variante?: Variante }) {
   const [estado, accion] = useFormState<EstadoLogin, FormData>(loginAction, {});
   const [verPwd, setVerPwd] = useState(false);
+  const sesionFinalizada = useSearchParams().get("motivo") === "sesion";
   const agentes = variante === "agentes";
 
   const etiqueta = agentes
@@ -116,6 +118,15 @@ export function LoginForm({ variante = "clasico" }: { variante?: Variante }) {
           />
         )}
       </div>
+      {sesionFinalizada && !estado.error ? (
+        <p
+          role="status"
+          className="rounded-pj-sm border border-azul-line bg-azul-soft px-3 py-2 text-[12px] text-azul-d"
+        >
+          Su sesión finalizó: sus permisos cambiaron o la cuenta fue
+          desactivada. Ingrese nuevamente.
+        </p>
+      ) : null}
       {estado.error ? (
         <p
           role="alert"
