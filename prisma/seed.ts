@@ -1,12 +1,17 @@
 /**
- * Seed idempotente del PEI 2026-2030 desde el dataset canónico (prisma/data/*.json).
+ * Seed del PEI 2026-2030 desde el dataset canónico (prisma/data/*.json) para
+ * ENTORNOS NUEVOS. Desde el go-live la fuente de verdad es la base de
+ * producción (lo editado en Administración manda): este seed nunca
+ * sobrescribe datos existentes.
  *
- * - Ejecutar contra PROD:  npm run db:seed:prod   (estructura + usuarios, SIN mediciones)
- * - Ejecutar contra TEST:  npm run db:seed:test   (además SEED_MOCKUP=1 → mediciones demo)
+ * - Base vacía:            prepara el entorno completo con IDs deterministas,
+ *                          idénticos en prod y test (requisito del switch).
+ * - Base con datos:        se niega a correr. Con --forzar-entorno-nuevo
+ *                          solo crea lo que falte, sin tocar lo existente.
+ * - SEED_MOCKUP=1 (test):  reinicia la demo de capacitación: borra y recrea
+ *                          las mediciones de ejemplo. Solo contra bases "test".
  *
- * Upserts por clave natural (codigo/nombre/email) con IDs explícitos deterministas,
- * idénticos en ambas databases (requisito del switch prod/test: los usuarios y
- * catálogos deben coincidir para que las referencias de la base test sean válidas).
+ * Al terminar realinea las secuencias de PostgreSQL con los IDs cargados.
  */
 import { PrismaClient, Prisma, RolResp, EstadoWF } from "@prisma/client";
 import bcrypt from "bcryptjs";
@@ -25,6 +30,24 @@ import { join } from "node:path";
 
 const prisma = new PrismaClient();
 const SEED_MOCKUP = process.env.SEED_MOCKUP === "1";
+const FORZAR = process.argv.includes("--forzar-entorno-nuevo");
+
+/** Tablas con id serial cuya secuencia se realinea tras insertar ids explícitos. */
+const TABLAS_CON_SECUENCIA = [
+  "ObjetivoEstrategico", "AccionEstrategica", "Indicador", "Meta", "EscalaIndicador",
+  "Dependencia", "Circunscripcion", "Periodo", "Usuario", "Riesgo", "PndPilar",
+  "PndObjetivo", "Ods", "UmbralCriticidad", "Medicion", "Validacion", "Evidencia",
+  "HistorialEstado", "Notificacion", "VentanaCarga", "SlaCarga", "LoteEtl", "ErrorEtl",
+  "AuditoriaAdmin",
+];
+
+async function realinearSecuencias(): Promise<void> {
+  for (const t of TABLAS_CON_SECUENCIA) {
+    await prisma.$queryRawUnsafe(
+      `SELECT setval(pg_get_serial_sequence('"${t}"', 'id'), GREATEST(COALESCE((SELECT MAX(id) FROM "${t}"), 1), 1), (SELECT MAX(id) FROM "${t}") IS NOT NULL)`,
+    );
+  }
+}
 
 // ---------------------------------------------------------------------------
 // PND / ODS (matriz de vinculación del PEI)
@@ -82,15 +105,33 @@ async function main() {
   const dbName = dbUrl.split("?")[0]?.split("/").pop() ?? "?";
   console.log(`Seed PEI 2026-2030 → database: ${dbName} · mockup: ${SEED_MOCKUP ? "SÍ" : "no"}\n`);
 
+  const esBaseDePrueba = /test/i.test(dbName);
+  if (SEED_MOCKUP && !esBaseDePrueba) {
+    throw new Error(`SEED_MOCKUP borra mediciones: solo puede correr contra una base de prueba (la actual es ${dbName}).`);
+  }
+  const poblada = (await prisma.indicador.count()) > 0;
+  if (poblada && !SEED_MOCKUP && !FORZAR) {
+    throw new Error(
+      `La base ${dbName} ya tiene datos. Desde el go-live la fuente de verdad es la base: ` +
+        "el seed solo prepara entornos nuevos y no sobrescribe nada. Para crear solo lo que " +
+        "falte use --forzar-entorno-nuevo; para reiniciar la demo use db:seed:test.",
+    );
+  }
+  // En una base existente, las secuencias pueden haber quedado atrás de los
+  // ids cargados: se realinean antes de crear filas sin id explícito.
+  if (poblada) await realinearSecuencias();
+  /** Id explícito solo en entorno nuevo (deterministas, iguales en prod y test). */
+  const idNuevo = (id: number) => (poblada ? {} : { id });
+
   // ---- Parámetros y umbral global -----------------------------------------
   await prisma.parametro.upsert({
     where: { clave: "semaforo_verde" },
-    update: { valor: "0.90" },
+    update: {},
     create: { clave: "semaforo_verde", valor: "0.90" },
   });
   await prisma.parametro.upsert({
     where: { clave: "semaforo_amarillo" },
-    update: { valor: "0.70" },
+    update: {},
     create: { clave: "semaforo_amarillo", valor: "0.70" },
   });
   await prisma.umbralCriticidad.upsert({
@@ -103,7 +144,7 @@ async function main() {
   for (const [numero, nombre] of Object.entries(PILARES)) {
     await prisma.pndPilar.upsert({
       where: { numero: Number(numero) },
-      update: { nombre },
+      update: {},
       create: { numero: Number(numero), nombre },
     });
   }
@@ -111,7 +152,7 @@ async function main() {
     const pilar = await prisma.pndPilar.findUniqueOrThrow({ where: { numero: p.pilar } });
     await prisma.pndObjetivo.upsert({
       where: { codigo: p.codigo },
-      update: { nombre: p.nombre, pilarId: pilar.id },
+      update: {},
       create: { codigo: p.codigo, nombre: p.nombre, pilarId: pilar.id },
     });
   }
@@ -123,42 +164,44 @@ async function main() {
 
   // ---- Objetivos + vínculos PND/ODS ---------------------------------------
   const objetivos = cargarObjetivos();
+  const oeIdPorNumero = new Map<number, number>();
   for (const oe of objetivos) {
-    await prisma.objetivoEstrategico.upsert({
+    const fila = await prisma.objetivoEstrategico.upsert({
       where: { codigo: oe.codigo },
-      update: { nombre: oe.nombre },
-      create: { id: oe.id, codigo: oe.codigo, nombre: oe.nombre },
+      update: {},
+      create: { ...idNuevo(oe.id), codigo: oe.codigo, nombre: oe.nombre },
     });
+    oeIdPorNumero.set(oe.id, fila.id);
     for (const pndCod of oe.pnd) {
       const pnd = await prisma.pndObjetivo.findUniqueOrThrow({ where: { codigo: pndCod } });
       await prisma.oePnd.upsert({
-        where: { oeId_pndObjetivoId: { oeId: oe.id, pndObjetivoId: pnd.id } },
+        where: { oeId_pndObjetivoId: { oeId: fila.id, pndObjetivoId: pnd.id } },
         update: {},
-        create: { oeId: oe.id, pndObjetivoId: pnd.id },
+        create: { oeId: fila.id, pndObjetivoId: pnd.id },
       });
     }
     for (const odsNum of oe.ods) {
       const ods = await prisma.ods.findUniqueOrThrow({ where: { numero: odsNum } });
       await prisma.oeOds.upsert({
-        where: { oeId_odsId: { oeId: oe.id, odsId: ods.id } },
+        where: { oeId_odsId: { oeId: fila.id, odsId: ods.id } },
         update: {},
-        create: { oeId: oe.id, odsId: ods.id },
+        create: { oeId: fila.id, odsId: ods.id },
       });
     }
   }
+  const oeId = (numero: number) => oeIdPorNumero.get(numero)!;
 
   // ---- Acciones Estratégicas (IDs deterministas por orden del dataset) ----
   const acciones = cargarAcciones();
   const aeIdPorCodigo = new Map<string, number>();
   for (let i = 0; i < acciones.length; i++) {
     const ae = acciones[i];
-    const id = i + 1;
-    await prisma.accionEstrategica.upsert({
+    const fila = await prisma.accionEstrategica.upsert({
       where: { codigo: ae.codigo },
-      update: { nombre: ae.nombre, oeId: ae.oe },
-      create: { id, codigo: ae.codigo, nombre: ae.nombre, oeId: ae.oe },
+      update: {},
+      create: { ...idNuevo(i + 1), codigo: ae.codigo, nombre: ae.nombre, oeId: oeId(ae.oe) },
     });
-    aeIdPorCodigo.set(ae.codigo, id);
+    aeIdPorCodigo.set(ae.codigo, fila.id);
   }
 
   // ---- Dependencias (catálogo alfabético con IDs deterministas) -----------
@@ -169,25 +212,25 @@ async function main() {
   const depIdPorNombre = new Map<string, number>();
   for (let i = 0; i < nombresDeps.length; i++) {
     const nombre = nombresDeps[i];
-    const id = i + 1;
-    await prisma.dependencia.upsert({
+    // Id real de la base (no el orden alfabético): un cambio en el conjunto de
+    // nombres del JSON no debe reasignar responsabilidades.
+    const fila = await prisma.dependencia.upsert({
       where: { nombre },
       update: {},
-      create: { id, nombre },
+      create: { ...idNuevo(i + 1), nombre },
     });
-    depIdPorNombre.set(nombre, id);
+    depIdPorNombre.set(nombre, fila.id);
   }
 
   // ---- Indicadores + Metas + Escalas + Responsables -----------------------
   const indIdPorCodigo = new Map<number, number>();
   for (let i = 0; i < indicadores.length; i++) {
     const ind = indicadores[i];
-    const id = i + 1;
     const cicloVida = esCicloVida(ind.metas);
     const concluidos = indicesConcluidos(ind.metas);
     const data = {
       nivel: ind.nivel,
-      oeId: ind.oe,
+      oeId: oeId(ind.oe),
       aeId: ind.ae ? aeIdPorCodigo.get(ind.ae)! : null,
       nombre: ind.nombre,
       descripcion: ind.descripcion,
@@ -207,12 +250,15 @@ async function main() {
       comentarios: ind.comentarios,
       requiereDiagnostico: CODIGOS_DIAGNOSTICO.has(ind.codigo),
     };
-    await prisma.indicador.upsert({
-      where: { codigo: ind.codigo },
-      update: data,
-      create: { id, codigo: ind.codigo, ...data },
+    const existente = await prisma.indicador.findUnique({ where: { codigo: ind.codigo } });
+    if (existente) {
+      // La base manda: no se tocan atributos, metas, escalas ni responsables.
+      indIdPorCodigo.set(ind.codigo, existente.id);
+      continue;
+    }
+    const row = await prisma.indicador.create({
+      data: { ...idNuevo(i + 1), codigo: ind.codigo, ...data },
     });
-    const row = await prisma.indicador.findUniqueOrThrow({ where: { codigo: ind.codigo } });
     indIdPorCodigo.set(ind.codigo, row.id);
 
     for (let a = 0; a < ANIOS_PEI.length; a++) {
@@ -261,12 +307,12 @@ async function main() {
     }
   }
 
-  // ---- Riesgos (sin clave natural → recrear) ------------------------------
-  await prisma.riesgo.deleteMany({});
-  for (const r of cargarRiesgos()) {
+  // ---- Riesgos (sin clave natural: solo si la tabla está vacía) ------------
+  const hayRiesgos = (await prisma.riesgo.count()) > 0;
+  for (const r of hayRiesgos ? [] : cargarRiesgos()) {
     await prisma.riesgo.create({
       data: {
-        oeId: r.oe,
+        oeId: oeId(r.oe),
         descripcion: r.descripcion,
         probabilidad: r.probabilidad,
         impacto: r.impacto,
@@ -290,7 +336,7 @@ async function main() {
     if (!existente) {
       await prisma.periodo.create({
         data: {
-          id: p.id,
+          ...idNuevo(p.id),
           anio: p.anio,
           tipo: "ANUAL",
           fechaInicio: new Date(`${p.anio}-01-01T00:00:00Z`),
@@ -303,28 +349,31 @@ async function main() {
 
   // ---- Usuarios demo ------------------------------------------------------
   const hash = await bcrypt.hash(PASSWORD_DEMO, 10);
+  // Solo se crean si faltan: nunca se reactivan ni se restauran sus roles.
+  const idUsuarioDemo = new Map<number, number>();
   for (const u of USUARIOS) {
-    await prisma.usuario.upsert({
-      where: { email: u.email },
-      update: { nombre: u.nombre, activo: true },
-      create: { id: u.id, nombre: u.nombre, email: u.email, passwordHash: hash, activo: true },
+    const existente = await prisma.usuario.findUnique({ where: { email: u.email } });
+    if (existente) {
+      idUsuarioDemo.set(u.id, existente.id);
+      continue;
+    }
+    const creado = await prisma.usuario.create({
+      data: {
+        ...idNuevo(u.id),
+        nombre: u.nombre,
+        email: u.email,
+        passwordHash: hash,
+        activo: true,
+        roles: { create: u.roles.map((rol) => ({ rol })) },
+        dependencias: {
+          create: u.dependencias
+            .map((n) => depIdPorNombre.get(n))
+            .filter((id): id is number => id !== undefined)
+            .map((dependenciaId) => ({ dependenciaId })),
+        },
+      },
     });
-    for (const rol of u.roles) {
-      await prisma.usuarioRol.upsert({
-        where: { usuarioId_rol: { usuarioId: u.id, rol } },
-        update: {},
-        create: { usuarioId: u.id, rol },
-      });
-    }
-    for (const depNombre of u.dependencias) {
-      const depId = depIdPorNombre.get(depNombre);
-      if (!depId) continue;
-      await prisma.usuarioDependencia.upsert({
-        where: { usuarioId_dependenciaId: { usuarioId: u.id, dependenciaId: depId } },
-        update: {},
-        create: { usuarioId: u.id, dependenciaId: depId },
-      });
-    }
+    idUsuarioDemo.set(u.id, creado.id);
   }
 
   // ---- Mockup (solo test) -------------------------------------------------
@@ -345,7 +394,7 @@ async function main() {
     for (const u of USUARIOS) {
       for (const dep of u.dependencias) {
         const depId = depIdPorNombre.get(dep);
-        if (depId) cargaPorDep.set(depId, u.id);
+        if (depId) cargaPorDep.set(depId, idUsuarioDemo.get(u.id) ?? u.id);
       }
     }
 
@@ -377,6 +426,7 @@ async function main() {
           version,
           fuente: m.fuente ?? "Registro administrativo de la dependencia (demo)",
           usuarioCargaId,
+          intervinientesIds: [usuarioCargaId],
           observaciones: obs ?? null,
           fechaCorte: new Date("2026-06-30T00:00:00Z"),
         },
@@ -463,8 +513,13 @@ async function main() {
   console.log(
     `\nOK · OE: ${nOE} · AE: ${nAE} · Indicadores: ${nInd} · Metas: ${nMetas} · Dependencias: ${nDeps} · Responsabilidades: ${nResp} · Niveles de escala: ${nEsc} · Mediciones: ${nMed}`,
   );
-  if (nInd !== 89) throw new Error(`Se esperaban 89 indicadores y hay ${nInd}`);
-  if (nAE !== 39) throw new Error(`Se esperaban 39 AE y hay ${nAE}`);
+  await realinearSecuencias();
+  // En un entorno nuevo la estructura debe ser exactamente la del dataset;
+  // en una base existente Administración puede haber dado altas o bajas.
+  if (!poblada) {
+    if (nInd !== 89) throw new Error(`Se esperaban 89 indicadores y hay ${nInd}`);
+    if (nAE !== 39) throw new Error(`Se esperaban 39 AE y hay ${nAE}`);
+  }
 }
 
 main()

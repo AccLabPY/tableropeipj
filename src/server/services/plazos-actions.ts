@@ -13,15 +13,18 @@ import {
   PlazoInputSchema,
   PresupuestoInputSchema,
 } from "@/shared/schemas/plazos";
+import { dependenciasResponsables } from "@/domain";
 import { invalidarEstadoPEI } from "./estado-cache";
 import { catalogoIndicadores } from "./estado-pei.service";
 import { notificarActoDePlazo } from "./notificaciones.service";
+import { conAuditoria } from "./auditoria.service";
 
 /**
  * Actos administrativos sobre la ventana de carga: fijar plazos, otorgar
  * prórrogas y habilitar/cerrar la carga (general o por alcance).
- * Todo queda registrado append-only en `VentanaCarga` con autor y motivo,
- * y notifica a las dependencias alcanzadas.
+ * Todo queda registrado append-only en `VentanaCarga` con autor y motivo, en
+ * la bitácora de auditoría, y notifica a las dependencias alcanzadas. La
+ * notificación va al final y no revierte el acto si falla.
  */
 
 export interface ResultadoPlazo {
@@ -79,8 +82,9 @@ async function dependenciasAlcanzadas(
     if (scope === "AE") return i.ae?.codigo === entidad;
     return String(i.codigo) === entidad;
   });
+  // Solo dependencias de carga: las que figuran como fuente no cargan.
   const dependenciaIds = [
-    ...new Set(alcanzados.flatMap((i) => i.responsables.map((r) => r.dependenciaId))),
+    ...new Set(alcanzados.flatMap((i) => dependenciasResponsables(i.responsables))),
   ];
   const detalle =
     scope === "INDICADOR" && alcanzados[0]
@@ -93,6 +97,17 @@ async function dependenciasAlcanzadas(
     indicadorId: scope === "INDICADOR" ? (alcanzados[0]?.id ?? null) : null,
     detalle,
   };
+}
+
+/** Notifica sin hacer fallar el acto ya registrado. */
+async function notificarSeguro(
+  ...args: Parameters<typeof notificarActoDePlazo>
+): Promise<void> {
+  try {
+    await notificarActoDePlazo(...args);
+  } catch (e) {
+    console.error("[plazos] no se pudo notificar el acto:", e);
+  }
 }
 
 /** Solo ADMIN puede operar sobre el alcance GLOBAL. */
@@ -109,24 +124,42 @@ export async function fijarPlazoAction(input: unknown): Promise<ResultadoPlazo> 
     if (d.tipo === "PLAZO") exigirAlcance(ctx, d.scope);
 
     const periodo = await periodoAnual(ctx, d.anio);
-    await ctx.db.ventanaCarga.create({
-      data: {
-        periodoId: periodo.id,
-        scope: d.scope,
-        entidad: d.entidad,
-        tipo: d.tipo,
-        fechaLimite: d.fechaLimite,
-        motivo: d.motivo ?? null,
-        usuarioId: ctx.actor.userId,
-      },
+    await conAuditoria(ctx, async (tx) => {
+      const v = await tx.db.ventanaCarga.create({
+        data: {
+          periodoId: periodo.id,
+          scope: d.scope,
+          entidad: d.entidad,
+          tipo: d.tipo,
+          fechaLimite: d.fechaLimite,
+          motivo: d.motivo ?? null,
+          usuarioId: ctx.actor.userId,
+        },
+      });
+      return {
+        valor: undefined,
+        evento: {
+          accion: d.tipo === "PRORROGA" ? "PRORROGA_OTORGAR" : "PLAZO_FIJAR",
+          entidad: "VentanaCarga",
+          entidadId: v.id,
+          despues: {
+            anio: d.anio,
+            alcance: d.scope,
+            entidad: d.entidad,
+            fechaLimite: d.fechaLimite,
+          },
+          motivo: d.motivo ?? null,
+        },
+      };
     });
+    refrescar();
     const { dependenciaIds, indicadorId, detalle } = await dependenciasAlcanzadas(
       ctx,
       d.scope,
       d.entidad,
     );
     if (d.tipo === "PRORROGA") {
-      await notificarActoDePlazo(ctx, {
+      await notificarSeguro(ctx, {
         tipo: "PRORROGA_OTORGADA",
         dependenciaIds,
         indicadorId,
@@ -135,7 +168,6 @@ export async function fijarPlazoAction(input: unknown): Promise<ResultadoPlazo> 
         url: `/registro?anio=${d.anio}`,
       });
     }
-    refrescar();
     return {
       ok: true,
       mensaje:
@@ -157,24 +189,37 @@ export async function habilitarCargaAction(input: unknown): Promise<ResultadoPla
     exigirAlcance(ctx, d.scope);
 
     const periodo = await periodoAnual(ctx, d.anio);
-    await ctx.db.ventanaCarga.create({
-      data: {
-        periodoId: periodo.id,
-        scope: d.scope,
-        entidad: d.entidad,
-        tipo: d.tipo,
-        fechaLimite: null,
-        motivo: d.motivo ?? null,
-        usuarioId: ctx.actor.userId,
-      },
+    const abre = d.tipo === "APERTURA";
+    await conAuditoria(ctx, async (tx) => {
+      const v = await tx.db.ventanaCarga.create({
+        data: {
+          periodoId: periodo.id,
+          scope: d.scope,
+          entidad: d.entidad,
+          tipo: d.tipo,
+          fechaLimite: null,
+          motivo: d.motivo,
+          usuarioId: ctx.actor.userId,
+        },
+      });
+      return {
+        valor: undefined,
+        evento: {
+          accion: abre ? "CARGA_HABILITAR" : "CARGA_CERRAR",
+          entidad: "VentanaCarga",
+          entidadId: v.id,
+          despues: { anio: d.anio, alcance: d.scope, entidad: d.entidad },
+          motivo: d.motivo,
+        },
+      };
     });
+    refrescar();
     const { dependenciaIds, indicadorId, detalle } = await dependenciasAlcanzadas(
       ctx,
       d.scope,
       d.entidad,
     );
-    const abre = d.tipo === "APERTURA";
-    await notificarActoDePlazo(ctx, {
+    await notificarSeguro(ctx, {
       tipo: abre ? "CARGA_HABILITADA" : "CARGA_CERRADA",
       dependenciaIds,
       indicadorId,
@@ -184,7 +229,6 @@ export async function habilitarCargaAction(input: unknown): Promise<ResultadoPla
       cuerpo: `Alcance: ${detalle}${d.motivo ? `\n“${d.motivo}”` : ""}`,
       url: `/registro?anio=${d.anio}`,
     });
-    refrescar();
     return {
       ok: true,
       mensaje: abre
@@ -205,9 +249,26 @@ export async function fijarPlazoGlobalAction(
     const ctx = await getCtx(actor);
     const d = PlazoGlobalSchema.parse(input);
     const periodo = await periodoAnual(ctx, d.anio);
-    await ctx.db.periodo.update({
-      where: { id: periodo.id },
-      data: { fechaLimiteCarga: d.fechaLimite },
+    await conAuditoria(ctx, async (tx) => {
+      // Lectura fresca (no el memo de periodoAnual) para el "antes".
+      const antes = await tx.db.periodo.findUnique({
+        where: { id: periodo.id },
+        select: { fechaLimiteCarga: true },
+      });
+      await tx.db.periodo.update({
+        where: { id: periodo.id },
+        data: { fechaLimiteCarga: d.fechaLimite },
+      });
+      return {
+        valor: undefined,
+        evento: {
+          accion: "PLAZO_GENERAL",
+          entidad: "Periodo",
+          entidadId: d.anio,
+          antes: { fechaLimiteCarga: antes?.fechaLimiteCarga ?? null },
+          despues: { fechaLimiteCarga: d.fechaLimite },
+        },
+      };
     });
     refrescar();
     return {
@@ -229,19 +290,34 @@ export async function guardarPresupuestoAction(
     const actor = await requireApi("ADMIN");
     const ctx = await getCtx(actor);
     const d = PresupuestoInputSchema.parse(input);
-    await ctx.db.presupuestoEjercicio.upsert({
-      where: { anio: d.anio },
-      create: {
-        anio: d.anio,
-        asignado: d.asignado,
-        ejecutado: d.ejecutado,
-        usuarioId: ctx.actor.userId,
-      },
-      update: {
-        asignado: d.asignado,
-        ejecutado: d.ejecutado,
-        usuarioId: ctx.actor.userId,
-      },
+    await conAuditoria(ctx, async (tx) => {
+      const antes = await tx.db.presupuestoEjercicio.findUnique({
+        where: { anio: d.anio },
+      });
+      await tx.db.presupuestoEjercicio.upsert({
+        where: { anio: d.anio },
+        create: {
+          anio: d.anio,
+          asignado: d.asignado,
+          ejecutado: d.ejecutado,
+          usuarioId: ctx.actor.userId,
+        },
+        update: {
+          asignado: d.asignado,
+          ejecutado: d.ejecutado,
+          usuarioId: ctx.actor.userId,
+        },
+      });
+      return {
+        valor: undefined,
+        evento: {
+          accion: "PRESUPUESTO_GUARDAR",
+          entidad: "PresupuestoEjercicio",
+          entidadId: d.anio,
+          antes: antes ? { asignado: antes.asignado, ejecutado: antes.ejecutado } : null,
+          despues: { asignado: d.asignado, ejecutado: d.ejecutado },
+        },
+      };
     });
     refrescar();
     return { ok: true, mensaje: `Ejecución presupuestaria ${d.anio} actualizada.` };

@@ -101,7 +101,8 @@ export async function calcularEstadoPEI(
 
     const acciones: AEEstadoDTO[] = aesDelOE.map((ae) => {
       const inds = estados.filter((e) => e.aeCodigo === ae.codigo);
-      const avance = avanceAE(inds.map((i) => ({ capado: i.capado })));
+      // Promedio ponderado por el peso de cada indicador (Matriz PEI).
+      const avance = avanceAE(inds.map((i) => ({ capado: i.capado, peso: i.peso })));
       const umbral = resolverUmbral(umbrales, {
         indicadorCodigo: -1,
         aeCodigo: ae.codigo,
@@ -222,6 +223,7 @@ function estadoDeIndicador(
     umbralVerde: umbral.verde,
     umbralAmarillo: umbral.amarillo,
     umbralOrigen: origenUmbral(umbrales, ctxUmbral),
+    peso: num(ind.peso) ?? 1,
     dependenciaPrincipal: principal,
     dependenciaPrincipalId: respPrincipal?.dependenciaId ?? null,
     dependenciaIds: ind.responsables.map((x) => x.dependenciaId),

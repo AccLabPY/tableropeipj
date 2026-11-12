@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  calcularSla,
+  ejerciciosAEvaluar,
   reglaAplica,
   resolverVentana,
   umbralAviso,
@@ -183,5 +185,40 @@ describe("umbral de aviso de vencimiento", () => {
     expect(umbralAviso(conDias(6))).toBe(7);
     expect(umbralAviso(conDias(0.5))).toBe(1);
     expect(umbralAviso(conDias(-2))).toBeNull(); // vencida ⇒ cerrada
+  });
+});
+
+describe("SLA de carga", () => {
+  const limite = new Date("2027-02-28T23:59:59-03:00");
+
+  it("un envío horas después del plazo cuenta como 1 día de atraso", () => {
+    const r = calcularSla(limite, new Date("2027-03-01T05:00:00-03:00"));
+    expect(r.enPlazo).toBe(false);
+    expect(r.diasDesvio).toBe(1);
+  });
+
+  it("un envío anticipado registra días completos de anticipación", () => {
+    expect(calcularSla(limite, new Date("2027-02-25T10:00:00-03:00"))).toEqual({
+      diasDesvio: -3,
+      enPlazo: true,
+    });
+    expect(calcularSla(limite, new Date("2027-02-28T20:00:00-03:00"))).toEqual({
+      diasDesvio: 0,
+      enPlazo: true,
+    });
+  });
+
+  it("sin fecha límite el envío está en plazo", () => {
+    expect(calcularSla(null, new Date())).toEqual({ diasDesvio: null, enPlazo: true });
+  });
+});
+
+describe("ejercicios a evaluar para avisos", () => {
+  const anios = [2026, 2027, 2028, 2029, 2030];
+  it("en febrero se evalúa también el ejercicio anterior", () => {
+    expect(ejerciciosAEvaluar(new Date("2027-02-10T12:00:00Z"), anios)).toEqual([2026, 2027]);
+  });
+  it("fuera del PEI no hay ejercicios", () => {
+    expect(ejerciciosAEvaluar(new Date("2032-03-01T12:00:00Z"), anios)).toEqual([]);
   });
 });

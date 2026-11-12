@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   ESTADOS_EDITABLES,
+  admiteEvidencias,
+  esAutovalidacion,
   puedeTransicionar,
   transicionesDesde,
   validarTransicion,
@@ -46,6 +48,26 @@ describe("máquina de estados del workflow", () => {
 
   it("solo BORRADOR y OBSERVADO son editables por la dependencia", () => {
     expect(ESTADOS_EDITABLES).toEqual(["BORRADOR", "OBSERVADO"]);
+  });
+
+  it("el rechazo está retirado: ninguna resolución lleva a RECHAZADO", () => {
+    expect(puedeTransicionar("ENVIADO", "RECHAZADO")).toBe(false);
+    expect(puedeTransicionar("EN_REVISION", "RECHAZADO")).toBe(false);
+  });
+
+  it("evidencias solo en estados editables o que admiten versión nueva", () => {
+    expect(admiteEvidencias("BORRADOR")).toBe(true);
+    expect(admiteEvidencias("OBSERVADO")).toBe(true);
+    expect(admiteEvidencias("RECHAZADO")).toBe(true);
+    expect(admiteEvidencias("ENVIADO")).toBe(false);
+    expect(admiteEvidencias("EN_REVISION")).toBe(false);
+    expect(admiteEvidencias("APROBADO")).toBe(false);
+  });
+
+  it("autovalidación: quien intervino no puede resolver", () => {
+    expect(esAutovalidacion(7, [3, 7])).toBe(true);
+    expect(esAutovalidacion(9, [3, 7])).toBe(false);
+    expect(esAutovalidacion(9, [])).toBe(false);
   });
 });
 

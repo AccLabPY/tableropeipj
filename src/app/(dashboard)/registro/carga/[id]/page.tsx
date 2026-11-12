@@ -140,6 +140,7 @@ export default async function DetalleCargaPage({
         <PanelValidacionCarga
           medicionId={m.id}
           estado={m.estado}
+          puedeResolver={d.puedeResolver}
           ventana={d.ventana}
           objetivo={{
             anio: m.periodoAnio,
@@ -155,7 +156,13 @@ export default async function DetalleCargaPage({
       {puedeValidar && !d.esUltimaVersion ? (
         <p className="mb-4 rounded-pj-sm border border-sem-ambar-border bg-sem-ambar-bg px-3 py-2 text-[12px] text-sem-ambar-fg">
           Esta es una versión histórica (existe una versión posterior): las
-          resoluciones se toman sobre la última versión de la carga.
+          resoluciones se toman sobre la última versión de la carga.{" "}
+          <a
+            href={`/registro/carga/${d.ultimaVersionId}`}
+            className="font-semibold underline"
+          >
+            Ir a la última versión →
+          </a>
         </p>
       ) : null}
 

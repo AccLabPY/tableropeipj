@@ -31,12 +31,17 @@ El despliegue productivo corre on-premise en el Poder Judicial
 5. Umbrales de semáforo configurables con herencia
    Indicador → AE → OE → Global.
 6. Jerarquía visible OE → **Acción Estratégica** → Indicador.
+7. **Nadie valida lo que cargó**: quien cargó, editó, adjuntó o envió una
+   versión no puede tomarla en revisión ni resolverla.
+8. **La base de producción es la fuente de verdad** desde el go-live: el seed
+   solo prepara entornos nuevos y `scripts/exportar-dataset.mjs` mantiene el
+   JSON del repositorio como respaldo.
 
 ## Stack
 
 Next.js 14 (App Router) · TypeScript estricto · Tailwind · Recharts ·
-Prisma (`mysql`, `relationMode="prisma"`) · TiDB Serverless · Auth.js v5
-(credenciales + JWT + RBAC) · Vitest.
+Prisma 5 con PostgreSQL 17 (FKs nativas, migraciones versionadas) · Auth.js v5
+(credenciales + JWT revalidado contra la base + RBAC) · Vitest · Docker.
 
 ## Dos bases de datos (switch desde Admin)
 
@@ -55,7 +60,7 @@ La autenticación siempre ocurre contra `peipj` (plano de control).
 cp .env.example .env      # completar credenciales (ver abajo)
 npm install
 npm run data:verify       # valida el dataset canónico: 6 OE / 39 AE / 89 ind.
-npm run db:setup:all      # push + seed de ambas databases (idempotente)
+npm run db:setup:all      # migraciones + seed de ambas bases (solo bases vacías)
 npm run dev               # http://localhost:3000
 ```
 
@@ -73,9 +78,8 @@ En dev conviene `DB_DEFAULT_ENV=test` para no tocar producción por error.
 | `autoridad@pj.gov.py` | AUTORIDAD (solo lectura total) |
 | `consulta@pj.gov.py` | CONSULTA (solo lectura) |
 
-> ⚠ **Seguridad**: cambiar estas claves en producción y **rotar la
-> contraseña del usuario de TiDB** (las credenciales iniciales circularon por
-> chat). Ver `docs/deploy-render.md` §5.
+> ⚠ **Seguridad**: en producción estas cuentas ya no usan la clave demo;
+> mantenerlas desactivadas o con contraseñas fuertes.
 
 ## Scripts
 
@@ -85,10 +89,11 @@ En dev conviene `DB_DEFAULT_ENV=test` para no tocar producción por error.
 | `npm run test` · `test:domain` | Vitest (motor de cumplimiento + contratos) |
 | `npm run typecheck` · `lint` | calidad |
 | `npm run data:verify` | valida `prisma/data/*.json` (89 indicadores) |
-| `npm run db:push:prod` / `db:push:test` | sincroniza esquema |
-| `npm run db:seed:prod` / `db:seed:test` | seed idempotente (test += mockup) |
-| `npm run db:setup:all` | todo lo anterior en orden |
+| `npm run db:migrate:prod` / `db:migrate:test` | `prisma migrate deploy` (nunca `db push`) |
+| `npm run db:seed:prod` / `db:seed:test` | seed de entorno nuevo (test: reinicia la demo) |
+| `npm run db:setup:all` | migraciones + seed de ambas bases |
 | `npm run db:studio:prod` / `db:studio:test` | Prisma Studio |
+| `node scripts/exportar-dataset.mjs` | exporta la base al JSON del repositorio |
 
 ## Estructura
 
@@ -116,18 +121,17 @@ validar,rectificar,evidencias}` · `GET /api/health`.
 
 ## Rendimiento
 
-TiDB está en us-east-1 (~200 ms por round-trip desde Paraguay), por lo que la
-plataforma cachea agresivamente en memoria (`src/server/services/cache.ts`):
+La plataforma corre como una sola instancia y cachea en memoria
+(`src/server/services/cache.ts`):
 
 - **Estado del PEI, catálogo, umbrales y fichas** con TTL +
   *stale-while-revalidate*: las navegaciones en caliente responden en
   **60–120 ms** sin tocar la base.
 - **Warm-up al arrancar** (`src/instrumentation.ts`): el servidor precalienta
   ambas bases en background; el primer visitante no paga el cómputo frío.
-- **Invalidación explícita**: aprobar/observar mediciones, editar la matriz o
-  cambiar umbrales limpian el caché al instante (los tableros nunca muestran
-  datos viejos tras una mutación). TTL corto (60 s) acota el desfase entre
-  instancias en despliegues multi-nodo.
+- **Invalidación explícita después del commit**: aprobar/observar mediciones,
+  editar la matriz o cambiar umbrales limpian el caché. Cada store lleva una
+  generación: un cálculo que empezó antes de la mutación no se guarda.
 
 > Para juzgar la velocidad usar `npm run build && npm start`: `npm run dev`
 > compila cada ruta en el primer acceso y siempre se siente más lento.
@@ -147,12 +151,14 @@ Ventana de carga por indicador (`src/domain/plazos.ts`, dominio puro y testeado;
 - **Cierre automático**: al vencer, `exigirCargaHabilitada()` bloquea con 409
   `CARGA_CERRADA` el guardado, el envío y los adjuntos **solo para las
   dependencias**; DGPD y ADMIN siguen operando (son quienes prorrogan).
-- **Avisos**: a 7 y a 1 día del vencimiento se emite `PLAZO_PROXIMO` a la
-  dependencia (evaluación perezosa con throttle horario desde
-  `GET /api/v1/notificaciones`), y al entrar a Registro aparece un popup con
+- **Avisos**: dos por indicador y fecha límite (a 7 días o menos y el último
+  día) a todas las dependencias de carga, incluido el ejercicio anterior en
+  enero y febrero (evaluación perezosa con throttle horario desde
+  `GET /api/v1/notificaciones`); al entrar a Registro aparece un popup con
   los indicadores por vencer (una vez por sesión).
 - **SLA**: cada envío escribe una fila en `SlaCarga` (plazo vigente, días de
-  desvío, en plazo, con prórroga). El resumen por dependencia se ve en
+  desvío, en plazo, con prórroga); un atraso de horas ya cuenta como fuera de
+  plazo. El resumen por dependencia se ve en
   **Gobernanza → SLA de carga** y en la hoja "SLA de carga" del Excel de
   mediciones.
 
@@ -172,8 +178,8 @@ Bandeja in-app por usuario (tabla `Notificacion`, en ambas bases de datos):
 - **Generación**: cada transición de la máquina de estados emite
   notificaciones (`notificaciones.service.ts`, enganchado en
   `medicion.service.ts`): las cargas **enviadas** notifican a DGPD/Admin; las
-  **resoluciones** (aprobada/observada/rechazada/rectificada/en revisión)
-  notifican a los usuarios de la dependencia dueña. Al **aprobar**, si el
+  **resoluciones** (aprobada/observada/rectificada/en revisión) notifican a
+  los usuarios de todas las dependencias de carga del indicador. Al **aprobar**, si el
   indicador queda en semáforo ROJO se emite además `INDICADOR_CRITICO` a
   validadores + dependencia. El emisor nunca se auto-notifica; un fallo de
   notificación jamás rompe la transición (fire-and-forget).
@@ -183,7 +189,7 @@ Bandeja in-app por usuario (tabla `Notificacion`, en ambas bases de datos):
 - **Detalle de carga** (`/registro/carga/[id]`): expediente individual de una
   medición — valores, evidencias descargables, resoluciones de la DGPD y
   timeline completo del historial. DGPD/Admin ven cualquiera; una dependencia
-  solo las suyas (scoping de `medicion.repo`).
+  las de los indicadores donde es responsable (scoping de `medicion.repo`).
 - **Seed de demo**: `node scripts/seed-notificaciones.mjs` siembra la bandeja
   en la BD de prueba desde el historial real (idempotente).
 
@@ -222,11 +228,29 @@ Cómo funciona:
 - Componentes con contexto cliente: `TemaProvider`/`useTema()`,
   `MotionProvider`, `Aparecer`, `Contador`, `BlobsFondo`, `LogoAgentes`.
 
+## Carga compartida, rectificación y auditoría
+
+- **Carga compartida**: la dependencia principal y las corresponsables editan,
+  adjuntan y envían la misma medición; las dependencias «fuente» solo la ven.
+- **Rectificación**: crea la versión siguiente en borrador con los datos y una
+  copia de las evidencias; la interfaz abre la versión nueva.
+- **Mediciones rechazadas** (histórico): guardar sobre ellas inicia una
+  versión nueva.
+- **Transacciones**: cada transición escribe estado, historial y validación
+  en una sola transacción con control optimista (409 `ESTADO_CAMBIADO`).
+- **Sesiones**: el JWT se revalida contra la base de control (caché de 60 s):
+  cambios de roles rigen sin volver a ingresar; desactivar o cambiar la
+  contraseña cierra las sesiones (`Usuario.sesionVersion`).
+- **Auditoría**: `AuditoriaAdmin` (append-only por trigger) registra cambios
+  de matriz, umbrales, estructura, usuarios, plazos, presupuesto y entorno;
+  consulta en `/admin/auditoria` (ADMIN y DGPD).
+
 ## Deploy
 
-Preparado para **Render + TiDB** (no ejecutado): `render.yaml` +
-`docs/deploy-render.md`. Portabilidad Fase B (PostgreSQL on-premise del PJ):
-cambiar el `provider` de Prisma; el cálculo vive en dominio TS, sin SQL crudo.
+Producción on-premise en el Poder Judicial: contenedor Docker detrás de Apache
+y del proxy institucional, PostgreSQL 17 dedicado. Runbook completo en
+[docs/despliegue-pj.md](docs/despliegue-pj.md). `render.yaml` y
+`docs/deploy-render.md` describen el entorno anterior en la nube (histórico).
 
 ## Fuera de alcance de esta fase
 

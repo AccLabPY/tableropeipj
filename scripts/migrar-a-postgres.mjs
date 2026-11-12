@@ -1,6 +1,10 @@
 /**
  * Migración de datos TiDB (MySQL) → PostgreSQL 17 on-premise (Fase B).
  *
+ * HISTÓRICO: corresponde al esquema 0_init. Las migraciones posteriores
+ * agregaron columnas y tablas que TiDB no tiene; no reutilizar sin adaptarlo.
+ * Su paso `--paso secuencias` sigue siendo útil para realinear secuencias.
+ *
  * Corre en pnud-app (contenedor node:20) o en cualquier host con acceso
  * simultáneo a TiDB:4000 y a pnud-db:5432. Usa drivers crudos (mysql2 + pg):
  * el cliente Prisma del repo ya está generado para PostgreSQL y solo se usa

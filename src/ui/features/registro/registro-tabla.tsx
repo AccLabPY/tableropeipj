@@ -147,6 +147,11 @@ export function RegistroTabla({ data }: { data: RegistroDTO }) {
                   <span className="mt-[2px] block text-[10.5px] text-muted-2">
                     {i.oeCodigo} · {i.aeCodigo ?? "Nivel OE"} ·{" "}
                     {i.dependenciaPrincipal}
+                    {i.rolDependencia === "CORRESPONSABLE"
+                      ? " · su dependencia es corresponsable"
+                      : i.rolDependencia === "FUENTE"
+                        ? " · su dependencia es fuente (solo consulta)"
+                        : ""}
                   </span>
                 </Link>
               ),
@@ -209,14 +214,16 @@ export function RegistroTabla({ data }: { data: RegistroDTO }) {
                 <Link
                   href={href(i.codigo)}
                   title={
-                    data.puedeValidar && !data.puedeCargar
-                      ? `Revisar la carga del indicador ${i.codigo}`
-                      : `Reportar el avance del indicador ${i.codigo}`
+                    i.puedeCargar
+                      ? `Reportar el avance del indicador ${i.codigo}`
+                      : data.puedeValidar
+                        ? `Revisar la carga del indicador ${i.codigo}`
+                        : `Ver la carga del indicador ${i.codigo}`
                   }
                   className="inline-flex items-center gap-[5px] whitespace-nowrap rounded-pj-sm border border-linea bg-superficie px-[10px] py-[5px] text-[11.5px] font-semibold text-azul-d transition-colors hover:border-azul-line hover:bg-azul-soft agentes:rounded-chip"
                 >
                   <ClipboardEdit className="h-3.5 w-3.5" />
-                  {data.puedeValidar && !data.puedeCargar ? "Revisar" : "Reportar"}
+                  {i.puedeCargar ? "Reportar" : data.puedeValidar ? "Revisar" : "Ver"}
                 </Link>
               ),
             },

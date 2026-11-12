@@ -8,7 +8,7 @@ import { worklistRegistro } from "@/server/services/registro.service";
 import { AnioQuery, CodigoParam } from "@/shared/schemas/query";
 import { ChipWorkflow } from "@/ui/features/shared/chip-workflow";
 import { RegistroFormulario } from "@/ui/features/registro/registro-formulario";
-import { fmtFechaCorta } from "@/lib/utils";
+import { fmtFechaCorta, fmtDiasRestantes } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Reportar avance" };
 export const dynamic = "force-dynamic";
@@ -113,9 +113,7 @@ export default async function RegistroIndicadorPage({
                     {v.diasRestantes !== null && v.diasRestantes <= 7 ? (
                       <span className="ml-1 font-semibold text-sem-ambar-fg">
                         ·{" "}
-                        {v.diasRestantes <= 0
-                          ? "vence hoy"
-                          : `faltan ${v.diasRestantes} días`}
+                        {fmtDiasRestantes(v.diasRestantes)}
                       </span>
                     ) : null}
                     {v.conProrroga ? (

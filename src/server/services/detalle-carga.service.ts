@@ -1,10 +1,11 @@
 import type { Ctx } from "@/server/db/env";
 import { prismaControl } from "@/server/db/client";
 import { tieneRol } from "@/server/auth/guards";
-import { clasificarFormula, parsearVariables } from "@/domain";
+import { clasificarFormula, esAutovalidacion, parsearVariables } from "@/domain";
 import type { EstadoWF } from "@/domain/types";
 import { noEncontrado } from "@/server/api/api-error";
 import { porId } from "@/server/repositories/medicion.repo";
+import { indicadorPorId } from "@/server/repositories/indicador.repo";
 import { catalogoIndicadores } from "./estado-pei.service";
 import { toMedicionResumen } from "./medicion-dto";
 import { conTTL, TTL_LARGO } from "./cache";
@@ -52,17 +53,16 @@ export async function detalleCarga(
   if (!m) throw noEncontrado("Carga");
 
   const inds = await catalogoIndicadores(ctx);
-  const ind = inds.find((i) => i.id === m.indicadorId);
+  const ind =
+    inds.find((i) => i.id === m.indicadorId) ?? (await indicadorPorId(ctx, m.indicadorId));
   if (!ind) throw noEncontrado("Indicador de la carga");
   const tipoCalculo = clasificarFormula(ind.formula, ind.esEscala);
 
   const ventana = await ventanaDeIndicador(ctx, ind, m.periodo.anio);
-  const posteriores = await ctx.db.medicion.count({
-    where: {
-      indicadorId: m.indicadorId,
-      periodoId: m.periodoId,
-      version: { gt: m.version },
-    },
+  const ultima = await ctx.db.medicion.findFirst({
+    where: { indicadorId: m.indicadorId, periodoId: m.periodoId },
+    orderBy: { version: "desc" },
+    select: { id: true, version: true },
   });
 
   const [nombres, validadores] = await Promise.all([
@@ -112,7 +112,11 @@ export async function detalleCarga(
     },
     cargadorNombre:
       m.usuarioCargaId !== null ? (nombres.get(m.usuarioCargaId) ?? null) : null,
-    esUltimaVersion: posteriores === 0,
+    esUltimaVersion: !ultima || ultima.version === m.version,
+    ultimaVersionId: String(ultima?.id ?? m.id),
+    puedeResolver:
+      tieneRol(ctx.actor, "DGPD_VALIDADOR", "ADMIN") &&
+      !esAutovalidacion(ctx.actor.userId, m.intervinientesIds),
     historial: m.historial.map((h) => ({
       estadoAnterior: h.estadoAnterior as EstadoWF | null,
       estadoNuevo: h.estadoNuevo as EstadoWF,

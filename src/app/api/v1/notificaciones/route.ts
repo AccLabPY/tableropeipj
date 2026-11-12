@@ -6,7 +6,8 @@ import {
   emitirAvisosVencimiento,
   listarNotificaciones,
 } from "@/server/services/notificaciones.service";
-import { ANIO_REFERENCIA, ANIOS_PEI } from "@/shared/constants";
+import { ANIOS_PEI } from "@/shared/constants";
+import { ejerciciosAEvaluar } from "@/domain";
 
 export const dynamic = "force-dynamic";
 
@@ -20,8 +21,10 @@ export const GET = manejar(async (req) => {
     new URL(req.url).searchParams.get("limite") ?? undefined,
   );
   // Evaluación perezosa de vencimientos (throttle horario dentro del service).
-  const anioVigente = ANIOS_PEI.find((a) => a >= new Date().getFullYear()) ?? ANIO_REFERENCIA;
-  await emitirAvisosVencimiento(ctx, anioVigente);
+  // Incluye el ejercicio anterior: su plazo vence en el año siguiente.
+  for (const anio of ejerciciosAEvaluar(new Date(), ANIOS_PEI)) {
+    await emitirAvisosVencimiento(ctx, anio);
+  }
   const { items, noLeidas } = await listarNotificaciones(ctx, limite);
   return ok(items, { noLeidas });
 });

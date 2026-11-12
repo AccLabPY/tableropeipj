@@ -23,6 +23,9 @@ export const PlazoInputSchema = z.object({
   /** ISO date (yyyy-mm-dd) o datetime. */
   fechaLimite: z.coerce.date(),
   motivo: z.string().trim().max(500).nullish(),
+}).refine((d) => d.tipo !== "PRORROGA" || (d.motivo?.length ?? 0) >= 5, {
+  message: "Indique el motivo de la prórroga (mínimo 5 caracteres).",
+  path: ["motivo"],
 });
 export type PlazoInput = z.infer<typeof PlazoInputSchema>;
 
@@ -30,7 +33,11 @@ export type PlazoInput = z.infer<typeof PlazoInputSchema>;
 export const HabilitacionInputSchema = z.object({
   ...base,
   tipo: z.enum(["APERTURA", "CIERRE"]),
-  motivo: z.string().trim().max(500).nullish(),
+  motivo: z
+    .string()
+    .trim()
+    .min(5, "Indique el motivo (mínimo 5 caracteres).")
+    .max(500),
 });
 export type HabilitacionInput = z.infer<typeof HabilitacionInputSchema>;
 

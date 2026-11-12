@@ -1,12 +1,13 @@
 /**
- * Infraestructura de caché en memoria por proceso (TiDB está en us-east-1:
- * cada round-trip cuesta ~200 ms; el objetivo es 0 queries en caliente).
+ * Caché en memoria por proceso (la aplicación corre como una única instancia).
  *
  * - TTL por entrada + stale-while-revalidate: vencida una entrada se sirve el
- *   valor anterior AL INSTANTE y se recomputa en background (dedupe inflight).
- * - Registro global de stores: `invalidarEstadoPEI()` limpia todo tras
- *   cualquier mutación (aprobar mediciones, editar matriz, umbrales, switch).
- * - Sin dependencias de servicios: los services definen sus propios cachés.
+ *   valor anterior al instante y se recomputa una sola vez en background.
+ * - Generación por store: un cálculo que empezó antes de una invalidación no
+ *   se guarda al terminar, así no repuebla el caché con datos previos a la
+ *   mutación. Por eso `invalidarEstadoPEI()` se llama DESPUÉS del commit.
+ * - Stores e inflight viven en globalThis: Server Actions y Server Components
+ *   pueden instanciar este módulo más de una vez.
  */
 
 interface Entrada {
@@ -14,24 +15,41 @@ interface Entrada {
   exp: number;
 }
 
-const g = globalThis as unknown as {
-  __peiCaches?: Map<string, Map<string, Entrada>>;
-};
-const caches = (g.__peiCaches ??= new Map());
-const inflight = new Map<string, Promise<unknown>>();
+interface Store {
+  gen: number;
+  datos: Map<string, Entrada>;
+  inflight: Map<string, { gen: number; p: Promise<unknown> }>;
+}
 
-function store(nombre: string): Map<string, Entrada> {
-  let s = caches.get(nombre);
+const g = globalThis as unknown as { __peiCacheStores?: Map<string, Store> };
+const stores = (g.__peiCacheStores ??= new Map());
+
+function store(nombre: string): Store {
+  let s = stores.get(nombre);
   if (!s) {
-    s = new Map();
-    caches.set(nombre, s);
+    s = { gen: 0, datos: new Map(), inflight: new Map() };
+    stores.set(nombre, s);
   }
   return s;
 }
 
-/** Limpia TODOS los cachés de la plataforma (llamar tras cada mutación). */
+function vaciar(s: Store): void {
+  s.gen++;
+  s.datos.clear();
+  s.inflight.clear();
+}
+
+/** Limpia TODOS los cachés. Llamar después del commit de cada mutación. */
 export function invalidarEstadoPEI(): void {
-  caches.forEach((s) => s.clear());
+  stores.forEach(vaciar);
+}
+
+/** Limpia solo los stores indicados. */
+export function invalidarStore(...nombres: string[]): void {
+  for (const n of nombres) {
+    const s = stores.get(n);
+    if (s) vaciar(s);
+  }
 }
 
 export const TTL_CORTO = 60_000; // estado computado / fichas
@@ -49,32 +67,31 @@ export async function conTTL<T>(
   fn: () => Promise<T>,
 ): Promise<T> {
   const s = store(nombre);
-  const hit = s.get(key);
-  const ahora = Date.now();
-  if (hit && hit.exp > ahora) return hit.v as T;
+  const hit = s.datos.get(key);
+  if (hit && hit.exp > Date.now()) return hit.v as T;
 
-  const ik = `${nombre}:${key}`;
-  const computar = async (): Promise<T> => {
-    const v = await fn();
-    s.set(key, { v, exp: Date.now() + ttl });
-    return v;
+  const lanzar = (): Promise<T> => {
+    const gen = s.gen;
+    const p = fn().then((v) => {
+      if (s.gen === gen) s.datos.set(key, { v, exp: Date.now() + ttl });
+      return v;
+    });
+    const reg = { gen, p: p as Promise<unknown> };
+    s.inflight.set(key, reg);
+    const limpiar = () => {
+      if (s.inflight.get(key) === reg) s.inflight.delete(key);
+    };
+    p.then(limpiar, limpiar);
+    return p;
   };
 
+  const enVuelo = s.inflight.get(key);
   if (hit && swr) {
-    // Vencida pero presente: servir stale y refrescar en background (dedupe).
-    if (!inflight.has(ik)) {
-      const p = computar()
-        .catch((e) => console.error(`[cache ${nombre}] refresco falló:`, e))
-        .finally(() => inflight.delete(ik));
-      inflight.set(ik, p as Promise<unknown>);
+    if (!enVuelo) {
+      lanzar().catch((e) => console.error(`[cache ${nombre}] refresco falló:`, e));
     }
     return hit.v as T;
   }
-
-  // Sin valor previo: computar (con dedupe de requests concurrentes).
-  const existente = inflight.get(ik);
-  if (existente) return existente as Promise<T>;
-  const p = computar().finally(() => inflight.delete(ik));
-  inflight.set(ik, p as Promise<unknown>);
-  return p;
+  if (enVuelo && enVuelo.gen === s.gen) return enVuelo.p as Promise<T>;
+  return lanzar();
 }

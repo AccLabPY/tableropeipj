@@ -89,6 +89,19 @@ export default function GlosarioPage() {
             </GlosarioItem>
 
             <GlosarioItem
+              termino="Peso del indicador"
+              ejemplo="En una acción con dos indicadores al 100% (peso 2) y al 40% (peso 1), el avance es (2×100 + 1×40) / 3 = 80%."
+            >
+              <p>
+                Importancia relativa de cada indicador dentro de su{" "}
+                <b>Acción Estratégica</b>, definida en la Matriz PEI (1 por
+                defecto). El avance de la acción es el promedio ponderado por
+                ese peso; el avance de cada objetivo y el índice global son
+                promedios simples de los niveles inferiores con dato.
+              </p>
+            </GlosarioItem>
+
+            <GlosarioItem
               termino="Cobertura de reporte"
               ejemplo="«4 de 78 mediciones aprobadas» — un promedio de cumplimiento con cobertura baja es una foto parcial."
             >
@@ -112,6 +125,10 @@ export default function GlosarioPage() {
                 <b>Solo lo Aprobado alimenta los tableros oficiales.</b> Cada
                 transición queda en un historial inmutable con autor, fecha y
                 comentario.
+              </p>
+              <p>
+                <b>Nadie valida lo que cargó:</b> quien cargó, editó, adjuntó o
+                envió una versión no puede tomarla en revisión ni resolverla.
               </p>
             </GlosarioItem>
 

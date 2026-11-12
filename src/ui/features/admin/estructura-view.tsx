@@ -490,13 +490,15 @@ function Fila({
       <button
         type="button"
         onClick={onEliminar}
+        disabled={bloqueado}
+        aria-label={bloqueado ? "No se puede eliminar: tiene elementos dependientes" : "Eliminar"}
         title={
           bloqueado
             ? "Tiene elementos dependientes: elimínelos primero"
             : "Eliminar"
         }
         className={cn(
-          "grid h-7 w-7 flex-none place-items-center rounded-pj-sm border border-linea text-muted hover:border-sem-rojo-border hover:bg-sem-rojo-bg hover:text-sem-rojo-fg agentes:rounded-chip",
+          "grid h-7 w-7 flex-none place-items-center rounded-pj-sm border border-linea text-muted enabled:hover:border-sem-rojo-border enabled:hover:bg-sem-rojo-bg enabled:hover:text-sem-rojo-fg disabled:cursor-not-allowed agentes:rounded-chip",
           bloqueado && "opacity-40",
         )}
       >

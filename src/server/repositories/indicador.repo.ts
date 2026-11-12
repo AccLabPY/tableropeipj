@@ -58,3 +58,14 @@ export async function cargablesPorActor(ctx: Ctx): Promise<IndicadorCompleto[]> 
     orderBy: { codigo: "asc" },
   });
 }
+
+/** Indicador por id (incluye inactivos), con sus responsables. */
+export async function indicadorPorId(
+  ctx: Ctx,
+  id: number,
+): Promise<IndicadorCompleto | null> {
+  return ctx.db.indicador.findUnique({
+    where: { id },
+    include: INCLUDE_COMPLETO,
+  });
+}

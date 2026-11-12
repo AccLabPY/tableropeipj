@@ -12,6 +12,7 @@ export const authConfig = {
     authorized({ auth, request }) {
       const logueado = !!auth?.user;
       const { pathname } = request.nextUrl;
+      if (pathname.startsWith("/salir")) return true;
       if (pathname.startsWith("/login")) {
         return logueado
           ? Response.redirect(new URL("/ejecutivo", request.nextUrl))

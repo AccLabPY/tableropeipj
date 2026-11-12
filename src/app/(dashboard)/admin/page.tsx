@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { requirePage, tieneRol } from "@/server/auth/guards";
 import { getCtx, getDbEnv } from "@/server/db/env";
+import { prismaControl } from "@/server/db/client";
 import { PageHeader } from "@/ui/components/page-header";
 import { Card, CardBody, CardHeader } from "@/ui/components/card";
 import { DbSwitch } from "@/ui/features/admin/db-switch";
@@ -19,7 +20,8 @@ export default async function AdminPage() {
     ctx.db.indicador.count(),
     ctx.db.medicion.count(),
     ctx.db.umbralCriticidad.count(),
-    ctx.db.usuario.count(),
+    // Los usuarios viven en la base de control, sea cual sea el entorno activo.
+    prismaControl().usuario.count(),
   ]);
 
   const secciones = [
@@ -37,6 +39,11 @@ export default async function AdminPage() {
       href: "/admin/plazos",
       titulo: "Plazos de carga",
       desc: "Fecha límite del ejercicio, habilitación y cierre de la carga, y prórrogas por indicador o dependencia.",
+    },
+    {
+      href: "/admin/auditoria",
+      titulo: "Auditoría",
+      desc: "Quién cambió qué y cuándo: matriz, umbrales, estructura, usuarios, plazos y presupuesto, con el antes y el después.",
     },
     ...(esAdmin
       ? [

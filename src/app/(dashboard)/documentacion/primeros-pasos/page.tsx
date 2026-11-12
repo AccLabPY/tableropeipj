@@ -116,7 +116,7 @@ export default function PrimerosPasosPage() {
               Arriba a la derecha, la <b>campanita 🔔</b> concentra las
               novedades que le conciernen: si usted carga datos, cada cambio
               de estado de sus cargas (tomada en revisión, aprobada, observada,
-              rechazada, rectificada); si valida, cada carga nueva enviada por
+              rectificada) y los avisos de plazo próximo a vencer; si valida, cada carga nueva enviada por
               las dependencias y las alertas de <b>indicadores en estado
               crítico</b>. El número rojo indica cuántas no leyó; al tocar una
               notificación se abre directamente el detalle correspondiente.

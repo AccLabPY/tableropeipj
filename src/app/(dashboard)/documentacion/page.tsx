@@ -4,8 +4,10 @@ import {
   BookOpen,
   ClipboardEdit,
   GraduationCap,
+  Settings,
   ShieldCheck,
 } from "lucide-react";
+import { requirePage, tieneRol } from "@/server/auth/guards";
 import { PageHeader } from "@/ui/components/page-header";
 import { Card } from "@/ui/components/card";
 
@@ -29,9 +31,17 @@ const GUIAS = [
   {
     href: "/documentacion/guia-del-validador",
     titulo: "Guía del validador",
-    desc: "Bandeja de notificaciones, detalle de cada carga, descarga de evidencias, aprobación, observación, rechazo y rectificación.",
+    desc: "Bandeja de notificaciones, detalle de cada carga, descarga de evidencias, aprobación, observación y rectificación.",
     Icono: ShieldCheck,
     audiencia: "DGPD",
+  },
+  {
+    href: "/documentacion/guia-de-administracion",
+    titulo: "Guía de administración",
+    desc: "Usuarios y sesiones, matriz y peso, umbrales, estructura, plazos, presupuesto, auditoría y entorno de prueba.",
+    Icono: Settings,
+    audiencia: "Administración y DGPD",
+    soloGestion: true,
   },
   {
     href: "/documentacion/glosario",
@@ -42,7 +52,10 @@ const GUIAS = [
   },
 ] as const;
 
-export default function DocumentacionPage() {
+export default async function DocumentacionPage() {
+  const actor = await requirePage();
+  const gestiona = tieneRol(actor, "ADMIN", "DGPD_VALIDADOR");
+  const guias = GUIAS.filter((g) => !("soloGestion" in g) || gestiona);
   return (
     <section>
       <PageHeader
@@ -50,7 +63,7 @@ export default function DocumentacionPage() {
         subtitle="Manual operativo y metodológico de la Plataforma de Seguimiento del PEI 2026–2030"
       />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {GUIAS.map((g) => (
+        {guias.map((g) => (
           <Link key={g.href} href={g.href} className="group">
             <Card className="flex h-full flex-col p-5 transition-shadow hover:shadow-toast">
               <div className="flex items-center gap-3">

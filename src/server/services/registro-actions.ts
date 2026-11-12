@@ -101,12 +101,15 @@ export async function subirEvidenciaAction(
   }
 }
 
-/** Elimina un adjunto propio (solo mientras la medición es editable). */
+/**
+ * Elimina un adjunto: las dependencias mientras la medición es editable; la
+ * DGPD y ADMIN mientras no sea oficial (antes de aprobar).
+ */
 export async function eliminarEvidenciaAction(
   evidenciaId: string,
 ): Promise<ResultadoAccion> {
   try {
-    const actor = await requireApi("DEPENDENCIA_CARGA", "ADMIN");
+    const actor = await requireApi("DEPENDENCIA_CARGA", "DGPD_VALIDADOR", "ADMIN");
     const ctx = await getCtx(actor);
     await eliminarEvidencia(ctx, BigInt(evidenciaId));
     revalidatePath("/registro");
@@ -145,7 +148,6 @@ export async function validarMedicionAction(
     const texto = {
       APROBADO: "Medición APROBADA: ya alimenta los tableros oficiales.",
       OBSERVADO: "Medición OBSERVADA: vuelve a la dependencia para corrección.",
-      RECHAZADO: "Medición RECHAZADA.",
     }[datos.resultado];
     return { ok: true, mensaje: texto };
   } catch (e) {
@@ -169,7 +171,7 @@ export async function rectificarMedicionAction(
     revalidatePath("/registro");
     return {
       ok: true,
-      mensaje: `Medición rectificada: se creó la versión ${nueva.version} en borrador para su corrección.`,
+      mensaje: `Medición rectificada: se creó la versión ${nueva.version} en borrador, con las evidencias de la versión anterior.`,
       medicionId: String(nueva.id),
     };
   } catch (e) {

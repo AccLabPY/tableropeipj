@@ -7,7 +7,7 @@
 FROM node:20-bookworm-slim AS deps
 WORKDIR /app
 # --include=dev: typescript/tailwind/postcss viven en devDependencies y el
-# build las necesita aunque NODE_ENV=production (mismo motivo que render.yaml).
+# build las necesita aunque NODE_ENV=production.
 COPY package.json package-lock.json ./
 COPY prisma ./prisma
 RUN npm ci --include=dev

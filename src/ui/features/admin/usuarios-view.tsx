@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
   actualizarUsuarioAction,
+  cerrarSesionesUsuarioAction,
   crearUsuarioAction,
   type ResultadoAdmin,
 } from "@/server/services/admin-actions";
@@ -298,7 +299,15 @@ export function UsuariosView({
             </label>
           ) : null}
 
-          <div className="border-t border-linea-2 pt-3">
+          {form.id !== null ? (
+            <p className="text-[11.5px] leading-[1.45] text-muted">
+              Los cambios de roles y dependencias rigen en el próximo clic del
+              usuario. Desactivarlo o cambiarle la contraseña cierra sus
+              sesiones abiertas.
+            </p>
+          ) : null}
+
+          <div className="flex flex-wrap gap-2 border-t border-linea-2 pt-3">
             <button
               type="button"
               onClick={guardar}
@@ -311,6 +320,20 @@ export function UsuariosView({
                   ? "Crear usuario"
                   : "Guardar cambios"}
             </button>
+            {form.id !== null ? (
+              <button
+                type="button"
+                onClick={() =>
+                  start(async () => {
+                    setToast(await cerrarSesionesUsuarioAction(form.id!));
+                    router.refresh();
+                  })
+                }
+                className="inline-flex items-center gap-2 rounded-pj border border-linea bg-superficie px-4 py-[9px] text-[12.5px] font-semibold text-tinta hover:bg-hover disabled:opacity-50"
+              >
+                Cerrar sesiones del usuario
+              </button>
+            ) : null}
           </div>
         </fieldset>
       </Card>

@@ -160,3 +160,33 @@ export function umbralAviso(v: VentanaEfectiva): number | null {
   }
   return null;
 }
+
+/**
+ * Puntualidad de un envío frente a su fecha límite. Desvío positivo = días de
+ * atraso redondeados hacia arriba (un atraso de horas ya es 1 día y fuera de
+ * plazo); negativo = días completos de anticipación. Sin límite: en plazo.
+ */
+export function calcularSla(
+  limite: Date | null,
+  envio: Date,
+): { diasDesvio: number | null; enPlazo: boolean } {
+  if (!limite) return { diasDesvio: null, enPlazo: true };
+  const diff = envio.getTime() - limite.getTime();
+  if (diff <= 0) {
+    const anticipacion = Math.floor(-diff / DIA_MS);
+    return { diasDesvio: anticipacion === 0 ? 0 : -anticipacion, enPlazo: true };
+  }
+  return { diasDesvio: Math.ceil(diff / DIA_MS), enPlazo: false };
+}
+
+/**
+ * Ejercicios cuyos plazos pueden estar corriendo en la fecha dada: el año en
+ * curso y el anterior (el plazo de un ejercicio vence al año siguiente).
+ */
+export function ejerciciosAEvaluar(
+  ahora: Date,
+  anios: readonly number[],
+): number[] {
+  const actual = ahora.getFullYear();
+  return anios.filter((a) => a === actual || a === actual - 1);
+}

@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/server/auth/auth";
 import { prismaControl } from "@/server/db/client";
 import { esTema, type Tema } from "@/shared/tema";
+import { invalidarVigencia } from "@/server/auth/vigencia";
 import { COOKIE_TEMA } from "./tema";
 
 /**
@@ -21,6 +22,7 @@ export async function setTemaAction(tema: string): Promise<{ ok: boolean; tema: 
       where: { id: Number(session.user.id) },
       data: { tema },
     });
+    invalidarVigencia(Number(session.user.id));
   }
 
   cookies().set(COOKIE_TEMA, tema, {

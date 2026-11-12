@@ -68,6 +68,36 @@ Dockerfile). Sin él, Prisma no detecta libssl 3 y toda consulta muere con
   `prisma migrate deploy` como `peipj_migrator` (scripts `db:migrate:prod|test`),
   ejecutado desde APP en un contenedor `node:20-bookworm-slim` (instalar `openssl`
   antes: `apt-get update && apt-get install -y openssl`).
+- Migraciones nombradas con prefijo numérico secuencial (`0_init`, `1_…`, `2_…`).
+  `1_unicidad_nulls_not_distinct` recrea los índices únicos de `Medicion` y
+  `Periodo` con `NULLS NOT DISTINCT` (Prisma no detecta esa marca: no cambiar sus
+  columnas ni sus nombres). Si su bloque `DO` aborta por duplicados: depurarlos y
+  `prisma migrate resolve --rolled-back 1_unicidad_nulls_not_distinct`.
+
+### Aplicar migraciones nuevas
+
+```bash
+# Respaldo previo
+sudo -u postgres /usr/local/bin/peipj-backup.sh            # en pnud-db
+# En pnud-app: archivo temporal con las URLs del rol migrador (chmod 600, SIN comillas)
+#   DATABASE_URL=postgresql://peipj_migrator:…@…:5432/peipj_test?schema=public
+docker run --rm -v /opt/peipj/app:/app -w /app --env-file /opt/peipj/.env.migrador   node:20-bookworm-slim sh -c "apt-get update -qq && apt-get install -yqq openssl >/dev/null && npx prisma migrate deploy"
+# repetir con DATABASE_URL apuntando a peipj; luego borrar /opt/peipj/.env.migrador
+```
+
+## Datos canónicos
+
+Desde el go-live **la base de producción es la fuente de verdad** (lo editado en
+Administración manda). El seed solo prepara entornos nuevos: sobre una base con
+datos se niega a correr (con `--forzar-entorno-nuevo` solo crea lo que falte, sin
+sobrescribir); `db:seed:test` reinicia la demo de la base de prueba. Para mantener
+el respaldo del repositorio al día:
+
+```bash
+docker run --rm -v /opt/peipj/app:/app -w /app --env-file /opt/peipj/.env   node:20-bookworm-slim node scripts/exportar-dataset.mjs     # --simular para ver diferencias
+```
+
+Luego copiar `prisma/data/*.json` al repositorio, `npm run data:verify` y commitear.
 
 ## Respaldos
 
@@ -113,7 +143,9 @@ del rol `peipj_migrator` (destino), **sin comillas**. Se elimina tras el cutover
 avisar a los usuarios que vuelvan a la URL de Render. No requiere tocar nada on-premise.
 
 **Decomiso definitivo** (tras ≥2 semanas estables): rotar/eliminar credenciales
-TiDB Cloud y borrar el servicio de Render.
+TiDB Cloud y borrar el servicio de Render. **Estado a noviembre de 2026: pendiente**
+(Render y TiDB siguen activos). Mientras existan, cualquier uso de la URL anterior
+escribe en una base que ya no es la oficial.
 
 ## Pendientes conocidos
 

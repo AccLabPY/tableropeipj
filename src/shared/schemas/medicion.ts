@@ -45,10 +45,18 @@ export type MedicionInput = z.infer<typeof MedicionInputSchema>;
  * retiró del circuito: una carga incorrecta se OBSERVA para su corrección.
  * RECHAZADO subsiste en la BD solo para las mediciones históricas.
  */
-export const ValidarInputSchema = z.object({
-  resultado: z.enum(["APROBADO", "OBSERVADO"]),
-  comentario: z.string().max(2000).nullish(),
-});
+export const ValidarInputSchema = z
+  .object({
+    resultado: z.enum(["APROBADO", "OBSERVADO"]),
+    comentario: z.string().max(2000).nullish(),
+  })
+  .refine(
+    (d) => d.resultado !== "OBSERVADO" || (d.comentario?.trim().length ?? 0) >= 5,
+    {
+      message: "Al observar, el comentario es obligatorio (mínimo 5 caracteres).",
+      path: ["comentario"],
+    },
+  );
 export type ValidarInput = z.infer<typeof ValidarInputSchema>;
 
 export const EvidenciaInputSchema = z.object({
